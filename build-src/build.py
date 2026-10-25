@@ -1220,14 +1220,9 @@ def build_quiz():
 def build_about():
     rel=''
     body=f'''
-<section class="hero"><div class="wrap">
-  <div><div class="crumbs"><a href="index.html">首頁</a><span>›</span><span>關於與黃醫師</span></div><span class="eyebrow">關於優健堂 UHealthFit × WiseQuest</span>
-  <h1>值得信賴的健康之選</h1><p class="lead">優健堂 UHealthFit 是一個專注於健康與保健產品的平台，由美國紐約的 Uhealth Trading Inc. 經營。我們重視產品本身，而不是品牌大小；WiseQuest 是平台上由黃醫師研發的草本保健系列。</p></div>
-  <div class="hero-visual"><img src="{IMG}/home/all-products-lineup.png" alt="優健堂全系列產品陳列"></div>
-</div></section>
-<section class="sec doctor bg-dark"><div class="wrap">
-  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，中國中西醫結合執業醫師" loading="lazy"></div>
-  <div><span class="eyebrow">研發者 · 黃醫師 Dr. Huang</span><h2>由一位看了二十年「整個人」的醫師研發</h2>
+<section class="sec doctor bg-dark doctor-top"><div class="wrap">
+  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，中國中西醫結合執業醫師"></div>
+  <div><div class="crumbs"><a href="index.html">首頁</a><span>›</span><span>黃醫師</span></div><span class="eyebrow">研發者 · 黃醫師 Dr. Huang</span><h1>由一位看了二十年「整個人」的醫師研發</h1>
   <p>黃醫師是中國中西醫結合執業醫師，中醫全科醫師，擁有二十年臨床經驗與草本配方研發專長。她師從多位國家級名老中醫、各科教授與清末御醫傳人，學習中醫針藥特色療法；作為全科中醫師，臨床涉及內科、皮膚科、婦科、兒科，對消化系統疾病、心理睡眠疾病、神經系統疾病、呼吸系統疾病、循環系統疾病、泌尿生殖系統疾病、皮膚科常見病與痛症等均有豐富的臨床經驗，並專研中醫醫美二十年，自主研發的中藥化妝品曾獲國家發明專利。</p>
   <blockquote>「中醫講治未病，在身體逐漸衰老的過程中會發生很多衰老相關的疾病，中醫抗衰就顯得尤為重要。很多時候讓症狀暫時消失，不等於身體真的恢復。我想做的，是幫身體重新找回自己健康的狀態——用承傳千年的草本經驗，幫助身體恢復平衡。」<footer>— 黃醫師</footer></blockquote>
   <ul class="checks"><li><div>生產設施具 FDA 登記<small>核查企業與生產設施的 FDA 登記資訊（登記不等於 FDA 核准）</small></div></li><li><div>天然／有機來源成分<small>優先選擇來源清楚的草本與植物成分</small></div></li><li><div>專業經驗配方<small>以臨床觀點對應現代人的常見日常需求</small></div></li><li><div>品質安全把關<small>原料、生產、第三方純度檢測三道關卡</small></div></li><li><div>價格合理親民<small>讓長期保健更容易持續</small></div></li><li><div>只說有依據的事<small>不誇大、不神化草本、不製造焦慮</small></div></li></ul></div>
@@ -1242,18 +1237,10 @@ def build_about():
   </div>
   <div class="pull">「身體一直在努力照顧你。現在，換我們照顧它。」<small>每一篇內容動筆前後，我們都問自己三個問題：它真實嗎？它對讀者真的有幫助嗎？它對得起初心嗎？</small></div>
 </div></section>
-<section class="sec bg-cream"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">中醫整體觀 × 現代工藝</span><h2>一套邏輯，六個系列</h2><p class="lead">中醫傳統認為身體各部位彼此牽連。每個系列的配方邏輯，都從這張「整體地圖」出發；再以現代萃取濃縮、第三方純度檢測、成分全部公開。</p></div>
-  <div class="grid-3">{''.join(f'<a class="scard s-{k}" href="series/{k}.html"><span class="series-tag"><span class="dot"></span>{SERIES[k]["organ"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)}</div>
-</div></section>
-<section class="sec"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">聯絡我們</span><h2>有問題，隨時來信</h2><p class="lead">客服信箱 <a href="mailto:service@uhealthfit.com" style="color:var(--green);font-weight:700">service@uhealthfit.com</a>。訂單、運送與退貨相關事宜，請在 zh.uhealthfit.com 商店查看政策或來信。</p></div>
-  <div class="hero-cta"><a class="btn btn-primary ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a><a class="btn btn-ghost" href="faq.html">看常見問題</a></div>
-</div></section>
 {journey(rel,'about')}
 {sticky(rel)}
 '''
-    write('about.html', head('關於優健堂與黃醫師｜品牌理念、品質把關 · 優健堂 UHealthFit × WiseQuest','優健堂 UHealthFit 由美國紐約 Uhealth Trading Inc. 經營；WiseQuest 草本保健系列由中國中西醫結合執業醫師黃醫師研發。尊重自然、尊重專業、關懷每一個人、分享知識。',rel,'about.html','about')+nav(rel,'about')+body+footer(rel))
+    write('about.html', head('研發者黃醫師 Dr. Huang｜WiseQuest 草本保健研發者 · 優健堂 UHealthFit','WiseQuest 草本保健全系列由中國中西醫結合執業醫師、中醫全科醫師黃醫師研發，二十年臨床經驗與草本配方研發專長。不壓制、不依賴，從根源支持身體。',rel,'about.html','about')+nav(rel,'about')+body+footer(rel))
 
 ABOUT_US_PICKS = [
  ('生產廠商核查','核查企業與生產設施的登記與品質資訊，例如 FDA 設施登記（登記不等於 FDA 核准）。'),
