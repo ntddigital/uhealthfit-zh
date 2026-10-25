@@ -640,6 +640,12 @@ def stats_row(slug):
     st=DETAILS.get(slug,{}).get('stats')
     if not st: return ''
     return '<ul class="pstats">'+''.join(f'<li><b>{esc(a)}</b><span>{esc(b)}</span></li>' for a,b in st)+'</ul>'
+def zebra(html):
+    # 產品頁中段區塊依出現順序白／米色交替，不受個別區塊有無影響
+    n=[0]
+    def f(m):
+        n[0]+=1; return '<section class="sec'+('' if n[0]%2 else ' bg-cream')+'"'
+    return re.sub(r'<section class="sec(?: bg-cream| bg-green-light)?"',f,html)
 def showcase_section(slug):
     sc=DETAILS.get(slug,{}).get('showcase')
     if not sc: return ''
@@ -1039,7 +1045,13 @@ def build_products():
     </div>
   </div>
 </div></section>
-{showcase_section(slug)}
+<!--zebra-->{showcase_section(slug)}
+{compare_section(slug)}
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
+  <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
+</div></section>
+{ingredients_section(slug)}{pillars_section(slug)}
 <section class="sec bg-cream"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分與用法</span><h2>你知道自己每天用的是什麼</h2></div>
   <div class="spec">
@@ -1048,12 +1060,8 @@ def build_products():
   </div>
   <div class="timeline"><div class="ic">⏱</div><div><b>誠實的期待：</b>多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異；若一開始沒有太多感覺，這是正常的。</div></div>
 </div></section>
-{ingredients_section(slug)}{pillars_section(slug)}{how_section(slug)}{compare_section(slug)}{demo_section(slug)}
-<section class="sec"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
-  <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
-</div></section>
-{reviews_section(slug)}
+{how_section(slug)}{demo_section(slug)}
+{reviews_section(slug)}<!--/zebra-->
 <section class="sec bg-green-light"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">常見問題</span><h2>購買前，你可能想知道</h2></div>
   <div class="faq-list">{faq_block(p['faq'])}</div>
@@ -1068,6 +1076,7 @@ def build_products():
 <script type="application/ld+json">{faq_ld(p['faq'])}</script>
 {('<script type="application/ld+json">'+ld+'</script>') if ld else ''}
 '''
+        body=re.sub(r'<!--zebra-->(.*?)<!--/zebra-->',lambda m:zebra(m.group(1)),body,flags=re.S)
         write(f'products/{slug}.html', head(f'{p["name"]}｜{p["hook"]} · 優健堂 × WiseQuest', p['desc'], rel, f'products/{slug}.html', f'product-{slug}', og_image=p['image'])+nav(rel,'series')+body+footer(rel))
 
 # ───────────────────────────── 部落格 ─────────────────────────────
