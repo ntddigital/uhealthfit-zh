@@ -737,9 +737,18 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 {TRACKING_BODY_TOP}
 '''
 
+def series_products(k):
+    # 系列內的產品（含組合），供導覽列與全部產品頁使用
+    s=SERIES[k]; return s['products']+([s['bundle']] if s.get('bundle') else [])
+
 def nav(rel, active=''):
     dd = ''.join(f'<a class="s-{k}" href="{rel}series/{k}.html"><span class="dot"></span><span>{SERIES[k]["name"]}<small>{SERIES[k]["h1"]}</small></span></a>' for k in SERIES_ORDER)
     mob_sub = ''.join(f'<a href="{rel}series/{k}.html">{SERIES[k]["name"]}</a>' for k in SERIES_ORDER)
+    pname = lambda p: PRODUCTS[p]['name'].split('（')[0].replace('WiseQuest ','')  # 組合名去掉括號內的品項，選單才不換行
+    dd_prod = ''.join(f'<div class="dd-col s-{k}"><a class="dd-h" href="{rel}series/{k}.html"><span class="dot"></span>{SERIES[k]["name"]}</a>'
+                      +''.join(f'<a href="{rel}products/{p}.html">{esc(pname(p))}</a>' for p in series_products(k))+'</div>' for k in SERIES_ORDER)
+    dd_prod += f'<a class="dd-all" href="{rel}products/index.html">瀏覽全部 {len(PRODUCT_ORDER)} 款產品 →</a>'
+    mob_prod = ''.join(f'<span class="sub-h">{SERIES[k]["name"]}</span>'+''.join(f'<a href="{rel}products/{p}.html">{esc(pname(p))}</a>' for p in series_products(k)) for k in SERIES_ORDER)
     def a(href,label,key):
         cls = ' class="active"' if active==key else ''
         return f'<a href="{href}"{cls}>{label}</a>'
@@ -750,6 +759,7 @@ def nav(rel, active=''):
     <nav aria-label="主選單"><ul class="nav-links">
       <li>{a(rel+'index.html','主頁','home')}</li>
       <li>{a(rel+'series/eye.html','六大系列','series')}<div class="dd">{dd}</div></li>
+      <li>{a(rel+'products/index.html','選購產品','products')}<div class="dd dd-prod">{dd_prod}</div></li>
       <li>{a(rel+'blog/index.html','選購指南','blog')}</li>
       <li>{a(rel+'quiz.html','30 秒測驗','quiz')}</li>
       <li>{a(rel+'about.html','關於與黃醫師','about')}</li>
@@ -760,6 +770,7 @@ def nav(rel, active=''):
   <div class="mobile-menu"><div class="wrap">
     <a href="{rel}index.html">主頁</a>
     <a href="{rel}series/eye.html">六大系列</a><div class="sub">{mob_sub}</div>
+    <details class="mm-dd"><summary>選購產品</summary><div class="sub">{mob_prod}<a class="sub-all" href="{rel}products/index.html">瀏覽全部產品 →</a></div></details>
     <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about.html">關於與黃醫師</a><a href="{rel}faq.html">常見問題</a>
   </div></div>
 </header>
@@ -1093,7 +1104,7 @@ def build_products():
 {('<script type="application/ld+json">'+ld+'</script>') if ld else ''}
 '''
         body=re.sub(r'<!--zebra-->(.*?)<!--/zebra-->',lambda m:zebra(m.group(1)),body,flags=re.S)
-        write(f'products/{slug}.html', head(f'{p["name"]}｜{p["hook"]} · 優健堂 × WiseQuest', p['desc'], rel, f'products/{slug}.html', f'product-{slug}', og_image=p['image'])+nav(rel,'series')+body+footer(rel))
+        write(f'products/{slug}.html', head(f'{p["name"]}｜{p["hook"]} · 優健堂 × WiseQuest', p['desc'], rel, f'products/{slug}.html', f'product-{slug}', og_image=p['image'])+nav(rel,'products')+body+footer(rel))
 
 # ───────────────────────────── 部落格 ─────────────────────────────
 def build_blog():
@@ -1249,6 +1260,32 @@ FAQS = {
  '購買、運送與退貨':[('在這個網站可以直接結帳嗎？','本站專注於幫你「選對」。按下「購買」會前往我們的官方商店 zh.uhealthfit.com 商品頁，在那裡完成安全結帳（支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等）。'),('運費與到貨時間？','訂單於 48 小時內（工作日）處理。美國地區：眼貼滿 USD $79 免運、其他商品滿 USD $200 免運；未達門檻時運費於結帳頁顯示。眼貼與其他商品由不同倉庫出貨，可能分開送達。'),('可以退貨嗎？','收到商品後 30 天內，未拆封、封條完整並附原始包裝的商品可申請退貨；基於衛生考量，已拆封的個人護理商品無法退貨。請先來信 service@uhealthfit.com 取得退貨指引。'),('商店顯示的幣別是美金嗎？','本站所有購買連結都會帶你到 zh.uhealthfit.com 的美國市場（USD）頁面，價格與本站標示一致；若你在美國以外結帳，系統可能依配送地切換幣別，實際金額以結帳頁顯示為準。')],
  '關於平台':[('優健堂 UHealthFit 和 WiseQuest 是什麼關係？','優健堂 UHealthFit 是專注於健康與保健產品的平台，由美國紐約的 Uhealth Trading Inc. 經營；WiseQuest 是平台上由黃醫師研發的草本保健系列。'),('30 秒測驗的結果準嗎？','測驗依你的回答為六個系列排序，目的是幫你找到「先從哪裡開始」，僅供參考，不是醫療診斷。')],
 }
+def build_products_index():
+    rel='../'
+    chips='<div class="chips">'+''.join(f'<a class="chip" href="#{k}">{SERIES[k]["name"]}</a>' for k in SERIES_ORDER)+'</div>'
+    secs=''
+    for i,k in enumerate(SERIES_ORDER):
+        sv=SERIES[k]; ps=series_products(k)
+        cards=''.join(product_card(p,rel,wide=(len(ps)==1)) for p in ps)
+        secs+=f'''<section class="sec{' bg-cream' if i%2 else ''}" id="{k}"><div class="wrap">
+  <div class="sec-head"><span class="series-tag s-{k}"><span class="dot"></span>{sv['name']} · {esc(sv['tag'])}</span><h2>{esc(sv['h1'])}</h2><p class="lead">{esc(sv['lead'])} <a href="{rel}series/{k}.html" style="color:var(--green);font-weight:700;white-space:nowrap">看{sv['name']}系列介紹 →</a></p></div>
+  <div class="pgrid{' pgrid-1' if len(ps)==1 else ''}">{cards}</div>
+</div></section>
+'''
+    body=f'''
+<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
+  <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>全部產品</span></div>
+  <span class="eyebrow">選購產品 · {len(PRODUCT_ORDER)} 款</span><h1>全部產品，一頁看完</h1>
+  <p class="lead" style="max-width:760px">依六大系列整理。點「了解」看完整成分、用法與常見問題；點「購買」前往官方商店安全結帳。價格為美金（USD），以結帳頁為準。</p>
+  {chips}
+</div></div></section>
+{secs}
+<section class="sec"><div class="wrap"><p class="note" style="text-align:center">膠囊類為膳食補充劑、外用品為日常保養品，皆非藥品，不用於診斷、治療、治癒或預防任何疾病。效果因人而異。</p></div></section>
+{journey(rel,'home')}
+{sticky(rel)}
+'''
+    write('products/index.html', head('全部產品｜護眼・肌膚・固齒・元氣・睡眠・腸胃 · 優健堂 × WiseQuest','WiseQuest 草本保健全部產品：依六大系列整理，成分、用法與價格一頁看完，到官方商店安全結帳。',rel,'products/index.html','products')+nav(rel,'products')+body+footer(rel))
+
 def build_faq():
     rel=''
     groups=''.join(f'<div class="faq-group"><h3>{g}</h3>{faq_block(items)}</div>' for g,items in FAQS.items())
@@ -1263,7 +1300,7 @@ def build_faq():
     write('faq.html', head('常見問題｜產品、品質、購買與退貨 · 優健堂 × WiseQuest','WiseQuest 草本保健常見問題：是不是藥、多久有感、怎麼吃、在哪裡製造、如何購買與退貨。',rel,'faq.html','faq')+nav(rel,'faq')+body+footer(rel))
 
 def build_misc():
-    pages=['index.html','about.html','faq.html','quiz.html','blog/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
+    pages=['index.html','about.html','faq.html','quiz.html','blog/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
     sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
@@ -1291,6 +1328,6 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
     write('README.md', readme)
 
 if __name__=='__main__':
-    build_home(); build_series(); build_products(); build_blog(); build_quiz(); build_about(); build_faq(); build_misc()
+    build_home(); build_series(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about(); build_faq(); build_misc()
     open(os.path.join(DIST,'.nojekyll'),'w').close()  # 停用 GitHub Pages 的 Jekyll 處理
     print('built →',DIST)

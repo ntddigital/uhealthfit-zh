@@ -62,6 +62,11 @@ h3{font-size:20px;font-weight:700}
 .dd a{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:10px;font-size:14px}
 .dd a:hover{background:var(--green-light)}
 .dd .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.dd-prod{grid-template-columns:repeat(3,minmax(190px,1fr));gap:4px 10px;min-width:640px;left:50%;transform:translateX(-50%);padding:14px}
+.dd-col{display:flex;flex-direction:column;gap:1px;padding:4px 0}
+.dd-col .dd-h{font-weight:700;color:var(--ink);font-size:13px}
+.dd-col a:not(.dd-h){padding:7px 10px 7px 30px;color:var(--ink-2)}
+.dd .dd-all{grid-column:1/-1;justify-content:center;border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:6px;padding-top:12px;font-weight:700;color:var(--green)}
 .dd small{display:block;color:var(--ink-3);font-size:12px;font-weight:400}
 .nav-cta{display:flex;align-items:center;gap:8px}
 .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:10px;width:42px;height:42px;cursor:pointer;align-items:center;justify-content:center}
@@ -70,11 +75,17 @@ h3{font-size:20px;font-weight:700}
 .menu-btn span::before{top:-6px}.menu-btn span::after{top:6px}
 .mobile-menu{display:none;background:#fff;border-bottom:1px solid var(--line)}
 .mobile-menu.open{display:block}
-.mobile-menu .wrap{padding:10px 20px 18px;display:grid;gap:4px;height:auto}
+.mobile-menu .wrap{padding:10px 20px 18px;display:grid;grid-template-columns:1fr;gap:4px;height:auto}
 .mobile-menu a{display:block;padding:12px 10px;border-radius:10px;font-weight:600}
 .mobile-menu a:hover{background:var(--green-light)}
 .mobile-menu .sub{padding-left:14px;display:grid}
 .mobile-menu .sub a{font-weight:500;font-size:15px;color:var(--ink-2);padding:9px 10px}
+.mm-dd summary{list-style:none;cursor:pointer;padding:12px 10px;border-radius:10px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.mm-dd summary::-webkit-details-marker{display:none}
+.mm-dd summary::after{content:"+";font-size:18px;color:var(--green)}
+.mm-dd[open] summary::after{content:"−"}
+.mobile-menu .sub .sub-h{font-size:12px;font-weight:700;color:var(--ink-3);padding:10px 10px 2px;letter-spacing:.04em}
+.mobile-menu .sub .sub-all{color:var(--green);font-weight:700}
 @media(max-width:960px){.nav-links{display:none}.menu-btn{display:flex}.brand span{display:none}.nav .btn{display:none}}
 
 /* Hero 共用 */
