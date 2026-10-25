@@ -243,7 +243,7 @@ SLIDES = {
  'soothing-cream':   dict(svg='calming',             bg='#F2DDC6', headline='鎮靜 舒適／更柔軟的肌膚',        intro='不含刺激性活性成分的植萃修護，為乾燥與壓力肌帶來每日的溫和呵護。', shot='herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide'),
  'clarifying-cream': dict(svg='clarifying-cream',    bg='#F6E9D9', headline='為易長痘肌膚／精選的草本',      intro='溫和淨顏的植萃面霜，讓膚色看起來更勻淨、更安定。', shot='herbal-clarifying-cream/clarifying-cream-product-shot-wide'),
  'lifting-serum':    dict(svg='lifting-serum',       bg='#D3CFAD', headline='更緊緻 更亮澤／更年輕的肌膚',    intro='高濃度植萃精華，日復一日，見證肌膚的提升與煥亮。', shot='herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide'),
- 'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-product-shot-wide'),
+ 'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-bottle-open-capsules', avif=False),
 }
 def series_hero(k, rel):
     """系列頁頁首輪播：同 uhealthfit.com/zh-TW 首頁 slides——滿版、左文右圖、自動切換。
@@ -448,7 +448,11 @@ def ingredients_section(slug):
     g=INGREDIENTS.get(slug)
     if not g: return ''
     p=PRODUCTS[slug]; capsule='膠囊' in p['name']
-    cards=''.join(f'<div class="ing"><span class="ing-role">{esc(r)}</span><h3>{esc(n)}</h3><p>{esc(t)}</p></div>' for r,n,t in g['items'])
+    imgs=[ing_img(n) for _,n,_ in g['items']]; show_pics=sum(1 for x in imgs if x)*2>=len(imgs)
+    def pic(n,u):
+        if not show_pics: return ''
+        return f'<div class="ing-pic"><img src="{u}" alt="{esc(n)}" loading="lazy"></div>' if u else f'<div class="ing-pic ing-pic-blank"><span>{esc(n[0])}</span></div>'
+    cards=''.join(f'<div class="ing{" has-pic" if show_pics else ""}">{pic(n,u)}<span class="ing-role">{esc(r)}</span><h3>{esc(n)}</h3><p>{esc(t)}</p></div>' for (r,n,t),u in zip(g['items'],imgs))
     facts=''.join(f'<li><b>{esc(k)}</b><span>{esc(v)}</span></li>' for k,v in g.get('facts',[]))
     full=f'<details class="ing-full"><summary>完整成分表（INCI）</summary><p>{esc(g["full"])}</p></details>' if g.get('full') else ''
     note=('以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為膳食補充劑，不是藥品。' if capsule
@@ -483,6 +487,146 @@ TRACKING_HEAD_END = ("<!-- Meta Pixel -->\n"
   "<!-- End Meta Pixel -->").replace('__PIXEL__', META_PIXEL_ID)
 TRACKING_BODY_TOP = ("<!-- Google Tag Manager (noscript) --><noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=__GTM__\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n"
   "<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" src=\"https://www.facebook.com/tr?id=__PIXEL__&amp;ev=PageView&amp;noscript=1\"></noscript>").replace('__GTM__', GTM_ID).replace('__PIXEL__', META_PIXEL_ID)
+
+
+# ───── 產品頁充實內容：改寫自 uhealthfit.com/zh-TW 各產品頁（2026-10-25 擷取），依 BRIEF.md 合規紅線改寫 ─────
+# 售價一律以 zh.uhealthfit.com 為準（PRODUCTS 裡的 price），這裡只放介紹、用法、配圖。
+# 不採用：疾病名稱、療效宣稱、前後對比照、未核實數據（如回購率）、貶抑其他品類的比較。
+# 眼貼、固齒膠囊的成分清單待客戶確認，這裡不改動它們的成分，只補用法與配圖。
+U_IMG = 'https://uhealthfit.com'
+def u_opt(path, w=1200):   # uhealthfit.com 的最佳化圖
+    return f'{U_IMG}/_optimized/{path}-{w}.avif'
+def u_png(path):
+    return f'{U_IMG}/{path}.png'
+# 成分實物照（uhealthfit.com/ingredients/）
+ING_IMG = {
+ '西洋參':'panax-ginseng','人參':'panax-ginseng','黃芪':'astragalus','山藥':'chinese-yam','當歸':'angelica','當歸根':'angelica',
+ '陳皮':'citrus-peel','菊花':'chrysanthemum','玉米鬚':'corn-silk','丹參':'salvia','丹參根油':'salvia','枸杞':'goji','茯苓':'poria',
+ '火麻仁（THC-Free）':'hemp-seed','生地黃':'raw-rehmannia','厚朴':'magnolia-bark','萊菔子':'radish-seed','馬齒莧':'purslane',
+ '積雪草':'centella-cica','紫草':'comfrey','紫草根油':'comfrey','苦參':'sophora','尤加利 × 薄荷':'eucalyptus-menthol','尤加利葉精油':'eucalyptus-menthol',
+ '石斛':'dendrobium','白芍':'white-peony','胜肽':'peptide-complex','神經醯胺 NP':'ceramides-ha',
+}
+def ing_img(name):
+    k=ING_IMG.get(name); return u_opt(f'ingredients/{k}',800) if k else None
+
+DETAILS = {
+ 'enerbalance': dict(
+   image=u_png('products/enerbalance/enerbalance-bottle-open-capsules'), gallery_contain=True,
+   stats=[('0%','咖啡因'),('7 味','傳統草本'),('1,500 mg','每份草本精粹')],
+   showcase=dict(img='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=1000', eyebrow='產品介紹', title='傳統黑膏滋，做成每天方便吃的膠囊',
+     text='膏滋，是中醫把草本反覆煎煮、去渣後濃縮成膏的傳統工藝。EnerBalance 保留同樣的合煎精華，濃縮進標準化的植物膠囊：每份劑量固定、獨立取用、常溫保存，出門也方便帶。',
+     bullets=['植物性膠囊殼（羥丙甲纖維素），適合素食者','明確標示 5:1 濃縮比例，無添加糖','每份 3 粒，每瓶 60 份','不含咖啡因與強刺激性成分，不以短暫提神為目的']),
+   compare=dict(title='傳統膏滋與膠囊，差在哪裡', cols=['傳統膏滋','EnerBalance 膠囊'], rows=[
+     ('衛生與取用','開罐後反覆用勺挖取，長期接觸空氣','獨立密封膠囊，取用不接觸空氣與器具'),
+     ('劑量','自行舀取，用量因人而異','每份劑量標準化，每日兩次、每次 3 粒'),
+     ('保存','質地黏稠，多需冷藏，保存期較短','常溫陰涼乾燥處保存'),
+     ('攜帶','不易分裝，外出不方便','膠囊輕巧，隨身攜帶、隨餐服用'),
+     ('添加','常以冰糖、蜂蜜收膏','草本精粉直接封裝，無添加糖'),
+     ('濃縮比例','依製作經驗而異，多不對外揭露','標示 5:1，批次標準化、可追溯')]),
+   how=[('每日兩次','每次 3 粒，每日共 6 粒（約 3,000 mg）。'),('隨餐服用','放在早餐、午餐或晚餐旁，最容易記得。'),('以月為單位','一瓶 180 粒約一個月；持續使用，效果因人而異。')],
+   yes=['經常熬夜、工作節奏緊湊的上班族','運動後想多一份日常滋養的人','希望日常溫和進補的中老年人','想減少咖啡因、改用草本支持活力的人','注重天然植物營養的養生族群'],
+   caution='請勿超過建議用量。孕婦及哺乳期女性請勿使用。18 歲以下、正在服用抗凝血藥物（如華法林）或其他藥物，或有健康狀況、正在接受醫療照護者，使用前請先諮詢醫師。使用中如有不適，請停止使用並諮詢專業醫療人員。瓶口封膜破損請勿使用；請置於兒童無法取得處，陰涼乾燥保存。'),
+ 'calmoon': dict(
+   stats=[('7 味','君臣佐使草本'),('0','褪黑素'),('2 次','每日：午後、睡前')],
+   showcase=dict(img=u_opt('products/calmoon/calmoon-ingredients-collage'), eyebrow='產品介紹', title='四個方向，一起照顧夜晚',
+     text='Calmoon 不靠單一成分讓人「關機」。七味草本依中醫「君臣佐使」的傳統結構，分成四個方向，同時照顧夜晚的放鬆、白天累積的情緒與壓力，以及隔天的精神。',
+     bullets=['安神：炒酸棗仁、茯神、百合，傳統上用於養心安神','舒緩情緒：合歡皮、夏枯草，幫助睡前放鬆','因應壓力：刺五加，傳統上用於幫助身體因應日常壓力','白天精神：刺五加、丹參，支持隔天的專注與精神']),
+   how=[('午後一次','午餐後隨餐 3 粒，先幫白天的緊繃鬆一步。'),('睡前一次','晚餐後或睡前約一小時 3 粒，讓夜晚自然放鬆。'),('持續 2–4 週以上','每日共 6 粒（約 3,000 mg）；睡眠節律的穩定需要時間，效果因人而異。')],
+   caution='請勿超過建議用量。孕婦及哺乳期女性請勿使用。18 歲以下、正在服用抗凝血藥物（如華法林）、鎮靜類藥物或其他藥物，或有健康狀況者，使用前請先諮詢醫師。服用後請勿駕駛或操作機械。如有不適，請停止使用。請置於兒童無法取得處，陰涼乾燥保存。'),
+ 'dentaforte': dict(
+   stats=[('10 味','傳統草本'),('1,500 mg','每份草本配方'),('隨餐','每日兩次')],
+   showcase=dict(img=u_png('editorial/capsule-open'), eyebrow='產品介紹', title='刷牙之外，每天從內在多做一點',
+     text='DentaForte 不是牙膏、漱口水這類清潔產品，而是放在餐桌旁的日常草本補充。它設計為和刷牙、牙線、定期洗牙並行，不取代任何一項。',
+     bullets=['與牙醫照護並行，不取代專業檢查','以月為單位、每日規律食用而設計，不是短期療程','植物膠囊；非基因改造、不含麩質，不含人工色素、香料與防腐劑','草本採購自東亞，於美國 cGMP 登記廠房封裝']),
+   how=[('每日兩次','早晚隨餐各 3 粒，每日共 6 粒（約 3,000 mg）。'),('一定隨餐','隨餐服用吸收更好，也能減少首週的消化適應。'),('以月為單位','一瓶 180 粒約 30 天；部分人在諮詢牙醫後改為每日一次維持。漏服時直接恢復，不要加倍補回。')],
+   caution='孕婦及哺乳期女性、未滿 18 歲、正在服用抗凝血藥物（配方中的丹參、五味子可能與其交互作用）、兩週內預定進行牙科手術，或已知對植物過敏者，使用前請先諮詢醫師。請持續定期洗牙與牙科檢查。'),
+ 'herbalflow': dict(
+   image=None,
+   stats=[('6 味','傳統草本'),('0','番瀉葉等刺激性成分'),('THC-Free','火麻仁')],
+   showcase=dict(img=u_png('products/herbalflow/herbalflow-bottle-open-capsules'), eyebrow='產品介紹', title='潤、行、調，三個方向一起照顧',
+     text='六味草本分成三組：火麻仁、當歸、生地黃負責「潤」；厚朴、萊菔子負責「行氣」；馬齒莧照顧腸道環境。不採用番瀉葉等刺激性成分，定位是每天溫和的腸道支持。',
+     bullets=['非刺激性配方，以日常調理為定位','兼顧規律順暢與飯後腹部舒適','全植物膠囊，無麩質、無添加糖','美國製造（使用進口原料）']),
+   how=[('每次 3 粒','建議隨餐服用，讓草本溫和配合消化過程。'),('每日 2 次','分配在兩餐，維持全天的節律。'),('溫和路線，貴在持續','規律使用，給腸道一段時間找回自己的節奏；效果因人而異。')],
+   yes=['久坐少動、希望兼顧節律與飯後舒適的上班族','偏好溫和、循序漸進路線的中老年人','應酬外食頻繁，希望兼顧消化與順暢的人'],
+   caution='請勿超過建議用量。孕婦、哺乳期女性及未滿 18 歲者請勿使用。正在服用抗凝血藥物（如華法林）或其他藥物，或有腸胃道健康狀況者，使用前請先諮詢醫師。如出現持續的腸胃不適，請停止使用並就醫。請置於兒童無法取得處，陰涼乾燥保存。'),
+ 'lumiview': dict(
+   stats=[('7 種','植物精華'),('1,500 mg','每份草本配方'),('隨餐','每日兩次')],
+   showcase=dict(img=u_opt('products/lumiview/lumiview-ingredients'), eyebrow='產品介紹', title='七味藥食同源草本，從整體出發',
+     text='中醫傳統把眼睛看成一條長鏈的末端，這條鏈始於肝與腎，所以 LumiView 是複方，而不是單一萃取物。七味草本都是古典方劑裡長久搭配使用的組合。',
+     bullets=['枸杞、山藥：配方的滋補基底，也是玉米黃素的膳食來源','菊花、決明子：古典方劑裡常見的搭配，富含植物類黃酮','黃芪、當歸：傳統的氣血配對','茯苓：平衡配方中的其他補益草本']),
+   how=[('每日兩次','早餐後、晚餐後各 3 粒，每日共 6 粒（約 3,000 mg）。'),('務必隨餐','不要空腹服用。'),('以月為單位','一瓶 180 粒約 30 天；長期維持時，許多人改為每日一次、每次 3 粒。這是服用時程，不是效果預測。')],
+   yes=['每天面對螢幕 6 小時以上的上班族','想建立日常保養習慣、並定期做眼科檢查的 40–60 歲族群','從求學時期就與螢幕為伴的數位世代','白天在戶外、晚上還要看螢幕的人','喜歡完整日常流程、能持之以恆的人'],
+   caution='未滿 18 歲、孕期或哺乳期、正在服用抗凝血藥物，或兩週內計畫進行眼部手術者，請先諮詢醫師。請隨餐服用，勿空腹。'),
+ 'eye-patches': dict(
+   stats=[('6 片','每晚建議用量'),('約 10 晚','每盒 60 片'),('0','防腐劑')],
+   how_title=('使用時的感受','貼上之後，清涼感會這樣慢慢展開'),
+   how=[('約 30 秒','眼周開始出現清涼感。'),('約 1 分鐘','清涼感擴散到整個眼周。'),('3–5 分鐘','眼睛周圍一片清爽。'),('整晚','柔軟的水凝膠保持濕潤，配戴數小時依然舒適；隔天早上取下。')]),
+ 'eye-cream': dict(
+   stats=[('6 種','草本精萃'),('20g','隨身裝'),('0','苯氧乙醇、人工香精')],
+   showcase=dict(img=u_png('products/herbal-soothing-repair-eye-cream/herbal-soothing-repair-eye-cream-ingredients'), eyebrow='產品介紹', title='不方便貼眼貼的時候，點一點就好',
+     text='長時間用眼、熬夜、旅途，最先顯現在嬌嫩的眼周。辦公室、通勤或出差時不方便貼眼貼，指尖取米粒大小，沿眼眶骨輕輕點拍，30 秒完成一次眼周保養。',
+     bullets=['伏案工作的午後：眼周看起來比較疲憊的時候','飛行、出差的旅途中','晚上出門前，讓眼周看起來更有神采']),
+   how=[('時間','早晚或睡前，於潔淨肌膚上使用。'),('用量','每隻眼取米粒大小，沿眼眶骨輕柔點拍至吸收。'),('避開','眼瞼與睫毛根部，只用於眼周肌膚。')],
+   caution='僅供外用，避免直接接觸眼睛；請勿用於破損肌膚。如懷孕或哺乳，使用前請諮詢醫師。如有不適，請停止使用。'),
+ 'soothing-cream': dict(
+   stats=[('7 種','東方植萃'),('0','類固醇'),('30g','早晚使用約 60 天')],
+   showcase=dict(img=u_opt('products/herbal-soothing-repair-cream/herbal-soothing-repair-cream-package'), eyebrow='產品介紹', title='一罐面霜，陪你一天的每個時刻',
+     text='東方植萃加上透明質酸與維生素 E、C 衍生物，溫和到可以天天用，臉部和身體都適用。',
+     bullets=['早晨：潔面後的第一步，尤加利與薄荷帶來清涼感，可疊在底妝之下','夜晚：睡前塗稍厚一層，醒來時肌膚感覺更平靜、更舒適','換季、曬後：天候轉變或戶外活動後，為泛紅、發熱的外觀帶來清涼與舒適','從頭到腳：手肘、膝蓋、乾燥的雙手，任何感到緊繃的部位']),
+   how=[('時機','早晚，於潔淨肌膚使用化妝水或精華液之後。'),('用量','取約豌豆大小，輕柔按壓於需要的部位。'),('第一次使用','先在前臂內側做 24 小時皮膚測試。')]),
+ 'clarifying-cream': dict(
+   stats=[('9 種','植萃與保養成分'),('0','類固醇、刺激性酸類'),('30g','早晚使用約 60 天')],
+   showcase=dict(img=u_opt('products/herbal-clarifying-cream/herbal-clarifying-cream-texture'), eyebrow='產品介紹', title='適合什麼樣的肌膚？',
+     text='輕盈的乳霜質地，觸膚即融，不黏膩。不含強效刺激成分，以草本與溫和的保養成分為主。',
+     bullets=['油性、易泛油光：洗臉後不久就泛油的肌膚，幫助吸附多餘表面油脂，同時不破壞屏障','混合性：T 字部位油亮、兩頰卻緊繃，平衡油光，讓屏障保持舒適','泛紅、敏感：不含酸類與刺激性活性成分，溫和到適合容易受刺激的肌膚']),
+   how=[('時機','早晚，於潔淨肌膚使用化妝水或精華液之後。'),('用量','取約豌豆大小，均勻塗抹全臉，避開眼周。'),('第一次使用','先在前臂內側做 24 小時皮膚測試。')]),
+ 'lifting-serum': dict(
+   stats=[('5 種','東方草本'),('2 種','胜肽'),('30ml','早晚使用約 60 天')],
+   showcase=dict(img=u_opt('products/herbal-lifting-revitalizing-serum/herbal-lifting-revitalizing-serum-package'), eyebrow='產品介紹', title='細紋、光澤、彈潤，每個人在意的不一樣',
+     text='不追求堆砌二十種成分，而是讓每一種成分各司其職：東方草本負責滋養，胜肽、神經醯胺與透明質酸負責彈潤與保濕。',
+     bullets=['初現細紋：眼周、嘴角與額頭的細紋，在拍照與明亮光線下更明顯','暗沉、疲憊：熬夜與忙碌讓膚色看起來平淡、沒有光澤','彈潤感不如從前：妝容的服貼度也和幾年前不同']),
+   how=[('時間','早晚，於潔淨肌膚上、面霜之前。'),('用量','3–4 滴，輕柔按壓於臉部與頸部。'),('第一次使用','先在前臂內側做 24 小時皮膚測試。')],
+   caution='僅供外用，避免直接接觸眼睛。如有不適，請停止使用。敏感肌首次使用前請先做皮膚測試。如懷孕或哺乳，使用前請諮詢醫師。'),
+}
+# 套用到產品資料：主圖、適合誰、注意事項
+for _k,_d in DETAILS.items():
+    if _d.get('image'): PRODUCTS[_k]['image']=_d['image']
+    if _d.get('yes'): PRODUCTS[_k]['yes']=_d['yes']
+    if _d.get('caution'): PRODUCTS[_k]['caution']=_d['caution']
+
+def stats_row(slug):
+    st=DETAILS.get(slug,{}).get('stats')
+    if not st: return ''
+    return '<ul class="pstats">'+''.join(f'<li><b>{esc(a)}</b><span>{esc(b)}</span></li>' for a,b in st)+'</ul>'
+def showcase_section(slug):
+    sc=DETAILS.get(slug,{}).get('showcase')
+    if not sc: return ''
+    bl=''.join(f'<li>{esc(x)}</li>' for x in sc.get('bullets',[]))
+    return f'''<section class="sec"><div class="wrap showcase">
+  <div class="showcase-pic"><img src="{sc['img']}" alt="{esc(PRODUCTS[slug]['name'])}" loading="lazy"></div>
+  <div><span class="eyebrow">{esc(sc.get('eyebrow','產品介紹'))}</span><h2>{esc(sc['title'])}</h2><p class="lead" style="font-size:16px">{esc(sc.get('text',''))}</p>{f'<ul class="showcase-list">{bl}</ul>' if bl else ''}</div>
+</div></section>
+'''
+def how_section(slug):
+    d=DETAILS.get(slug,{}); hw=d.get('how')
+    if not hw: return ''
+    eb,h2=d.get('how_title',('使用方式','每天這樣用'))
+    steps=''.join(f'<li><span class="how-k">{i+1}</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for i,(t,x) in enumerate(hw))
+    return f'''<section class="sec bg-green-light"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">{esc(eb)}</span><h2>{esc(h2)}</h2></div>
+  <ol class="how">{steps}</ol>
+</div></section>
+'''
+def compare_section(slug):
+    c=DETAILS.get(slug,{}).get('compare')
+    if not c: return ''
+    head='<tr><th></th>'+''.join(f'<th>{esc(x)}</th>' for x in c['cols'])+'</tr>'
+    rows=''.join(f'<tr><th>{esc(a)}</th><td>{esc(b)}</td><td>{esc(x)}</td></tr>' for a,b,x in c['rows'])
+    return f'''<section class="sec"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">比較</span><h2>{esc(c['title'])}</h2></div>
+  <div class="cmp-wrap"><table class="cmp"><thead>{head}</thead><tbody>{rows}</tbody></table></div>
+</div></section>
+'''
 
 def og_png(url):
     # 社群分享預覽不支援 AVIF：把 uhealthfit.com 的 _optimized/...-1200.avif 換回原始 PNG
@@ -634,7 +778,7 @@ POST_IMAGES = {
  'steroid-free-soothing-cream-guide':    _blog_img('75d0c6b723e108b98dba5d9e3a358a41.webp?v=1784443184'),
  'acne-prone-skin-herbal-cream-guide':   _blog_img('6b8903ce6bbb733467feb660618b47d6.jpg?v=1784124384'),
  'anti-fatigue-look-serum-guide':        shop_img('collections/4_0cd12e86-74cf-4588-b39b-7b5c570db219.jpg?v=1776886625', 900),
- 'caffeine-free-energy-herbal-guide':    _blog_img('lumiview_concept.webp?v=1784112994'),
+ 'caffeine-free-energy-herbal-guide':    'https://cdn.shopify.com/s/files/1/0676/4675/0818/files/db7afe76-0eda-4a8e-b8ae-e7633ec3ae0e.jpg?v=1786712333&width=900',  # zh 黑膏滋介紹頁：日常隨餐的情境照
  'winter-tonic-herbal-guide':            _blog_img('1fe980194242617ee83bf7d924b9915f_31870d96-4aef-4f95-905c-ab096322e3d2.png?v=1790143942'),
  'gaozi-paste-vs-capsule':               'https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=900',  # zh 黑膏滋介紹頁主圖：膠囊瓶與草本切片
  'american-ginseng-vs-ginseng':          f'{IMG}/blog/botanical-wellness-hero.png',
@@ -820,12 +964,13 @@ def build_products():
         ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":page_url(f"products/{slug}.html"),"offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
 <section class="pdp"><div class="wrap">
-  <div class="gallery"><img src="{p['image']}" alt="{esc(p['name'])}" width="800" height="800" fetchpriority="high"></div>
+  <div class="gallery{' contain' if DETAILS.get(slug,{}).get('gallery_contain') else ''}"><img src="{p['image']}" alt="{esc(p['name'])}" width="800" height="800" fetchpriority="high"></div>
   <div>
     <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}series/{p['series']}.html">{s['name']}</a><span>›</span><span>{esc(p['name'])}</span></div>
     <span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span>
     <h1>{esc(p['name'])}</h1><div class="en">{esc(p['en'])} · {esc(p['made'])}</div>
     <div class="hook">{esc(p['hook'])}</div>
+    {stats_row(slug)}
     <p class="desc">{esc(p['long'])}</p>
     <ul class="facts"><li>{esc(p['form'])}</li><li>{esc(p['spec'])}</li><li>成分全部公開 · 第三方純度檢測</li><li>30 天內未拆封可退</li></ul>
     <div class="buybox">
@@ -838,7 +983,7 @@ def build_products():
     </div>
   </div>
 </div></section>
-
+{showcase_section(slug)}
 <section class="sec bg-cream"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分與用法</span><h2>你知道自己每天用的是什麼</h2></div>
   <div class="spec">
@@ -847,7 +992,7 @@ def build_products():
   </div>
   <div class="timeline"><div class="ic">⏱</div><div><b>誠實的期待：</b>多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異；若一開始沒有太多感覺，這是正常的。</div></div>
 </div></section>
-{ingredients_section(slug)}{demo_section(slug)}
+{ingredients_section(slug)}{how_section(slug)}{compare_section(slug)}{demo_section(slug)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
   <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
