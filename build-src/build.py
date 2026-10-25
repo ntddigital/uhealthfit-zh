@@ -42,7 +42,7 @@ def shop_url(handle):
 
 # ───────────────────────────── 資料 ─────────────────────────────
 SERIES = {
- 'eye': dict(name='護眼系列', short='護眼', en='Eye Care', color='var(--c-eye)', organ='肝開竅於目',
+ 'eye': dict(name='護眼保健', short='護眼', en='Eye Health', color='var(--c-eye)', organ='肝開竅於目',
    tag='外、內、日夜一次到位', h1='睡覺時，讓眼睛好好休息',
    lead='長時間盯螢幕的一天結束後，眼睛也需要自己的「下班時間」。眼貼負責睡前的外部舒緩、膠囊從內支持、眼霜負責白天——三件合稱「護眼三寶」。',
    situations=['每天盯螢幕超過 8 小時，到了下午眼睛就覺得乾澀、沒電','睡前還在滑手機，早上起來眼睛沒有休息到的感覺','葉黃素吃了一陣子，但長時間用眼後的疲勞感還在'],
@@ -51,7 +51,7 @@ SERIES = {
    combo=('護眼三寶怎麼搭','睡前貼眼貼（外），每天兩次 LumiView（內），白天不方便貼眼貼時擦眼霜（日）。三個產品不是三個選擇，而是一天二十四小時的三個時段。'),
    faq=[('眼貼和蒸氣眼罩有什麼不同？','蒸氣眼罩是熱敷放鬆，十五分鐘結束；冷敷眼貼貼在眼周肌膚上，草本透過肌膚緩緩釋放，陪你度過整晚。兩者用途不同，可以依習慣選擇。'),('我已經在吃葉黃素，還需要嗎？','葉黃素補充的是視網膜相關的營養；長時間用眼後的乾澀疲勞感是另一個面向。兩者不衝突，是否同時使用建議先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？','不會。眼貼貼在內眼角、外眼角與下眼瞼下方的肌膚上，不入眼；日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。首次使用前先做局部皮膚測試，孕婦請勿使用。')],
    photo=shop_img('collections/1_46cb0e74-a579-49cb-92db-27a44cc036be.jpg?v=1776886629',900), image=f'{IMG}/_optimized/concerns/eye-care-1200.avif', image_fallback=f'{IMG}/products/eye-patches/eye-patches-box-front.png'),
- 'dental': dict(name='口腔健康系列', short='固齒', en='Dental Care', color='var(--c-dental)', organ='腎主骨，齒為骨之餘',
+ 'dental': dict(name='固齒健齦', short='固齒', en='Dental Health', color='var(--c-dental)', organ='腎主骨，齒為骨之餘',
    tag='刷牙之外的日常', h1='健康牙齦，穩固牙齒',
    lead='刷牙與牙線照顧的是看得見的表面。每天一次草本膠囊，從內在為牙齦與牙齒的日常健康多加一層支持——也是很多子女替爸媽準備的一份心意。',
    situations=['刷牙很認真，但還是想為牙齦的長期健康多做一點','爸媽年紀漸長，想替他們準備一份每天做得到的口腔保養','在「只有刷牙」與「大工程」之間，想找一個日常的中間選項'],
@@ -60,7 +60,7 @@ SERIES = {
    combo=('怎麼開始','DentaForte 每天隨餐服用，不需要改變原有刷牙習慣；請持續定期牙科檢查，有任何口腔不適請先就醫。'),
    faq=[('這能取代看牙醫嗎？','不能。DentaForte 是膳食補充劑，不是藥品，也不能取代牙醫的檢查與處置。它的位置是「刷牙之外、看牙之間」的日常保養。'),('要吃多久？','建議至少給自己 4–8 週，作為長期口腔健康管理的一部分；效果因人而異。'),('替長輩購買要注意什麼？','長輩若正在服藥或有慢性健康狀況，請先與醫師或藥師確認。全植物膠囊、隨餐服用，放在早餐旁最容易記得。')],
    photo=shop_img('collections/2_d6d295f9-6329-4973-aad6-05f2a9b122ca.jpg?v=1776886620',900), image=f'{IMG}/products/dentaforte/dentaforte-product-shot-wide.png', image_fallback=f'{IMG}/products/dentaforte/dentaforte-bottle-front.png'),
- 'sleep': dict(name='睡眠系列', short='睡眠', en='Sleep Care', color='var(--c-sleep)', organ='心主神明',
+ 'sleep': dict(name='睡眠健康', short='睡眠', en='Sleep Health', color='var(--c-sleep)', organ='心主神明',
    tag='不含褪黑素・配方溫和、不設計為長期依賴', h1='白天放鬆，夜裡好眠',
    lead='壓力大的日子，腦子到了晚上還停不下來。這個系列的原則很簡單：先安撫白天的壓力，支持身體原本的睡眠節律——不靠外力「關機」，狀態穩定後可以停用。',
    situations=['躺下了，腦子還在跑今天的待辦事項','想找不含褪黑素的選項，怕隔天昏沉','工作壓力大，希望夜晚能真正放鬆下來'],
@@ -69,7 +69,7 @@ SERIES = {
    combo=('怎麼開始','Calmoon 建議中午飯後與晚飯後／睡前一小時各 3 粒。搭配睡前一小時放下手機、固定起床時間，效果更容易累積。'),
    faq=[('為什麼中午也要吃？','因為這個配方照顧的是「白天的壓力」。中午那一次幫忙放下上午的緊繃，晚上那一次支持自然入睡。'),('會不會隔天昏沉？','Calmoon 不含褪黑素，配方溫和。每個人的感受不同，建議先從建議用量開始觀察。'),('可以和其他助眠產品一起用嗎？','若正在使用任何助眠產品或藥物，請先與醫師或藥師討論，不要自行疊加。')],
    photo=shop_img('collections/Bedtime-Habits-scaled.jpg?v=1785620068',900), image=f'{IMG}/products/calmoon/calmoon-product-shot-wide.png', image_fallback=f'{IMG}/products/calmoon/calmoon-bottle-front.png'),
- 'digestive': dict(name='消化系列', short='消化', en='Digestive Care', color='var(--c-digestive)', organ='脾主運化',
+ 'digestive': dict(name='腸胃舒暢', short='腸胃', en='Digestive Health', color='var(--c-digestive)', organ='脾主運化',
    tag='不含番瀉葉', h1='順暢自然，不靠刺激',
    lead='不是不通，是通了還是脹——潤腸與行氣是兩件事。以火麻仁為核心的六味草本，溫和支持腸道的自然節律，不含番瀉葉，節律穩定後可以停用。',
    situations=['久坐一整天、外食應酬後，肚子常常頂著一股氣','想找溫和的選項，不想越吃越多','希望腸道回到自己的節奏，而不是被「催」'],
@@ -78,26 +78,26 @@ SERIES = {
    combo=('怎麼開始','HerbalFlow 每天 2 次、每次 3 粒隨餐。搭配每天固定時間如廁、多喝溫水、飯後散步十分鐘，更容易養成節律。'),
    faq=[('和益生菌衝突嗎？','益生菌照顧的是菌相，HerbalFlow 的思路是潤腸與行氣，兩者角度不同。是否同時使用請先與醫師或藥師討論。'),('會不會越吃越多？','HerbalFlow 不含番瀉葉等刺激性成分，設計原則是支持節律而非刺激；節律穩定後可以停用。'),('什麼情況該去看醫師？','若有持續性的腹痛、體重明顯變化、排便型態突然改變或出血，請直接就醫，不要只依賴保健品。')],
    photo=shop_img('collections/Inside-1bloating.jpg?v=1785620047',900), image=f'{IMG}/products/herbalflow/herbalflow-product-shot-wide.png', image_fallback=f'{IMG}/products/herbalflow/herbalflow-bottle-front.png'),
- 'skin': dict(name='肌膚系列', short='肌膚', en='Skin Care', color='var(--c-skin)', organ='肺主皮毛',
-   tag='無類固醇・溫和到可以天天用', h1='鎮靜、舒適，更柔軟的肌膚',
-   lead='乾燥脫皮、換季敏感、曬後、蚊蟲叮咬後，或是容易長痘的膚況——東方草本加上透明質酸、維生素 E 與維生素 C 衍生物，為肌膚做好每天的保濕、舒緩與屏障保養。全家可用，美國製造。',
-   situations=['換季時肌膚容易敏感、乾燥脫皮','想找一罐全家都能用的無類固醇舒緩霜','油脂與屏障想一起照顧，不只是壓油'],
-   reframe=[('屏障','肌膚反覆不穩定，往往是屏障沒有照顧好。保濕與屏障保養要一起做。'),('草本舒緩','蒲公英、紫草、積雪草等草本，傳統上用於舒緩；無類固醇，溫和到可以天天用。'),('日常習慣','早晚各一次，首次先局部測試；搭配清淡飲食與規律作息，膚況更容易安定。')],
-   products=['soothing-cream','clarifying-cream'], bundle=None,
-   combo=('怎麼選','乾燥、換季敏感、曬後、蚊蟲叮咬後 → 草本舒緩修護霜；易出油、容易長痘的膚況 → 草本淨顏霜。兩者都是外用保養品，可以依部位分開使用。'),
-   faq=[('無類固醇是什麼意思？','配方中不含類固醇成分。這是一款日常保養品，不是藥品；若醫師已為你開立外用藥，請依醫囑使用，不要自行替換。'),('小孩可以用嗎？','草本舒緩修護霜設計為全家可用。嬰幼兒或有特殊膚況者，使用前請先諮詢醫師，並先在小範圍測試。'),('淨顏霜會不會太乾？','淨顏霜的思路是「調理油脂＋支持屏障」，含維生素 C 衍生物；若覺得乾，可以只用於易出油部位，其他部位搭配舒緩修護霜。')],
+ 'skin': dict(name='肌膚健康', short='肌膚', en='Skin Health', color='var(--c-skin)', organ='肺主皮毛',
+   tag='草本為核心・溫和到可以天天用', h1='舒緩、淨化、煥顏，一步一步來',
+   lead='以東方草本為核心的肌膚保養，照顧三種常見膚況：乾燥敏感、容易出油長痘，以及看起來暗沉、疲倦。舒緩修護霜負責保濕與屏障、淨顏霜負責油脂平衡、煥顏提升精華液負責緊緻與光澤——溫和到可以天天用，美國製造。',
+   situations=['換季時肌膚容易敏感、乾燥脫皮','油脂與屏障想一起照顧，不只是壓油','熬夜、壓力大，鏡子裡的自己看起來很累、暗沉'],
+   reframe=[('屏障','肌膚反覆不穩定，往往是屏障沒有照顧好。保濕與屏障保養要一起做。'),('草本舒緩','蒲公英、紫草、積雪草等草本，傳統上用於舒緩；舒緩修護霜與淨顏霜皆無類固醇，溫和到可以天天用。'),('支撐與光澤','人參、當歸、白芍、茯苓、積雪草 × 胜肽、神經醯胺 NP、透明質酸——幫助肌膚看起來更緊緻、更明亮。')],
+   products=['soothing-cream','clarifying-cream','lifting-serum'], bundle=None,
+   combo=('怎麼選','乾燥、換季敏感、曬後、蚊蟲叮咬後 → 草本舒緩修護霜；易出油、容易長痘的膚況 → 草本淨顏霜；看起來疲倦、想要緊緻與光澤 → 草本煥顏提升精華液（潔面後先擦精華，再接霜）。'),
+   faq=[('無類固醇是什麼意思？','配方中不含類固醇成分。這是一款日常保養品，不是藥品；若醫師已為你開立外用藥，請依醫囑使用，不要自行替換。'),('小孩可以用嗎？','草本舒緩修護霜設計為全家可用。嬰幼兒或有特殊膚況者，使用前請先諮詢醫師，並先在小範圍測試。'),('淨顏霜會不會太乾？','淨顏霜的思路是「調理油脂＋支持屏障」，含維生素 C 衍生物；若覺得乾，可以只用於易出油部位，其他部位搭配舒緩修護霜。'),('精華液男生可以用嗎？','可以。男女適用，35 歲以上尤其合適；質地清爽，早晚潔面後使用。')],
    photo=shop_img('collections/3_e69c85a3-7756-4f7b-8d78-f189c2138e6d.jpg?v=1776886599',900), image=f'{IMG}/products/herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-soothing-repair-cream/herbal-soothing-repair-cream-jar-front.png'),
- 'vitality': dict(name='煥顏・活力系列', short='煥顏活力', en='Radiance & Vitality', color='var(--c-vitality)', organ='腎主藏精',
-   tag='不要看起來很累', h1='不要看起來很累',
-   lead='你要的不是變年輕，是不要看起來很累。外在，用東方草本 × 胜肽的精華幫助肌膚更緊緻、更有光澤；內在，用不含咖啡因的黑膏滋濃縮膠囊，支持穩定、持續的日常活力。',
-   situations=['熬夜、壓力大，鏡子裡的自己看起來很累','想找溫和、能長期持續的初老保養','每天靠咖啡撐著，想換一種更穩定的方式'],
-   reframe=[('支撐與光澤','人參、當歸、白芍、茯苓、積雪草 × 胜肽、神經醯胺 NP、透明質酸——幫助肌膚看起來更緊緻、更明亮。'),('穩定活力','西洋參、黃芪、山藥等七味草本協同，不靠咖啡因的短暫刺激，支持持續穩定的日常活力。'),('能持續的才算數','早晚使用、每天隨餐——溫和到可以一直用，才是真正會留下來的保養。')],
-   products=['lifting-serum','enerbalance'], bundle=None,
-   combo=('怎麼搭','精華液早晚擦；EnerBalance 每天 2 次、每次 3 粒隨餐。孕婦、哺乳期、服藥中請先諮詢醫師。'),
-   faq=[('精華液男生可以用嗎？','可以。男女適用，35 歲以上尤其合適；質地清爽，早晚潔面後使用。'),('EnerBalance 會像咖啡一樣讓人睡不著嗎？','EnerBalance 不含咖啡因與強刺激性成分，思路是日常滋養而非提神。每個人體質不同，建議隨餐服用並觀察。'),('黑膏滋是什麼？','黑膏滋是傳統的草本膏方；EnerBalance 把它濃縮成膠囊，更方便、更衛生、也更容易每天持續。')],
-   photo=shop_img('collections/4_0cd12e86-74cf-4588-b39b-7b5c570db219.jpg?v=1776886625',900), image=f'{IMG}/products/herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-lifting-revitalizing-serum/herbal-lifting-revitalizing-serum-bottle-front.png'),
+ 'vitality': dict(name='元氣活力', short='元氣', en='Energy & Vitality', color='var(--c-vitality)', organ='腎主藏精',
+   tag='不含咖啡因與刺激物', h1='穩定的元氣，不靠咖啡因',
+   lead='每天靠咖啡撐著，下午還是沒電？這個系列的思路是日常滋養，而不是短暫提神：把傳統黑膏滋濃縮成膠囊，西洋參、黃芪、山藥等七味草本協同，支持穩定、持續的日常活力，不含咖啡因與刺激物。',
+   situations=['每天靠咖啡撐著，想換一種更穩定的方式','熬夜、壓力大，總覺得元氣不足、容易累','想延續傳統膏方的滋養，又嫌膏狀不方便'],
+   reframe=[('提神與滋養','咖啡因與能量飲負責「這一刻撐住」；草本滋養的思路是支持身體日常的穩定狀態，兩者角度不同。'),('穩定活力','西洋參、黃芪、山藥等七味草本協同，不靠咖啡因的短暫刺激，支持持續穩定的日常活力。'),('能持續的才算數','每天隨餐兩次，膠囊方便攜帶——溫和到可以一直吃，才是真正會留下來的保養。')],
+   products=['enerbalance'], bundle=None,
+   combo=('怎麼開始','EnerBalance 每天 2 次、每次 3 粒隨餐。孕婦、哺乳期、服藥中請先諮詢醫師。'),
+   faq=[('EnerBalance 會像咖啡一樣讓人睡不著嗎？','EnerBalance 不含咖啡因與強刺激性成分，思路是日常滋養而非提神。每個人體質不同，建議隨餐服用並觀察。'),('黑膏滋是什麼？','黑膏滋是傳統的草本膏方；EnerBalance 把它濃縮成膠囊，更方便、更衛生、也更容易每天持續。'),('要吃多久？','建議至少給自己 4–8 週，並當作日常保養的一部分；效果因人而異。')],
+   photo='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=900', image=f'{IMG}/products/enerbalance/enerbalance-product-shot-wide.png', image_fallback=f'{IMG}/products/enerbalance/enerbalance-bottle-front.png'),
 }
-SERIES_ORDER = ['eye','dental','sleep','digestive','skin','vitality']
+SERIES_ORDER = ['eye','skin','dental','vitality','sleep','digestive']  # 與 uhealthfit.com 導覽列順序相同
 
 PRODUCTS = {
  'eye-patches': dict(series='eye', name='WiseQuest 明目冷敷眼貼', en='Herbal Cooling Eye Patches', badge=('badge-star','明星產品'),
@@ -185,7 +185,7 @@ PRODUCTS = {
    yes=['容易出油、容易長痘的膚況','想一起照顧油脂與屏障的人','偏好草本、溫和日常保養的人'], no=['對配方任一成分過敏者','大面積或反覆疼痛硬塊者（請先看皮膚科醫師）'],
    faq=[('多久能看到變化？','膚況的安定需要時間，建議至少 4–8 週並搭配作息與飲食；效果因人而異。'),('可以全臉用嗎？','可以，也可以只用於易出油部位，其他部位搭配舒緩修護霜。'),('白天用需要防曬嗎？','建議白天搭配防曬，這是所有臉部保養的基本。')],
    image=shop_img('files/Untitled_design_c0b7bac5-b45b-48f9-bb62-96d6d17052a5.jpg?v=1781960121'), cross=['soothing-cream','lifting-serum','eye-cream']),
- 'lifting-serum': dict(series='vitality', name='草本煥顏提升精華液', en='Herbal Lifting & Revitalizing Serum', badge=('badge-star','精選'),
+ 'lifting-serum': dict(series='skin', name='草本煥顏提升精華液', en='Herbal Lifting & Revitalizing Serum', badge=('badge-star','精選'),
    hook='更緊緻、更有光澤的肌膚', desc='五種東方草本 × 胜肽、神經醯胺 NP、透明質酸，日復一日幫助肌膚看起來更緊緻、更明亮。男女適用，35 歲以上尤其合適。',
    long='你要的不是變年輕，是不要看起來很累。人參、當歸、白芍、茯苓、積雪草五種東方草本，加上胜肽、神經醯胺 NP 與透明質酸，從支撐、屏障、保濕多個面向，幫助肌膚看起來更緊緻、更有光澤——溫和到可以一直用，能持續的才是會留下來的保養。',
    herbs='人參、當歸、白芍、茯苓、積雪草（五種）', actives='胜肽、神經醯胺 NP、透明質酸', made='美國製造', form='外用精華液', spec='早晚使用',
@@ -966,7 +966,7 @@ def build_home():
 {journey(rel,'home')}
 {sticky(rel)}
 '''
-    write('index.html', head('優健堂 UHealthFit × WiseQuest｜醫師研發草本保健 · 護眼・固齒・舒眠・順暢・肌膚・活力','由中國中西醫結合執業醫師黃醫師研發的 WiseQuest 草本保健系列：明目冷敷眼貼、草本明目膠囊、固齒膠囊、安睡膠囊、潤暢膠囊、舒緩修護霜等。美國・日本製造，成分全部公開，$6 試用裝起。',rel,'index.html','home')+nav(rel,'home')+body+footer(rel))
+    write('index.html', head('優健堂 UHealthFit × WiseQuest｜醫師研發草本保健 · 護眼・肌膚・固齒・元氣・睡眠・腸胃','由中國中西醫結合執業醫師黃醫師研發的 WiseQuest 草本保健系列：明目冷敷眼貼、草本明目膠囊、固齒膠囊、安睡膠囊、潤暢膠囊、舒緩修護霜等。美國・日本製造，成分全部公開，$6 試用裝起。',rel,'index.html','home')+nav(rel,'home')+body+footer(rel))
 
 # ───────────────────────────── 系列頁 ─────────────────────────────
 def build_series():
@@ -1148,7 +1148,7 @@ QUIZ = [
  ('先問一個最實際的：一天裡，你有多少時間盯著螢幕？',[('8 小時以上，眼睛到下午就很乾、很累',{'eye':3}),('4–8 小時，偶爾會覺得疲勞',{'eye':2,'vitality':1}),('不多，螢幕不是我的主要困擾',{})]),
  ('晚上躺下之後，通常是什麼狀態？',[('腦子還在跑，很難放鬆',{'sleep':3}),('睡得著，但早上醒來不覺得有休息到',{'sleep':2,'vitality':1}),('大致安穩',{})]),
  ('久坐一整天、或外食應酬之後，肚子的感覺是？',[('常常頂著一股氣、不太順',{'digestive':3}),('偶爾會脹，吃清淡一點就好',{'digestive':1}),('很少有感覺',{})]),
- ('最近照鏡子，最在意的是？',[('看起來很累、暗沉、沒精神',{'vitality':3}),('換季時容易敏感、乾燥脫皮，或容易長痘',{'skin':3}),('還好，沒有特別在意',{})]),
+ ('最近照鏡子，最在意的是？',[('看起來很累、暗沉、沒精神',{'skin':2,'vitality':2}),('換季時容易敏感、乾燥脫皮，或容易長痘',{'skin':3}),('還好，沒有特別在意',{})]),
  ('關於牙齒與牙齦——',[('我或家中長輩想為牙齦長期健康多做一點',{'dental':3}),('有在認真刷牙，暫時沒想太多',{'dental':1}),('不是我現在的重點',{})]),
  ('如果只能先開始一件事，你希望它是？',[('不用改變生活、睡前就能做的',{'eye':2,'sleep':1}),('每天隨餐一次、養成習慣就好',{'dental':1,'digestive':1,'vitality':1}),('一罐放在家裡、全家都用得到的',{'skin':2}),('先讓自己白天有精神、晚上能放鬆',{'sleep':2,'vitality':2})]),
 ]
