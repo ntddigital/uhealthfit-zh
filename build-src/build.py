@@ -142,7 +142,7 @@ PRODUCTS = {
  'dentaforte': dict(series='dental', name='DentaForte 草本固齒膠囊', en='Herbal Formula for Teeth & Gum Health', badge=None,
    hook='照顧牙刷到不了的地方', desc='十味傳統草本複方，搭配認真刷牙與定期牙科檢查，作為長期口腔健康管理的一部分。隨餐服用，不必改變原有習慣。',
    long='刷牙、牙線、洗牙負責看得見的表面——這些是每天不能少的基本功。DentaForte 從另一個角度出發：中醫傳統認為「腎主骨，齒為骨之餘」，十味草本從內在支持牙齦與牙齒的日常健康。它不是取代牙醫的東西，而是「刷牙之外、看牙之間」每天做得到的保養。',
-   herbs='熟地黃、生地黃、黃芪、五味子、丹參、野菊花等十味草本', actives='—（純草本複方）', made='美國 cGMP 製造', form='全植物膠囊（全素）', spec='180 粒／瓶 ≈ 1 個月',
+   herbs='熟地黃、生地黃、山藥、丹參、五味子、野菊花、黃芪、茯苓、枸杞、菟絲子（十味）', actives='—（純草本複方）', made='美國 cGMP 製造', form='全植物膠囊（全素）', spec='180 粒／瓶 ≈ 1 個月',
    usage='每天 2 次、每次 3 粒，隨餐服用；搭配認真刷牙、牙線與定期牙科檢查。', caution='孕婦、哺乳期、服藥中或有慢性健康狀況者，使用前請諮詢醫師。有口腔不適請先就醫。',
    price=269, price_note='180 粒 · 約 1 個月', handle='wisequest-草本固齿胶囊',
    variants=[('1 瓶','$269','',True),('2 瓶','$511.10','',False),('3 瓶','$686','單瓶成本最低',False)], trial_handle=None,
@@ -407,6 +407,22 @@ INGREDIENTS = {
           ('保濕','維生素 E','抗氧化護理，幫助肌膚維持柔潤。'),
           ('保濕','維生素 C 衍生物','幫助肌膚看起來更明亮。')],
    facts=[('容量','30g'),('製造','美國製造'),('不含','類固醇'),('使用','臉部與身體皆可；首次使用請先在小範圍測試')]),
+ 'dentaforte': dict(
+   title='十味草本，一份每日配方',
+   intro='中醫傳統認為「腎主骨，齒為骨之餘」——牙齒的穩固，與整體的滋養有關。DentaForte 的十味草本依「補腎、健脾、活血、清熱」四個方向配伍；每份 3 粒含 1,500 毫克草本配方。',
+   items=[('補腎','熟地黃','Rehmannia glutinosa，蒸製根。中醫傳統上用於滋養肝腎，是配方「補腎固本」的核心。'),
+          ('補腎','生地黃','Rehmannia glutinosa，生根。與熟地黃搭配，傳統上用於清熱，讓配方不過於溫熱。'),
+          ('補腎','枸杞','Lycium barbarum。中醫傳統上用於滋養肝腎，也是常見的藥食同源草本。'),
+          ('補腎','五味子','Schisandra chinensis。經典的「五味」草本，傳統上用於收斂、滋養。'),
+          ('補腎','菟絲子','Cuscuta chinensis。傳統上與上述草本搭配，用於補腎，支持身體對營養的利用。'),
+          ('健脾','黃芪','Astragalus membranaceus。傳統上用於補氣，是中醫最常使用的補益草本之一。'),
+          ('健脾','山藥','Dioscorea opposita。傳統上用於健脾補氣，支持日常的營養吸收與平衡。'),
+          ('健脾','茯苓','Poria cocos。傳統上用於健脾，平衡配方中的其他補益草本。'),
+          ('活血','丹參','Salvia miltiorrhiza。傳統上用於活血，在配方中支持牙齦組織的日常循環。'),
+          ('清熱','野菊花','Chrysanthemum indicum。傳統上用於清熱，幫助維持口腔的清新與舒適。')],
+   facts=[('每份','3 粒，草本配方 1,500 毫克'),('建議用法','每天 2 次，每次 3 粒，隨餐'),('規格','180 粒／瓶（60 份，約 30 天）'),
+          ('草本複方','熟地黃（蒸製根）、生地黃（生根）、山藥、丹參、五味子、野菊花、黃芪、茯苓、枸杞、菟絲子'),
+          ('其他成分','羥丙甲纖維素（植物膠囊）、硬脂酸鎂'),('不含','基因改造成分、麩質、人工色素、香料、防腐劑')]),
  'clarifying-cream': dict(
    title='東方植萃 × 現代保養成分',
    intro='為易出油、易長痘的肌膚設計的輕盈面霜：天然礦物泥負責清爽，東方植萃負責舒緩與滋養，再加上三種現代保養成分。',
@@ -504,7 +520,7 @@ ING_IMG = {
  '陳皮':'citrus-peel','菊花':'chrysanthemum','玉米鬚':'corn-silk','丹參':'salvia','丹參根油':'salvia','枸杞':'goji','茯苓':'poria',
  '火麻仁（THC-Free）':'hemp-seed','生地黃':'raw-rehmannia','厚朴':'magnolia-bark','萊菔子':'radish-seed','馬齒莧':'purslane',
  '積雪草':'centella-cica','紫草':'comfrey','紫草根油':'comfrey','苦參':'sophora','尤加利 × 薄荷':'eucalyptus-menthol','尤加利葉精油':'eucalyptus-menthol',
- '石斛':'dendrobium','白芍':'white-peony','胜肽':'peptide-complex','神經醯胺 NP':'ceramides-ha',
+ '石斛':'dendrobium','白芍':'white-peony','熟地黃':'prepared-rehmannia','五味子':'schisandra','野菊花':'chrysanthemum','菟絲子':'dodder-seed','胜肽':'peptide-complex','神經醯胺 NP':'ceramides-ha',
 }
 def ing_img(name):
     k=ING_IMG.get(name); return u_opt(f'ingredients/{k}',800) if k else None
@@ -547,6 +563,22 @@ DETAILS = {
    showcase=dict(img=u_png('editorial/capsule-open'), eyebrow='產品介紹', title='刷牙之外，每天從內在多做一點',
      text='DentaForte 不是牙膏、漱口水這類清潔產品，而是放在餐桌旁的日常草本補充。它設計為和刷牙、牙線、定期洗牙並行，不取代任何一項。',
      bullets=['與牙醫照護並行，不取代專業檢查','以月為單位、每日規律食用而設計，不是短期療程','植物膠囊；非基因改造、不含麩質，不含人工色素、香料與防腐劑','草本採購自東亞，於美國 cGMP 登記廠房封裝']),
+   pillars=dict(img=u_opt('products/dentaforte/dentaforte-hero'), eyebrow='養護什麼', title='草本固齒膠囊養護什麼',
+     intro='同一套配方，從五個方向支持牙齒與牙齦的日常狀態。每一個方向，都是長期口腔保養的一項每日投入。',
+     items=[('根本：補腎固本','中醫傳統認為「腎主骨，齒為骨之餘」。熟地黃、枸杞、菟絲子等，從整體的滋養出發。'),
+            ('牙齦舒適','野菊花、五味子，傳統上用於支持平靜、舒適的牙齦。'),
+            ('日常循環','丹參傳統上用於活血，支持牙齦組織的日常循環。'),
+            ('營養利用','山藥與菟絲子傳統上常搭配使用，支持身體對營養的利用。'),
+            ('整體元氣','黃芪與茯苓是傳統上最常用的補益草本，支持整體的日常狀態。')]),
+   faq=[('吃了一定會有感覺嗎？','我們無法保證，也無法預測每個人的反應。我們能說明的是配方的設計方向：以月為單位、每日規律食用的草本營養支持。效果因人而異，與其過度承諾，我們寧願坦誠。'),
+        ('多久才會有感覺？','我們不承諾時間表。這套配方是為以月為單位、每日規律食用而設計，不是短期療程；建議至少給自己 4–8 週，並當作長期口腔保養的一部分。'),
+        ('可以取代看牙醫嗎？','不能。DentaForte 是膳食補充劑，不是藥品，也不能取代牙醫的檢查與處置。請持續定期洗牙、檢查，以及牙醫建議的照護。'),
+        ('正在服用抗凝血藥物，可以吃嗎？','配方中的丹參、五味子已知可能與抗凝血藥物產生交互作用。開始服用前，請先諮詢醫師。'),
+        ('為什麼一天要吃 6 粒，而不是一顆？','每日約 3,000 毫克的配方，無法裝進一顆好吞嚥的膠囊；分成早晚兩次，也能讓一天的攝取更平均。'),
+        ('漏吃一天或一週怎麼辦？','不要加倍補回，直接恢復正常用量即可。長期規律，比任何單獨的一天更重要。'),
+        ('草本來自哪裡？','草本採購自東亞（這些植物的原生地）的合法種植者，最後在美國通過 cGMP 登記的廠房封裝。'),
+        ('有沒有需要注意的反應？','最常見的是第一週輕微的消化適應，隨餐服用可以減輕；部分人的糞便顏色會因草本色素略有變化，屬於正常現象。若有任何異常，請停止服用並與我們聯繫。'),
+        ('替長輩購買要注意什麼？','長輩若正在服藥或有慢性健康狀況，請先與醫師或藥師確認。全植物膠囊、隨餐服用，放在早餐旁邊最容易記得。')],
    how=[('每日兩次','早晚隨餐各 3 粒，每日共 6 粒（約 3,000 mg）。'),('一定隨餐','隨餐服用吸收更好，也能減少首週的消化適應。'),('以月為單位','一瓶 180 粒約 30 天；部分人在諮詢牙醫後改為每日一次維持。漏服時直接恢復，不要加倍補回。')],
    caution='孕婦及哺乳期女性、未滿 18 歲、正在服用抗凝血藥物（配方中的丹參、五味子可能與其交互作用）、兩週內預定進行牙科手術，或已知對植物過敏者，使用前請先諮詢醫師。請持續定期洗牙與牙科檢查。'),
  'herbalflow': dict(
@@ -602,6 +634,7 @@ for _k,_d in DETAILS.items():
     if _d.get('image'): PRODUCTS[_k]['image']=_d['image']
     if _d.get('yes'): PRODUCTS[_k]['yes']=_d['yes']
     if _d.get('caution'): PRODUCTS[_k]['caution']=_d['caution']
+    if _d.get('faq'): PRODUCTS[_k]['faq']=_d['faq']
 
 def stats_row(slug):
     st=DETAILS.get(slug,{}).get('stats')
@@ -614,6 +647,15 @@ def showcase_section(slug):
     return f'''<section class="sec"><div class="wrap showcase">
   <div class="showcase-pic"><img src="{sc['img']}" alt="{esc(PRODUCTS[slug]['name'])}" loading="lazy"></div>
   <div><span class="eyebrow">{esc(sc.get('eyebrow','產品介紹'))}</span><h2>{esc(sc['title'])}</h2><p class="lead" style="font-size:16px">{esc(sc.get('text',''))}</p>{f'<ul class="showcase-list">{bl}</ul>' if bl else ''}</div>
+</div></section>
+'''
+def pillars_section(slug):
+    pl=DETAILS.get(slug,{}).get('pillars')
+    if not pl: return ''
+    items=''.join(f'<li><b>{esc(t)}</b><span>{esc(x)}</span></li>' for t,x in pl['items'])
+    return f'''<section class="sec bg-cream"><div class="wrap pillars">
+  <div class="pillars-pic"><img src="{pl['img']}" alt="{esc(PRODUCTS[slug]['name'])}" loading="lazy"></div>
+  <div><span class="eyebrow">{esc(pl.get('eyebrow','養護什麼'))}</span><h2>{esc(pl['title'])}</h2><p class="lead" style="font-size:16px">{esc(pl.get('intro',''))}</p><ol class="pillars-list">{items}</ol></div>
 </div></section>
 '''
 def how_section(slug):
@@ -1006,7 +1048,7 @@ def build_products():
   </div>
   <div class="timeline"><div class="ic">⏱</div><div><b>誠實的期待：</b>多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異；若一開始沒有太多感覺，這是正常的。</div></div>
 </div></section>
-{ingredients_section(slug)}{how_section(slug)}{compare_section(slug)}{demo_section(slug)}
+{ingredients_section(slug)}{pillars_section(slug)}{how_section(slug)}{compare_section(slug)}{demo_section(slug)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
   <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
