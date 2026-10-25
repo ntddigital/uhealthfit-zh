@@ -273,10 +273,10 @@ h3{font-size:20px;font-weight:700}
 .cmp{width:100%;border-collapse:collapse;min-width:560px;font-size:15px}
 .cmp th,.cmp td{padding:14px 16px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.6}
 .cmp thead th{background:var(--cream);font-weight:800}
-.cmp thead th:last-child{background:var(--green);color:#fff}
+.cmp thead th.hl{background:var(--green);color:#fff}
 .cmp tbody th{width:22%;color:var(--ink);font-weight:700;background:#fff}
 .cmp tbody td{color:var(--ink-2)}
-.cmp tbody td:last-child{color:var(--green-dark);font-weight:600;background:var(--green-light)}
+.cmp tbody td.hl{color:var(--green-dark);font-weight:600;background:var(--green-light)}
 .cmp tbody tr:last-child th,.cmp tbody tr:last-child td{border-bottom:0}
 .ing.has-pic{padding-top:0;overflow:hidden}
 .ing-pic{margin:0 -20px 10px;aspect-ratio:4/3;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}

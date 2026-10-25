@@ -511,9 +511,9 @@ def ing_img(name):
 
 DETAILS = {
  'enerbalance': dict(
-   image=u_png('products/enerbalance/enerbalance-bottle-open-capsules'), gallery_contain=True,
+   image='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=1000',  # zh 黑膏滋介紹頁主圖：瓶身與草本切片
    stats=[('0%','咖啡因'),('7 味','傳統草本'),('1,500 mg','每份草本精粹')],
-   showcase=dict(img='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=1000', eyebrow='產品介紹', title='傳統黑膏滋，做成每天方便吃的膠囊',
+   showcase=dict(img=u_png('products/enerbalance/enerbalance-bottle-open-capsules'), eyebrow='產品介紹', title='傳統黑膏滋，做成每天方便吃的膠囊',
      text='膏滋，是中醫把草本反覆煎煮、去渣後濃縮成膏的傳統工藝。EnerBalance 保留同樣的合煎精華，濃縮進標準化的植物膠囊：每份劑量固定、獨立取用、常溫保存，出門也方便帶。',
      bullets=['植物性膠囊殼（羥丙甲纖維素），適合素食者','明確標示 5:1 濃縮比例，無添加糖','每份 3 粒，每瓶 60 份','不含咖啡因與強刺激性成分，不以短暫提神為目的']),
    compare=dict(title='傳統膏滋與膠囊，差在哪裡', cols=['傳統膏滋','EnerBalance 膠囊'], rows=[
@@ -531,6 +531,15 @@ DETAILS = {
    showcase=dict(img=u_opt('products/calmoon/calmoon-ingredients-collage'), eyebrow='產品介紹', title='四個方向，一起照顧夜晚',
      text='Calmoon 不靠單一成分讓人「關機」。七味草本依中醫「君臣佐使」的傳統結構，分成四個方向，同時照顧夜晚的放鬆、白天累積的情緒與壓力，以及隔天的精神。',
      bullets=['安神：炒酸棗仁、茯神、百合，傳統上用於養心安神','舒緩情緒：合歡皮、夏枯草，幫助睡前放鬆','因應壓力：刺五加，傳統上用於幫助身體因應日常壓力','白天精神：刺五加、丹參，支持隔天的專注與精神']),
+   compare=dict(title='和市面上其他助眠選擇，差在哪？', hl=0,
+     intro='每一種選擇都有它的位置。這張表不是比較誰比較好，而是說明它們各自負責什麼，方便你判斷哪一種比較貼近自己的需求。',
+     cols=['Calmoon 安睡草本','褪黑素','單方草本'], rows=[
+     ('思路','七味草本複方，同時照顧安神、情緒、壓力與白天精神','補充身體本來就會分泌的睡眠相關激素','以單一草本為主，作用方向較單純'),
+     ('照顧情緒','合歡皮、夏枯草，傳統上用於舒緩情緒、幫助睡前放鬆','不是主要用途','視所選的草本而定'),
+     ('壓力調適','刺五加，傳統上用於幫助身體因應日常壓力','不是主要用途','視所選的草本而定'),
+     ('使用時段','午後與睡前各一次，從白天開始放鬆','多在睡前使用','依產品建議'),
+     ('是否含激素','不含褪黑素等激素','屬於激素類補充','多數不含激素')],
+     note='若正在使用任何助眠產品或藥物，請先諮詢醫師或藥師，不要自行疊加。效果因人而異。'),
    how=[('午後一次','午餐後隨餐 3 粒，先幫白天的緊繃鬆一步。'),('睡前一次','晚餐後或睡前約一小時 3 粒，讓夜晚自然放鬆。'),('持續 2–4 週以上','每日共 6 粒（約 3,000 mg）；睡眠節律的穩定需要時間，效果因人而異。')],
    caution='請勿超過建議用量。孕婦及哺乳期女性請勿使用。18 歲以下、正在服用抗凝血藥物（如華法林）、鎮靜類藥物或其他藥物，或有健康狀況者，使用前請先諮詢醫師。服用後請勿駕駛或操作機械。如有不適，請停止使用。請置於兒童無法取得處，陰涼乾燥保存。'),
  'dentaforte': dict(
@@ -620,11 +629,16 @@ def how_section(slug):
 def compare_section(slug):
     c=DETAILS.get(slug,{}).get('compare')
     if not c: return ''
-    head='<tr><th></th>'+''.join(f'<th>{esc(x)}</th>' for x in c['cols'])+'</tr>'
-    rows=''.join(f'<tr><th>{esc(a)}</th><td>{esc(b)}</td><td>{esc(x)}</td></tr>' for a,b,x in c['rows'])
+    hl=c.get('hl', len(c['cols'])-1)  # 要標示（綠底）的欄位，預設最後一欄
+    cls=lambda i: ' class="hl"' if i==hl else ''
+    head='<tr><th></th>'+''.join(f'<th{cls(i)}>{esc(x)}</th>' for i,x in enumerate(c['cols']))+'</tr>'
+    rows=''.join('<tr><th>'+esc(r[0])+'</th>'+''.join(f'<td{cls(i)}>{esc(v)}</td>' for i,v in enumerate(r[1:]))+'</tr>' for r in c['rows'])
+    intro=f'<p class="lead" style="font-size:16px">{esc(c["intro"])}</p>' if c.get('intro') else ''
+    note=f'<p class="note" style="margin-top:12px">{esc(c["note"])}</p>' if c.get('note') else ''
     return f'''<section class="sec"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">比較</span><h2>{esc(c['title'])}</h2></div>
+  <div class="sec-head"><span class="eyebrow">比較</span><h2>{esc(c['title'])}</h2>{intro}</div>
   <div class="cmp-wrap"><table class="cmp"><thead>{head}</thead><tbody>{rows}</tbody></table></div>
+  {note}
 </div></section>
 '''
 
