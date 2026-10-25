@@ -762,7 +762,8 @@ def nav(rel, active=''):
       <li>{a(rel+'products/index.html','選購產品','products')}<div class="dd dd-prod">{dd_prod}</div></li>
       <li>{a(rel+'blog/index.html','選購指南','blog')}</li>
       <li>{a(rel+'quiz.html','30 秒測驗','quiz')}</li>
-      <li>{a(rel+'about.html','關於與黃醫師','about')}</li>
+      <li>{a(rel+'about-us.html','關於我們','aboutus')}</li>
+      <li>{a(rel+'about.html','黃醫師','about')}</li>
       <li>{a(rel+'faq.html','常見問題','faq')}</li>
     </ul></nav>
     <div class="nav-cta"><a class="btn btn-primary btn-sm" href="{rel}series/eye.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
@@ -771,7 +772,7 @@ def nav(rel, active=''):
     <a href="{rel}index.html">主頁</a>
     <a href="{rel}series/eye.html">六大系列</a><div class="sub">{mob_sub}</div>
     <details class="mm-dd"><summary>選購產品</summary><div class="sub">{mob_prod}<a class="sub-all" href="{rel}products/index.html">瀏覽全部產品 →</a></div></details>
-    <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about.html">關於與黃醫師</a><a href="{rel}faq.html">常見問題</a>
+    <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about-us.html">關於我們</a><a href="{rel}about.html">黃醫師</a><a href="{rel}faq.html">常見問題</a>
   </div></div>
 </header>
 <main>
@@ -821,7 +822,7 @@ def footer(rel):
 <footer class="site"><div class="wrap">
   <div><img class="logo" src="{rel}{LOGO_WHITE}" alt="UHealthFit" width="146" height="26"><p>融合傳統智慧與現代科學的健康養護平台。</p><p style="margin-top:10px">Uhealth Trading Inc.<br>90 North St, Suite D, Middletown, NY 10940, USA<br><a href="mailto:service@uhealthfit.com">service@uhealthfit.com</a></p><div class="pay">{pays}</div></div>
   <div><h4>六大系列</h4><ul>{series_links}</ul></div>
-  <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}about.html">關於優健堂與黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
+  <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}about-us.html">關於我們</a></li><li><a href="{rel}about.html">研發者・黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
   <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
   <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於 zh.uhealthfit.com 完成。</div>
 </div></footer>
@@ -1254,6 +1255,54 @@ def build_about():
 '''
     write('about.html', head('關於優健堂與黃醫師｜品牌理念、品質把關 · 優健堂 UHealthFit × WiseQuest','優健堂 UHealthFit 由美國紐約 Uhealth Trading Inc. 經營；WiseQuest 草本保健系列由中國中西醫結合執業醫師黃醫師研發。尊重自然、尊重專業、關懷每一個人、分享知識。',rel,'about.html','about')+nav(rel,'about')+body+footer(rel))
 
+ABOUT_US_PICKS = [
+ ('生產廠商核查','核查企業與生產設施的登記與品質資訊，例如 FDA 設施登記（登記不等於 FDA 核准）。'),
+ ('天然來源成分','優先選擇來源清楚的天然植物與草本成分，成分全部公開。'),
+ ('專業經驗配方','由黃醫師以二十年臨床經驗設計，針對現代人日常的健康需求。'),
+ ('品質安全把關','重視生產流程與品質標準：依 cGMP 規範生產，並經第三方純度檢測。'),
+ ('價格合理親民','兼顧品質與價格，讓好的保健更容易長期持續。'),
+]
+def build_about_us():
+    rel=''
+    picks=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(ABOUT_US_PICKS))
+    series=''.join(f'<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]["photo"]}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]["en"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
+    body=f'''
+<section class="hero"><div class="wrap">
+  <div><div class="crumbs"><a href="index.html">首頁</a><span>›</span><span>關於我們</span></div><span class="eyebrow">關於優健堂 UHealthFit</span>
+  <h1>優質健康，選擇更安心</h1><p class="lead">優健堂 UHealthFit 由具有中醫與健康專業背景的人士，結合健康產品開發與製造領域的經驗共同發起。我們是 WiseQuest 品牌的官方網路商店，由美國紐約的 Uhealth Trading Inc. 經營。</p>
+  <div class="hero-cta"><a class="btn btn-primary" href="products/index.html">瀏覽全部產品</a><a class="btn btn-ghost" href="about.html">認識研發者黃醫師</a></div></div>
+  <div class="hero-visual"><img src="{IMG}/home/all-products-lineup.png" alt="WiseQuest 全系列產品陳列"></div>
+</div></section>
+<section class="sec"><div class="wrap" style="max-width:860px">
+  <div class="sec-head"><span class="eyebrow">我們的起點</span><h2>為現代生活，找到更好的健康選擇</h2></div>
+  <p class="lead" style="font-size:17px">現代生活帶來越來越多常見的健康需求：長時間盯螢幕的雙眼、越來越難放鬆的夜晚、久坐外食後不太順的腸胃、總覺得不夠用的精神，還有換季時反覆的肌膚狀態。</p>
+  <p class="lead" style="font-size:17px">所以我們想做一件簡單但重要的事：從現代人真實的日常需求出發，找到更值得長期選擇的保健產品——並把成分、用法與時間，誠實地說清楚。</p>
+</div></section>
+<section class="sec doctor bg-dark"><div class="wrap">
+  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，中國中西醫結合執業醫師" loading="lazy"></div>
+  <div><span class="eyebrow">研發者 · 黃醫師 Dr. Huang</span><h2>WiseQuest 全系列，由黃醫師研發</h2>
+  <p>黃醫師是中國中西醫結合執業醫師、中醫全科醫師，擁有二十年臨床經驗與草本配方研發專長。WiseQuest 的每一款產品——護眼、肌膚、固齒、元氣、睡眠到腸胃——都由她以中醫整體觀設計配方，再交由現代工藝製造。</p>
+  <p>她看了二十年「整個人」，而不只是單一的症狀；這也是 WiseQuest 配方的共同起點：不壓制、不依賴，從根源支持身體。</p>
+  <div class="hero-cta" style="margin-top:22px"><a class="btn btn-light" href="about.html">認識黃醫師與品牌理念</a></div></div>
+</div></section>
+<section class="sec bg-cream"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">天然來源 × 專業配方</span><h2>我們怎麼選產品</h2><p class="lead">我們相信，傳統草本智慧與現代健康理念可以彼此結合。我們在意的不只是「天然」兩個字，還有成分從哪裡來、如何搭配、產品如何製造，以及能不能為日常健康帶來實際的價值。</p></div>
+  <div class="grid-5">{picks}</div>
+</div></section>
+<section class="sec"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">專注現代人的日常健康</span><h2>六大系列，從最在意的那一件事開始</h2><p class="lead">我們目前關注六個常見的日常健康需求，也會持續尋找更適合現代生活、能融入日常保健習慣的產品。</p></div>
+  <div class="grid-3">{series}</div>
+</div></section>
+<section class="sec bg-green-light"><div class="wrap" style="max-width:860px">
+  <div class="sec-head"><span class="eyebrow">我們相信</span><h2>好的健康產品，不應該複雜</h2></div>
+  <div class="pull" style="margin-top:0">「好的健康產品，不應該複雜，也不應該高不可攀。」<small>優健堂希望透過更好的甄選、更透明的資訊與更合理的價格，讓高品質的保健成為更多人的日常選擇。</small></div>
+  <p class="lead" style="margin-top:22px">客服信箱 <a href="mailto:service@uhealthfit.com" style="color:var(--green);font-weight:700">service@uhealthfit.com</a>；訂單、運送與退貨，請見 <a href="faq.html" style="color:var(--green);font-weight:700">常見問題</a>。</p>
+</div></section>
+{journey(rel,'about')}
+{sticky(rel)}
+'''
+    write('about-us.html', head('關於我們｜優健堂 UHealthFit，WiseQuest 品牌官方網路商店','優健堂 UHealthFit 由具中醫與健康專業背景的人士發起，是 WiseQuest 品牌的官方網路商店，由美國紐約 Uhealth Trading Inc. 經營；WiseQuest 全系列由黃醫師研發。',rel,'about-us.html','about-us')+nav(rel,'aboutus')+body+footer(rel))
+
 FAQS = {
  '產品與使用':[('這些產品是藥嗎？可以取代我現在的治療或藥物嗎？','不是。膠囊類為膳食補充劑，乳霜、精華液與眼貼為日常保養品，都不是藥品，也不能取代醫師的診斷、治療或處方。若你正在服藥、懷孕或哺乳、或有任何健康疑慮，請在使用前先諮詢醫師或藥師。'),('多久會有感覺？','草本日常養護是累積型的。多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異，我們不做任何時效或結果的保證。'),('膠囊怎麼吃？需要一直吃下去嗎？','每瓶 180 粒約一個月份，建議每天兩次、每次三粒，隨餐服用（Calmoon 建議午餐後與睡前一小時）。全植物膠囊、全素。我們的設計原則是「不依賴」：狀態穩定後可以鞏固一段時間再停用。'),('可以同時用好幾個系列嗎？','可以依需要搭配（例如護眼三寶）。若同時使用多種補充劑或正在服藥，請先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？會過敏嗎？','眼貼貼在眼周肌膚上，不入眼。日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。第一次使用前建議先做局部皮膚測試；孕婦請勿使用。')],
  '品質與製造':[('產品在哪裡製造？成分安全嗎？','明目冷敷眼貼於日本製造；膠囊、乳霜與精華液於美國依 cGMP 規範生產，生產設施具 FDA 登記（登記不等於 FDA 核准）。產品經第三方純度檢測，成分全部公開，無人工色素與防腐劑、非轉基因。'),('「FDA 登記」是什麼意思？','指我們核查相關企業與生產設施在 FDA 的登記資訊。這與「FDA 核准」不同——膳食補充劑與化妝品不經 FDA 上市前核准。'),('素食者可以吃嗎？','膠囊類皆為全植物膠囊，全素。')],
@@ -1300,7 +1349,7 @@ def build_faq():
     write('faq.html', head('常見問題｜產品、品質、購買與退貨 · 優健堂 × WiseQuest','WiseQuest 草本保健常見問題：是不是藥、多久有感、怎麼吃、在哪裡製造、如何購買與退貨。',rel,'faq.html','faq')+nav(rel,'faq')+body+footer(rel))
 
 def build_misc():
-    pages=['index.html','about.html','faq.html','quiz.html','blog/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
+    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
     sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
@@ -1313,7 +1362,7 @@ def build_misc():
 
 ## 結構
 - index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋{len(POSTS)} 篇
-- quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about.html ｜ faq.html
+- quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about-us.html 關於我們（優健堂）｜ about.html 研發者黃醫師與品牌理念 ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
 ## 部署
@@ -1328,6 +1377,6 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
     write('README.md', readme)
 
 if __name__=='__main__':
-    build_home(); build_series(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about(); build_faq(); build_misc()
+    build_home(); build_series(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_misc()
     open(os.path.join(DIST,'.nojekyll'),'w').close()  # 停用 GitHub Pages 的 Jekyll 處理
     print('built →',DIST)
