@@ -251,7 +251,7 @@ def series_hero(k, rel):
     s=SERIES[k]; guide=[p for p in POSTS if p['series']==k][0]['slug']
     slides=[f'''<article class="slide slide-intro" aria-label="{esc(s['name'])}">
     <div class="wrap slide-inner">
-      <div class="slide-text"><div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span><span>›</span><span>{s['name']}</span></div>
+      <div class="slide-text"><div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}series/index.html">六大系列</a><span>›</span><span>{s['name']}</span></div>
         <span class="series-tag s-{k}"><span class="dot"></span>{s['name']} · {esc(s['tag'])}</span>
         <h1>{esc(s['h1'])}</h1><p class="lead">{esc(s['lead'])}</p>
         <div class="hero-cta"><a class="btn btn-primary" href="#products">看這個系列的產品</a><a class="btn btn-ghost" href="{rel}blog/{guide}.html">先讀選購指南</a></div>
@@ -525,6 +525,7 @@ def ing_img(name):
 DETAILS = {
  'enerbalance': dict(
    image='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=1000',  # zh 黑膏滋介紹頁主圖：瓶身與草本切片
+   promo_image='https://cdn.shopify.com/s/files/1/0706/1287/7467/files/heigaozi-single-thanksgiving-clean-v2.png?v=1791939199&width=1000',  # 商店「感恩回饋 40% OFF $179」特價圖；活動結束請刪除這一行
    stats=[('0%','咖啡因'),('7 味','傳統草本'),('1,500 mg','每份草本精粹')],
    showcase=dict(img=u_png('products/enerbalance/enerbalance-bottle-open-capsules'), eyebrow='產品介紹', title='傳統黑膏滋，做成每天方便吃的膠囊',
      text='膏滋，是中醫把草本反覆煎煮、去渣後濃縮成膏的傳統工藝。EnerBalance 保留同樣的合煎精華，濃縮進標準化的植物膠囊：每份劑量固定、獨立取用、常溫保存，出門也方便帶。',
@@ -743,6 +744,7 @@ def series_products(k):
 
 def nav(rel, active=''):
     dd = ''.join(f'<a class="s-{k}" href="{rel}series/{k}.html"><span class="dot"></span><span>{SERIES[k]["name"]}<small>{SERIES[k]["h1"]}</small></span></a>' for k in SERIES_ORDER)
+    dd += f'<a class="dd-all" href="{rel}series/index.html">看六大系列匯總 →</a>'
     mob_sub = ''.join(f'<a href="{rel}series/{k}.html">{SERIES[k]["name"]}</a>' for k in SERIES_ORDER)
     pname = lambda p: PRODUCTS[p]['name'].split('（')[0].replace('WiseQuest ','')  # 組合名去掉括號內的品項，選單才不換行
     dd_prod = ''.join(f'<div class="dd-col s-{k}"><a class="dd-h" href="{rel}series/{k}.html"><span class="dot"></span>{SERIES[k]["name"]}</a>'
@@ -758,20 +760,20 @@ def nav(rel, active=''):
     <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit" width="101" height="34"></a>
     <nav aria-label="主選單"><ul class="nav-links">
       <li>{a(rel+'index.html','主頁','home')}</li>
-      <li>{a(rel+'series/eye.html','六大系列','series')}<div class="dd">{dd}</div></li>
-      <li>{a(rel+'products/index.html','選購產品','products')}<div class="dd dd-prod">{dd_prod}</div></li>
+      <li>{a(rel+'series/index.html','六大系列','series')}<div class="dd">{dd}</div></li>
+      <li>{a(rel+'products/index.html','全部產品','products')}<div class="dd dd-prod">{dd_prod}</div></li>
       <li>{a(rel+'blog/index.html','選購指南','blog')}</li>
       <li>{a(rel+'quiz.html','30 秒測驗','quiz')}</li>
       <li>{a(rel+'about-us.html','關於我們','aboutus')}</li>
       <li>{a(rel+'about.html','黃醫師','about')}</li>
       <li>{a(rel+'faq.html','常見問題','faq')}</li>
     </ul></nav>
-    <div class="nav-cta"><a class="btn btn-primary btn-sm" href="{rel}series/eye.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
+    <div class="nav-cta"><a class="btn btn-primary btn-sm" href="{rel}series/index.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
   </div>
   <div class="mobile-menu"><div class="wrap">
     <a href="{rel}index.html">主頁</a>
-    <a href="{rel}series/eye.html">六大系列</a><div class="sub">{mob_sub}</div>
-    <details class="mm-dd"><summary>選購產品</summary><div class="sub">{mob_prod}<a class="sub-all" href="{rel}products/index.html">瀏覽全部產品 →</a></div></details>
+    <a href="{rel}series/index.html">六大系列</a><div class="sub">{mob_sub}</div>
+    <details class="mm-dd"><summary>全部產品</summary><div class="sub">{mob_prod}<a class="sub-all" href="{rel}products/index.html">瀏覽全部產品 →</a></div></details>
     <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about-us.html">關於我們</a><a href="{rel}about.html">黃醫師</a><a href="{rel}faq.html">常見問題</a>
   </div></div>
 </header>
@@ -797,7 +799,7 @@ def journey(rel, stage, series_key=None, post=None, product=None):
         cards.append(('延伸閱讀',posts[0]['title'][:22]+('…' if len(posts[0]['title'])>22 else ''),posts[0]['excerpt'],f'{rel}blog/{posts[0]["slug"]}.html','閱讀指南'))
         cards.append(('看整個系列',SERIES[sk]['name'],SERIES[sk]['lead'][:48]+'…',f'{rel}series/{sk}.html','前往系列頁'))
     elif stage=='quiz':
-        cards.append(('不想測？','直接看六大系列','從最在意的那一件事開始，每個系列都可以單獨開始。',f'{rel}series/eye.html','看六大系列'))
+        cards.append(('不想測？','直接看六大系列','從最在意的那一件事開始，每個系列都可以單獨開始。',f'{rel}series/index.html','看六大系列'))
         cards.append(('先讀一篇','選購指南','每個系列的「怎麼選」都寫成了指南。',f'{rel}blog/index.html','看選購指南'))
     html_cards=''.join(f'<div class="jcard"><div class="k">{k}</div><h3>{esc(t)}</h3><p>{esc(d)}</p><a class="btn btn-ghost btn-sm" href="{h}">{b}</a></div>' for k,t,d,h,b in cards)
     return f'''<section class="sec-tight journey"><div class="wrap">
@@ -831,14 +833,15 @@ def footer(rel):
 '''
 
 def sticky(rel):
-    return f'<div class="sticky-cta" aria-label="快速行動"><a class="btn btn-ghost" href="{rel}quiz.html">30 秒測驗</a><a class="btn btn-primary" href="{rel}series/eye.html">選購系列</a></div>'
+    return f'<div class="sticky-cta" aria-label="快速行動"><a class="btn btn-ghost" href="{rel}quiz.html">30 秒測驗</a><a class="btn btn-primary" href="{rel}series/index.html">選購系列</a></div>'
 
-def product_card(slug, rel, wide=False):
+def product_card(slug, rel, wide=False, promo=False):
     p=PRODUCTS[slug]
+    img=(DETAILS.get(slug,{}).get('promo_image') if promo else None) or p['image']
     badge=f'<span class="badge {p["badge"][0]}">{p["badge"][1]}</span>' if p.get('badge') else ''
     pr = price_str(p); note=p['price_note']
     return f'''<article class="prod{' wide' if wide else ''}">
-  <a class="pic" href="{rel}products/{slug}.html">{badge}<img src="{p['image']}" alt="{esc(p['name'])}" loading="lazy"></a>
+  <a class="pic" href="{rel}products/{slug}.html">{badge}<img src="{img}" alt="{esc(p['name'])}" loading="lazy"></a>
   <div class="body">
     <div class="name"><a href="{rel}products/{slug}.html">{esc(p['name'])}</a><small>{esc(p['en'])} · {esc(p['made'])}</small></div>
     <div class="hook">{esc(p['hook'])}</div>
@@ -906,9 +909,24 @@ def write(path, content):
     open(full,'w',encoding='utf8').write(content)
 
 # ───────────────────────────── 首頁 ─────────────────────────────
+def gallery(slug):
+    # 產品頁主圖；有特價圖時特價圖為第一張、原主圖為第二張，以輪播呈現
+    p=PRODUCTS[slug]; d=DETAILS.get(slug,{})
+    imgs=[x for x in [d.get('promo_image'), p['image']] if x]
+    cls='gallery'+(' contain' if d.get('gallery_contain') else '')
+    if len(imgs)==1:
+        return f'<div class="{cls}"><img src="{imgs[0]}" alt="{esc(p["name"])}" width="800" height="800" fetchpriority="high"></div>'
+    slides=''.join(f'<div class="gslide"><img src="{u}" alt="{esc(p["name"])}" width="800" height="800"'+(' fetchpriority="high"' if i==0 else ' loading="lazy"')+'></div>' for i,u in enumerate(imgs))
+    dots=''.join(f'<button type="button" aria-label="第 {i+1} 張"'+(' aria-current="true"' if i==0 else '')+'></button>' for i in range(len(imgs)))
+    return f'<div class="{cls} slides"><div class="slides-track">{slides}</div><button class="slides-prev" type="button" aria-label="上一張">‹</button><button class="slides-next" type="button" aria-label="下一張">›</button><div class="slides-dots">{dots}</div></div>'
+
+def series_card(k, rel):
+    # 系列卡片（首頁與六大系列匯總頁共用）
+    return f'''<a class="scard s-{k}" href="{rel}series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]['photo']}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>'''
+
 def build_home():
     rel=''
-    series_cards=''.join(f'''<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]['photo']}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>''' for k in SERIES_ORDER)
+    series_cards=''.join(series_card(k,rel) for k in SERIES_ORDER)
     posts=''.join(post_card(p,rel) for p in [POST_BY_SLUG[s] for s in ['eye-patch-vs-steam-mask-vs-eye-drops','melatonin-free-sleep-aid-guide','gum-care-supplement-for-parents']])
     featured=''.join(product_card(s,rel) for s in ['eye-patches','calmoon','dentaforte'])
     body=f'''
@@ -916,7 +934,7 @@ def build_home():
   <div><span class="eyebrow">優健堂 UHealthFit × WiseQuest · 醫師研發草本保健</span>
     <h1>不壓制、不依賴，<br><em>從根源支持身體</em></h1>
     <p class="lead">護眼、固齒、舒眠、順暢、肌膚、活力——六大日常養護系列，由中國中西醫結合執業醫師黃醫師研發。傳統草本配方、現代萃取工藝，美國・日本製造，成分全部公開。</p>
-    <div class="hero-cta"><a class="btn btn-primary" href="quiz.html">30 秒找到我的起點</a><a class="btn btn-ghost" href="series/eye.html">直接看六大系列</a></div>
+    <div class="hero-cta"><a class="btn btn-primary" href="quiz.html">30 秒找到我的起點</a><a class="btn btn-ghost" href="series/index.html">直接看六大系列</a></div>
     <ul class="hero-trust"><li>無添加 · 非轉基因</li><li>第三方純度檢測</li><li>全植物膠囊 · 全素</li></ul>
   </div>
   <div class="hero-visual cutout"><picture><source type="image/avif" srcset="{IMG}/_optimized/all-products-product-shot-wide-800.avif 800w, {IMG}/_optimized/all-products-product-shot-wide-1200.avif 1200w, {IMG}/_optimized/all-products-product-shot-wide-1448.avif 1448w" sizes="(max-width:900px) 100vw, 600px"><source type="image/webp" srcset="{IMG}/_optimized/all-products-product-shot-wide-800.webp 800w, {IMG}/_optimized/all-products-product-shot-wide-1200.webp 1200w, {IMG}/_optimized/all-products-product-shot-wide-1448.webp 1448w" sizes="(max-width:900px) 100vw, 600px"><img src="{IMG}/all-products-product-shot-wide.png" alt="WiseQuest 全系列產品，膠囊瓶、乳霜罐、精華液與眼貼盒" width="1448" height="1086" fetchpriority="high"></picture></div>
@@ -1053,7 +1071,7 @@ def build_products():
         ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":page_url(f"products/{slug}.html"),"offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
 <section class="pdp"><div class="wrap">
-  <div class="gallery{' contain' if DETAILS.get(slug,{}).get('gallery_contain') else ''}"><img src="{p['image']}" alt="{esc(p['name'])}" width="800" height="800" fetchpriority="high"></div>
+  {gallery(slug)}
   <div>
     <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}series/{p['series']}.html">{s['name']}</a><span>›</span><span>{esc(p['name'])}</span></div>
     <span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span>
@@ -1296,13 +1314,34 @@ FAQS = {
  '購買、運送與退貨':[('在這個網站可以直接結帳嗎？','本站專注於幫你「選對」。按下「購買」會前往我們的官方商店 zh.uhealthfit.com 商品頁，在那裡完成安全結帳（支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等）。'),('運費與到貨時間？','訂單於 48 小時內（工作日）處理。美國地區：眼貼滿 USD $79 免運、其他商品滿 USD $200 免運；未達門檻時運費於結帳頁顯示。眼貼與其他商品由不同倉庫出貨，可能分開送達。'),('可以退貨嗎？','收到商品後 30 天內，未拆封、封條完整並附原始包裝的商品可申請退貨；基於衛生考量，已拆封的個人護理商品無法退貨。請先來信 service@uhealthfit.com 取得退貨指引。'),('商店顯示的幣別是美金嗎？','本站所有購買連結都會帶你到 zh.uhealthfit.com 的美國市場（USD）頁面，價格與本站標示一致；若你在美國以外結帳，系統可能依配送地切換幣別，實際金額以結帳頁顯示為準。')],
  '關於平台':[('優健堂 UHealthFit 和 WiseQuest 是什麼關係？','優健堂 UHealthFit 是專注於健康與保健產品的平台，由美國紐約的 Uhealth Trading Inc. 經營；WiseQuest 是平台上由黃醫師研發的草本保健系列。'),('30 秒測驗的結果準嗎？','測驗依你的回答為六個系列排序，目的是幫你找到「先從哪裡開始」，僅供參考，不是醫療診斷。')],
 }
+def build_series_index():
+    rel='../'
+    cards=''.join(series_card(k,rel) for k in SERIES_ORDER)
+    organs=''.join(f'<a class="scard s-{k}" href="{rel}series/{k}.html"><span class="series-tag"><span class="dot"></span>{SERIES[k]["organ"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
+    body=f'''
+<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
+  <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span></div>
+  <span class="eyebrow">六大系列 · {len(PRODUCT_ORDER)} 款產品</span><h1>從最在意的那一件事開始</h1>
+  <p class="lead" style="max-width:760px">護眼保健、肌膚健康、固齒健齦、元氣活力、睡眠健康、腸胃舒暢——每個系列都可以單獨開始，也可以彼此搭配。不確定從哪裡開始？先做 30 秒測驗。</p>
+  <div class="hero-cta"><a class="btn btn-primary" href="{rel}quiz.html">30 秒找到我的起點</a><a class="btn btn-ghost" href="{rel}products/index.html">直接看全部產品</a></div>
+</div></div></section>
+<section class="sec" style="padding-top:0"><div class="wrap"><div class="grid-3">{cards}</div></div></section>
+<section class="sec bg-cream"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">中醫整體觀 × 現代工藝</span><h2>一套邏輯，六個系列</h2><p class="lead">中醫傳統認為身體各部位彼此牽連。每個系列的配方邏輯，都從這張「整體地圖」出發；再以現代萃取濃縮、第三方純度檢測、成分全部公開。</p></div>
+  <div class="grid-3">{organs}</div>
+</div></section>
+{journey(rel,'home')}
+{sticky(rel)}
+'''
+    write('series/index.html', head('六大系列｜護眼・肌膚・固齒・元氣・睡眠・腸胃 · 優健堂 UHealthFit × WiseQuest','優健堂 WiseQuest 六大日常養護系列：護眼保健、肌膚健康、固齒健齦、元氣活力、睡眠健康、腸胃舒暢。每個系列都可以單獨開始，也可以彼此搭配。',rel,'series/index.html','series-index')+nav(rel,'series')+body+footer(rel))
+
 def build_products_index():
     rel='../'
     chips='<div class="chips">'+''.join(f'<a class="chip" href="#{k}">{SERIES[k]["name"]}</a>' for k in SERIES_ORDER)+'</div>'
     secs=''
     for i,k in enumerate(SERIES_ORDER):
         sv=SERIES[k]; ps=series_products(k)
-        cards=''.join(product_card(p,rel,wide=(len(ps)==1)) for p in ps)
+        cards=''.join(product_card(p,rel,wide=(len(ps)==1),promo=True) for p in ps)
         secs+=f'''<section class="sec{' bg-cream' if i%2 else ''}" id="{k}"><div class="wrap">
   <div class="sec-head"><span class="series-tag s-{k}"><span class="dot"></span>{sv['name']} · {esc(sv['tag'])}</span><h2>{esc(sv['h1'])}</h2><p class="lead">{esc(sv['lead'])} <a href="{rel}series/{k}.html" style="color:var(--green);font-weight:700;white-space:nowrap">看{sv['name']}系列介紹 →</a></p></div>
   <div class="pgrid{' pgrid-1' if len(ps)==1 else ''}">{cards}</div>
@@ -1311,7 +1350,7 @@ def build_products_index():
     body=f'''
 <section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
   <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>全部產品</span></div>
-  <span class="eyebrow">選購產品 · {len(PRODUCT_ORDER)} 款</span><h1>全部產品，一頁看完</h1>
+  <span class="eyebrow">全部產品 · {len(PRODUCT_ORDER)} 款</span><h1>全部產品，一頁看完</h1>
   <p class="lead" style="max-width:760px">依六大系列整理。點「了解」看完整成分、用法與常見問題；點「購買」前往官方商店安全結帳。價格為美金（USD），以結帳頁為準。</p>
   {chips}
 </div></div></section>
@@ -1336,7 +1375,7 @@ def build_faq():
     write('faq.html', head('常見問題｜產品、品質、購買與退貨 · 優健堂 × WiseQuest','WiseQuest 草本保健常見問題：是不是藥、多久有感、怎麼吃、在哪裡製造、如何購買與退貨。',rel,'faq.html','faq')+nav(rel,'faq')+body+footer(rel))
 
 def build_misc():
-    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
+    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
     sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
@@ -1364,6 +1403,6 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
     write('README.md', readme)
 
 if __name__=='__main__':
-    build_home(); build_series(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_misc()
+    build_home(); build_series(); build_series_index(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_misc()
     open(os.path.join(DIST,'.nojekyll'),'w').close()  # 停用 GitHub Pages 的 Jekyll 處理
     print('built →',DIST)
