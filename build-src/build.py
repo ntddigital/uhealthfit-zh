@@ -651,7 +651,11 @@ DETAILS = {
 # 其他產品特價：在該產品 DETAILS 加 promo_image（商店特價圖），再把 slug 加進 items。
 PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              text='感謝這一年的陪伴。精選草本保健限時特價，實際價格與活動期間以官方商店結帳頁為準。',
-             items=['enerbalance'])
+             items=['enerbalance'],
+             # 設計好的橫幅圖（build-src/src/img/）；hot 為圖上兩個按鈕的位置（佔圖片寬高的百分比：左、上、寬、高）
+             banner=dict(lg='promo-thanksgiving-1672.jpg', sm='promo-thanksgiving-900.jpg', w=1672, h=941, product='enerbalance',
+                         alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299），40% OFF',
+                         hot=dict(buy=(3.8,76.0,22.2,10.8), learn=(26.2,76.6,16.4,9.4))))
 
 def promo_img(slug):
     return DETAILS.get(slug,{}).get('promo_image')
@@ -943,6 +947,19 @@ def gallery(slug):
 
 def promo_banner(rel):
     if not PROMO: return ''
+    if PROMO.get('banner'):
+        b=PROMO['banner']; slug=b['product']; p=PRODUCTS[slug]
+        pos=lambda k: 'left:{}%;top:{}%;width:{}%;height:{}%'.format(*b['hot'][k])
+        return f'''<section class="promo-hero"><div class="wrap">
+  <div class="promo-art">
+    <a href="{rel}products/{slug}.html" aria-label="{esc(p['name'])} 限時特價"><img src="{rel}img/{b['lg']}" srcset="{rel}img/{b['sm']} 900w, {rel}img/{b['lg']} {b['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{b['w']}" height="{b['h']}" fetchpriority="high"></a>
+    <a class="promo-hot ext" data-product="{slug}" href="{buy_url(p,slug)}" style="{pos('buy')}" aria-label="立即搶購 {esc(p['name'])}"></a>
+    <a class="promo-hot" href="{rel}products/{slug}.html" style="{pos('learn')}" aria-label="了解 {esc(p['name'])}"></a>
+  </div>
+  <div class="promo-cta-m"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即搶購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
+  <p class="note promo-note">實際價格與活動期間以官方商店結帳頁為準。</p>
+</div></section>
+'''
     tiles=''
     for slug in PROMO['items']:
         p=PRODUCTS[slug]; off=round((1-p['price']/p['compare'])*100) if p.get('compare') else None

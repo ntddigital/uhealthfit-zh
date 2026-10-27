@@ -557,3 +557,13 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .promo-cta{display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:860px){.promo-banner .wrap{grid-template-columns:1fr}.promo-text p{max-width:none}}
 @media(max-width:520px){.promo-banner.one .promo-tile{grid-template-columns:1fr}}
+/* 首頁促銷橫幅（設計圖版）：圖上按鈕以透明連結覆蓋；手機另外顯示實體按鈕 */
+.promo-hero{padding:clamp(14px,2.4vw,28px) 0 0}
+.promo-art{position:relative;border-radius:clamp(14px,2vw,24px);overflow:hidden;box-shadow:0 30px 60px -36px rgba(90,42,18,.55)}
+.promo-art img{display:block;width:100%;height:auto}
+.promo-hot{position:absolute;border-radius:999px}
+.promo-hot:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.promo-cta-m{display:none;gap:10px;margin-top:12px}
+.promo-cta-m .btn{flex:1;justify-content:center}
+.promo-note{margin-top:8px;font-size:12px;text-align:right}
+@media(max-width:700px){.promo-cta-m{display:flex}.promo-note{text-align:center}}
