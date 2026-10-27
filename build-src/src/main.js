@@ -7,7 +7,8 @@
   // 外站購買連結：沿用廣告來源參數、記錄事件（GA4 / Meta Pixel 若存在）
   // 訪客若從廣告或帶 UTM 的連結進站，把來源參數與點擊編號存在本次瀏覽，
   // 前往商店時原樣帶過去，讓 Shopify、GA4、Meta、Google Ads 能把訂單歸回原本的廣告。
-  // 沒有廣告來源時，才標記為 uhealthfit-site / referral（本站導購）。
+  // 沒有廣告來源時不加任何參數：us. 與 zh. 共用同一個 GA4 資源與 _ga cookie，
+  // 自製 utm_source 反而會把 Google 自然搜尋、YouTube 等原始來源蓋掉。
   var page=document.body.getAttribute('data-page')||'site';
   var AD_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','fbclid','gclid','gbraid','wbraid','msclkid','ttclid'];
   var adParams={};
@@ -22,10 +23,6 @@
     if(keys.length){
       AD_KEYS.forEach(function(k){u.searchParams.delete(k);});
       keys.forEach(function(k){u.searchParams.set(k,adParams[k]);});
-    } else if(!u.searchParams.get('utm_source')){
-      u.searchParams.set('utm_source','uhealthfit-site');
-      u.searchParams.set('utm_medium','referral');
-      u.searchParams.set('utm_campaign',page);
     }
     return u.toString();
   }

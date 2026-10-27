@@ -3,7 +3,7 @@
 位置：repo/build-src/build.py　執行：python3 build-src/build.py　→ 直接輸出到 repo 根目錄（GitHub Pages 的發布根）
 改文案的地方：本檔的 SERIES / PRODUCTS / QUIZ / FAQS 資料區、posts/ 內的選購指南文章、src/style.css、src/main.js
 """
-import json, os, re, shutil, hashlib, html as H
+import json, os, re, shutil, hashlib, datetime, posixpath, html as H
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +19,29 @@ def page_url(path):
     if path.endswith('index.html'): path=path[:-len('index.html')]
     elif path.endswith('.html'): path=path[:-len('.html')]
     return f'{SITE_URL}/{path}'
+PROD_HOST = SITE_URL.split('//',1)[1]  # 追蹤碼只在這個網域載入（localhost、pages.dev、github.io 不送資料）
+BUILD_DATE = datetime.date.today().isoformat()
+# sitemap 的 lastmod：記住每一頁上次內容變動的日期（build-src/lastmod.json，隨 repo 一起 commit）。
+# 內容雜湊有變才更新日期；CSS／JS 的版本號不算內容變動。
+LASTMOD_FILE = os.path.join(ROOT,'lastmod.json')
+try: LASTMOD = json.load(open(LASTMOD_FILE,encoding='utf8'))
+except Exception: LASTMOD = {}
+def _content_hash(content):
+    return hashlib.md5(re.sub(r'\?v=[0-9a-f]{8}','',content).encode('utf8')).hexdigest()
+def clean_links(content, path):
+    # 站內連結一律輸出 Cloudflare 的乾淨網址（根路徑）：index.html → /dir/，其他 .html 去副檔名。
+    # 模板與文章裡仍可寫 {rel}products/x.html、../quiz.html，輸出時統一改寫，避免每次點擊都先 308 轉址。
+    base = posixpath.dirname(path)
+    def fix(m):
+        href = m.group(1)
+        if re.match(r'^(https?:|mailto:|tel:|data:|//)', href): return m.group(0)
+        mm = re.match(r'^([^#?]*)(.*)$', href); target, tail = mm.group(1), mm.group(2)
+        full = target.lstrip('/') if target.startswith('/') else posixpath.normpath(posixpath.join(base, target))
+        if full.startswith('..'): return m.group(0)
+        if full.endswith('index.html'): full = full[:-len('index.html')]
+        elif full.endswith('.html'): full = full[:-len('.html')]
+        return f'href="/{full}{tail}"'
+    return re.sub(r'href="([^"]*?\.html(?:[#?][^"]*)?)"', fix, content)
 IMG = 'https://uhealthfit.com'
 LOGO = f'{IMG}/uhealthfit/uhealthfit_zh_logo.svg'  # 導覽列：優健堂（同 uhealthfit.com/zh-TW）
 LOGO_WHITE = 'img/uhealthfit-logo-white.svg'  # 頁尾：UHealthFit 白色字標（同 zh.uhealthfit.com 商店頁首）
@@ -493,15 +516,18 @@ GA4_ID = 'G-M63Z9F6FR7'
 META_PIXEL_ID = '2216128798841618'
 # 載入順序很重要：gtag.js 必須在 GTM 之前。若 GTM 先載入，同一個 GA4 ID 只會保留 GTM 那份（send_page_view=false），
 # 本站的網頁瀏覽與自訂事件都不會送出（2026-10-23 實測）。gtag 先載入時，page_view 與各事件都只送一次，不重複。
-TRACKING_HEAD_TOP = ("<!-- Google tag (gtag.js) -->\n"
-  "<script async src=\"https://www.googletagmanager.com/gtag/js?id=__GA4__\"></script>\n"
-  "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','__GA4__');</script>\n"
-  "<!-- Google Tag Manager -->\n"
-  "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','__GTM__');</script>\n"
-  "<!-- End Google Tag Manager -->").replace('__GA4__', GA4_ID).replace('__GTM__', GTM_ID)
-TRACKING_HEAD_END = ("<!-- Meta Pixel -->\n"
-  "<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','__PIXEL__');fbq('track','PageView');</script>\n"
-  "<!-- End Meta Pixel -->").replace('__PIXEL__', META_PIXEL_ID)
+# 只在正式網域載入：localhost、uhealthfit-zh.pages.dev、ntddigital.github.io 等測試環境不會把資料送進正式 GA4／Meta。
+# gtag.js 載入完成（或失敗）後才載入 GTM，確保 gtag 的 GA4 設定永遠先註冊，不再靠兩個 async 腳本的先後運氣。
+TRACKING_HEAD_TOP = ("<!-- Google tag (gtag.js) + Google Tag Manager：只在 __HOST__ 載入；gtag 先、GTM 後 -->\n"
+  "<script>(function(){if(location.hostname!=='__HOST__')return;"
+  "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','__GA4__');"
+  "var g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id=__GA4__';"
+  "g.onload=g.onerror=function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','__GTM__');};"
+  "document.head.appendChild(g);})();</script>\n"
+  "<!-- End Google Tag Manager -->").replace('__GA4__', GA4_ID).replace('__GTM__', GTM_ID).replace('__HOST__', PROD_HOST)
+TRACKING_HEAD_END = ("<!-- Meta Pixel：只在 __HOST__ 載入 -->\n"
+  "<script>(function(){if(location.hostname!=='__HOST__')return;!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','__PIXEL__');fbq('track','PageView');})();</script>\n"
+  "<!-- End Meta Pixel -->").replace('__PIXEL__', META_PIXEL_ID).replace('__HOST__', PROD_HOST)
 TRACKING_BODY_TOP = ("<!-- Google Tag Manager (noscript) --><noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=__GTM__\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n"
   "<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" src=\"https://www.facebook.com/tr?id=__PIXEL__&amp;ev=PageView&amp;noscript=1\"></noscript>").replace('__GTM__', GTM_ID).replace('__PIXEL__', META_PIXEL_ID)
 
@@ -749,7 +775,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 {TRACKING_HEAD_TOP}
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<link rel="canonical" href="{page_url(canonical_path)}">
+{'<link rel="canonical" href="'+page_url(canonical_path)+'">' if canonical_path else '<meta name="robots" content="noindex">'}
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
@@ -937,7 +963,11 @@ def externalize(content):
 
 def write(path, content):
     full=os.path.join(DIST,path); os.makedirs(os.path.dirname(full),exist_ok=True)
-    if path.endswith('.html'): content=externalize(content)
+    if path.endswith('.html'):
+        content=clean_links(externalize(content), path)
+        if path!='404.html':
+            h=_content_hash(content); e=LASTMOD.get(path)
+            if not e or e.get('hash')!=h: LASTMOD[path]={'hash':h,'date':BUILD_DATE}
     open(full,'w',encoding='utf8').write(content)
 
 # ───────────────────────────── 首頁 ─────────────────────────────
@@ -1286,7 +1316,7 @@ def build_quiz():
         </div>
       </div>
       <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" data-ebooks='{EBOOKS_JSON}' novalidate><input type="hidden" name="quiz_result" value=""><input type="hidden" name="lead_magnet" value="body-balance"><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">{'免費寄給我' if EBOOK_EMAIL_FLOW_LIVE else '免費領取'}</button></form>
-      <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。我們不會把你的資料提供給第三方。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
+      <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。你的 Email 會交由我們的電子郵件服務商 Klaviyo 處理，只用於寄送上述內容；本站另使用 Google Analytics 與 Meta Pixel 記錄「已留資」這個動作，不會把你的 Email 交給它們。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
       <div class="email-ok">{'✓ 已寄出！請留意信箱（沒看到的話，查看一下垃圾郵件匣）。也可以' if EBOOK_EMAIL_FLOW_LIVE else '✓ 已收到你的 Email！指南已經準備好，'}<a class="ebook-dl" href="#" target="_blank" rel="noopener">{'現在直接下載 PDF →' if EBOOK_EMAIL_FLOW_LIVE else '點這裡下載 PDF →'}</a></div>
     </div>
   </div>
@@ -1436,10 +1466,26 @@ def build_faq():
 '''
     write('faq.html', head('常見問題｜產品、品質、購買與退貨 · 優健堂 × WiseQuest','WiseQuest 草本保健常見問題：是不是藥、多久有感、怎麼吃、在哪裡製造、如何購買與退貨。',rel,'faq.html','faq')+nav(rel,'faq')+body+footer(rel))
 
+def build_404():
+    # Cloudflare Pages 會用根目錄的 404.html 回應不存在的網址（HTTP 404）。資產與連結用根路徑，任何深度的網址都能正確載入。
+    rel='/'
+    body=f'''<main>
+<section class="hero"><div class="wrap">
+  <div><span class="eyebrow">404 · 找不到這一頁</span>
+    <h1>這個網址不存在，<br><em>但你要找的東西可能還在</em></h1>
+    <p class="lead">網址可能已經更動，或輸入時有誤。你可以回首頁，或從下面的入口重新開始。</p>
+    <div class="hero-cta"><a class="btn btn-primary" href="/">回首頁</a><a class="btn btn-ghost" href="/series/">看六大系列</a><a class="btn btn-ghost" href="/blog/">選購指南</a></div>
+  </div>
+</div></section>
+</main>
+'''
+    write('404.html', head('找不到這一頁 · 優健堂 UHealthFit × WiseQuest','這個網址不存在。回到優健堂 UHealthFit × WiseQuest 首頁，或瀏覽六大系列與選購指南。',rel,None,'404')+nav(rel,'')+body+footer(rel))
+
 def build_misc():
     pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
-    sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
+    sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{LASTMOD.get(p,{}).get("date",BUILD_DATE)}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
+    json.dump({k:LASTMOD[k] for k in sorted(LASTMOD) if k in pages}, open(LASTMOD_FILE,'w',encoding='utf8'), ensure_ascii=False, indent=1)
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
     shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')) if os.path.isdir(os.path.join(DIST,'css')) else (os.makedirs(os.path.join(DIST,'css')), shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')))
     os.makedirs(os.path.join(DIST,'js'),exist_ok=True); shutil.copy(os.path.join(ROOT,'src','main.js'), os.path.join(DIST,'js','main.js'))
@@ -1454,17 +1500,18 @@ def build_misc():
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
 ## 部署
-Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。正式網址 https://us.uhealthfit.com/（自訂網域，DNS 在 GoDaddy：CNAME us → uhealthfit-zh.pages.dev）；Cloudflare 預設網址 https://uhealthfit-zh.pages.dev/。更換網域時改 build-src/build.py 的 SITE_URL 重建。Cloudflare 會把 .html 網址 308 轉址成乾淨網址（/about、/products/calmoon、/blog/），標準網址、sitemap 與結構化資料都已使用乾淨網址（build.py 的 page_url）。GitHub Pages 已不再使用。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`
+Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。正式網址 https://us.uhealthfit.com/（自訂網域，DNS 在 GoDaddy：CNAME us → uhealthfit-zh.pages.dev）；Cloudflare 預設網址 https://uhealthfit-zh.pages.dev/。更換網域時改 build-src/build.py 的 SITE_URL 重建。Cloudflare 會把 .html 網址 308 轉址成乾淨網址（/about、/products/calmoon、/blog/）；站內連結、標準網址、sitemap 與結構化資料都輸出乾淨網址（build.py 的 clean_links／page_url），不存在的網址由 404.html 回應 404。sitemap 的 lastmod 來自 build-src/lastmod.json（內容雜湊有變才更新日期，請一起 commit）。GitHub Pages 已不再使用（ntddigital.github.io 上的舊副本仍帶著追蹤碼，請下架）。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`
+- 本機預覽：`python3 build-src/serve.py`（模擬 Cloudflare 的乾淨網址與 404；.claude/launch.json 的 static-site 也是用它）。本機不會載入 GTM／GA4／Meta，追蹤碼只在 us.uhealthfit.com 啟用
 - Logo 與圖片：導覽列用 uhealthfit.com 的優健堂 SVG（LOGO）、頁尾用 zh.uhealthfit.com 商店頁首的 UHealthFit 白色字標（`build-src/src/img/`）；六大系列情境照與產品實拍取自 zh.uhealthfit.com（Shopify CDN，見 build.py 的 SHOP_CDN／shop_img，`&width=` 可調尺寸），其餘產品圖取自 uhealthfit.com
 上線前：
 1. 自訂網域 us.uhealthfit.com 已上線，SITE_URL 已設為正式網域；
-2. 追蹤碼已安裝（build.py 的 GTM_ID／GA4_ID／META_PIXEL_ID，與 zh.uhealthfit.com 相同）：GTM GTM-W58N8HRV、GA4 G-M63Z9F6FR7（gtag.js）、Meta Pixel 2216128798841618。js/main.js 會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect、測驗完成送 quiz_complete、留資送 generate_lead 與 Lead；
-3. 所有「購買」按鈕都指向 zh.uhealthfit.com 商品頁：訪客若從廣告或帶 UTM 的連結進站，會原樣帶上原本的 UTM 與點擊編號（fbclid、gclid 等）；沒有來源時才加上 utm_source=uhealthfit-site、utm_medium=referral。Meta 事件不帶產品、頁面或電子書類別；
+2. 追蹤碼已安裝（build.py 的 GTM_ID／GA4_ID／META_PIXEL_ID，與 zh.uhealthfit.com 相同），只在正式網域 us.uhealthfit.com 載入：GTM GTM-W58N8HRV、GA4 G-M63Z9F6FR7（gtag.js）、Meta Pixel 2216128798841618。js/main.js 會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect、測驗完成送 quiz_complete、留資送 generate_lead 與 Lead；
+3. 所有「購買」按鈕都指向 zh.uhealthfit.com 商品頁：訪客若從廣告或帶 UTM 的連結進站，會原樣帶上原本的 UTM 與點擊編號（fbclid、gclid 等）；沒有來源時不加任何參數（兩個子網域共用 GA4 資源與 _ga cookie，自製 UTM 會把自然流量的來源改記成 uhealthfit-site／referral；請在 GA4 管理 → 資料串流 → 列出不想要的參照連結 加入 uhealthfit.com）。Meta 事件不帶產品、頁面或電子書類別；
 4. Klaviyo：公開 company_id Xxa5rp、List TKC3Bu（Email List, single opt-in）；留資會帶 quiz_result 屬性，可用來建 Flow。
 '''
     write('README.md', readme)
 
 if __name__=='__main__':
-    build_home(); build_series(); build_series_index(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_misc()
+    build_home(); build_series(); build_series_index(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_404(); build_misc()
     open(os.path.join(DIST,'.nojekyll'),'w').close()  # 停用 GitHub Pages 的 Jekyll 處理
     print('built →',DIST)
