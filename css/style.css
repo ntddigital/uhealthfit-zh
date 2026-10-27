@@ -535,3 +535,25 @@ footer.site .logo{height:26px;width:auto;margin-bottom:14px}
 .doctor-top .crumbs{color:rgba(255,255,255,.6)}
 .doctor-top .crumbs a:hover{color:#B9E4C9}
 .doctor-top h1{font-size:clamp(26px,3.6vw,36px);margin:10px 0 16px}
+
+/* 促銷：特價圖完整呈現，不裁到價格文字；空白處用暖色底 */
+img.promo{object-fit:contain!important;object-position:center!important;background:linear-gradient(135deg,#5c3518,#b77836)}
+.badge-sale{background:#C0392B;color:#fff}
+/* 首頁促銷大橫幅 */
+.promo-banner{background:radial-gradient(circle at 15% 20%,#c4813c 0,transparent 55%),linear-gradient(135deg,#5a2a12,#8e3b16 55%,#b5652a);color:#fff;padding:clamp(28px,4vw,48px) 0}
+.promo-banner .wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(20px,4vw,48px);align-items:center}
+.promo-eyebrow{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;letter-spacing:.08em}
+.promo-text h2{font-size:clamp(34px,5.4vw,60px);line-height:1.15;margin:14px 0 12px;letter-spacing:.06em;color:#FFE9C7;text-shadow:0 2px 0 rgba(0,0,0,.18)}
+.promo-text p{color:rgba(255,255,255,.88);font-size:16px;max-width:460px}
+.promo-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.promo-tile{background:#fff;color:var(--ink);border-radius:20px;overflow:hidden;box-shadow:0 24px 50px -24px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.promo-banner.one .promo-tile{display:grid;grid-template-columns:1fr 1fr}
+.promo-pic{display:block;aspect-ratio:1}
+.promo-pic img{width:100%;height:100%;display:block}
+.promo-info{padding:20px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.promo-info b{font-size:18px;line-height:1.35}
+.promo-price{font-size:28px;font-weight:900;color:#B23A12;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px}
+.promo-off{font-size:13px;font-weight:800;background:#C0392B;color:#fff;border-radius:999px;padding:3px 10px;margin-left:6px}
+.promo-cta{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:860px){.promo-banner .wrap{grid-template-columns:1fr}.promo-text p{max-width:none}}
+@media(max-width:520px){.promo-banner.one .promo-tile{grid-template-columns:1fr}}

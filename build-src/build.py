@@ -256,7 +256,7 @@ def series_hero(k, rel):
         <h1>{esc(s['h1'])}</h1><p class="lead">{esc(s['lead'])}</p>
         <div class="hero-cta"><a class="btn btn-primary" href="#products">看這個系列的產品</a><a class="btn btn-ghost" href="{rel}blog/{guide}.html">先讀選購指南</a></div>
         <ul class="hero-trust"><li>{esc(s['organ'])}（中醫傳統觀點）</li><li>成分全部公開</li><li>效果因人而異，誠實交代時間</li></ul></div>
-      <div class="slide-photo"><img src="{s['photo']}" alt="{esc(s['name'])}" width="900" height="900" fetchpriority="high"></div>
+      <div class="slide-photo">{series_img(k, s['name'])} width="900" height="900" fetchpriority="high"></div>
     </div>
   </article>''']
     for slug in s['products']:
@@ -646,11 +646,32 @@ DETAILS = {
    caution='僅供外用，避免直接接觸眼睛。如有不適，請停止使用。敏感肌首次使用前請先做皮膚測試。如懷孕或哺乳，使用前請諮詢醫師。'),
 }
 # 套用到產品資料：主圖、適合誰、注意事項
+# ───── 促銷活動 ─────
+# 首頁大橫幅。活動結束：把 PROMO 設成 None，並刪除各產品 DETAILS 裡的 promo_image。
+# 其他產品特價：在該產品 DETAILS 加 promo_image（商店特價圖），再把 slug 加進 items。
+PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
+             text='感謝這一年的陪伴。精選草本保健限時特價，實際價格與活動期間以官方商店結帳頁為準。',
+             items=['enerbalance'])
+
+def promo_img(slug):
+    return DETAILS.get(slug,{}).get('promo_image')
+
+def series_photo(k):
+    # 系列內有產品在特價時，系列圖改用該產品的特價圖
+    for p in SERIES[k]['products']:
+        if promo_img(p): return promo_img(p), True
+    return SERIES[k]['photo'], False
+
+def series_img(k, alt=''):
+    u,promo=series_photo(k)
+    return f'<img src="{u}" alt="{esc(alt)}"'+(' class="promo"' if promo else '')
+
 for _k,_d in DETAILS.items():
     if _d.get('image'): PRODUCTS[_k]['image']=_d['image']
     if _d.get('yes'): PRODUCTS[_k]['yes']=_d['yes']
     if _d.get('caution'): PRODUCTS[_k]['caution']=_d['caution']
     if _d.get('faq'): PRODUCTS[_k]['faq']=_d['faq']
+    if _d.get('promo_image'): PRODUCTS[_k]['badge']=('badge-sale','特價')
 
 def stats_row(slug):
     st=DETAILS.get(slug,{}).get('stats')
@@ -835,13 +856,13 @@ def footer(rel):
 def sticky(rel):
     return f'<div class="sticky-cta" aria-label="快速行動"><a class="btn btn-ghost" href="{rel}quiz.html">30 秒測驗</a><a class="btn btn-primary" href="{rel}series/index.html">選購系列</a></div>'
 
-def product_card(slug, rel, wide=False, promo=False):
+def product_card(slug, rel, wide=False):
     p=PRODUCTS[slug]
-    img=(DETAILS.get(slug,{}).get('promo_image') if promo else None) or p['image']
+    img=promo_img(slug) or p['image']
     badge=f'<span class="badge {p["badge"][0]}">{p["badge"][1]}</span>' if p.get('badge') else ''
     pr = price_str(p); note=p['price_note']
     return f'''<article class="prod{' wide' if wide else ''}">
-  <a class="pic" href="{rel}products/{slug}.html">{badge}<img src="{img}" alt="{esc(p['name'])}" loading="lazy"></a>
+  <a class="pic" href="{rel}products/{slug}.html">{badge}<img src="{img}" alt="{esc(p['name'])}" loading="lazy"{' class="promo"' if promo_img(slug) else ''}></a>
   <div class="body">
     <div class="name"><a href="{rel}products/{slug}.html">{esc(p['name'])}</a><small>{esc(p['en'])} · {esc(p['made'])}</small></div>
     <div class="hook">{esc(p['hook'])}</div>
@@ -916,13 +937,29 @@ def gallery(slug):
     cls='gallery'+(' contain' if d.get('gallery_contain') else '')
     if len(imgs)==1:
         return f'<div class="{cls}"><img src="{imgs[0]}" alt="{esc(p["name"])}" width="800" height="800" fetchpriority="high"></div>'
-    slides=''.join(f'<div class="gslide"><img src="{u}" alt="{esc(p["name"])}" width="800" height="800"'+(' fetchpriority="high"' if i==0 else ' loading="lazy"')+'></div>' for i,u in enumerate(imgs))
+    slides=''.join(f'<div class="gslide"><img src="{u}" alt="{esc(p["name"])}" width="800" height="800"'+(' class="promo"' if u==d.get('promo_image') else '')+(' fetchpriority="high"' if i==0 else ' loading="lazy"')+'></div>' for i,u in enumerate(imgs))
     dots=''.join(f'<button type="button" aria-label="第 {i+1} 張"'+(' aria-current="true"' if i==0 else '')+'></button>' for i in range(len(imgs)))
     return f'<div class="{cls} slides"><div class="slides-track">{slides}</div><button class="slides-prev" type="button" aria-label="上一張">‹</button><button class="slides-next" type="button" aria-label="下一張">›</button><div class="slides-dots">{dots}</div></div>'
 
+def promo_banner(rel):
+    if not PROMO: return ''
+    tiles=''
+    for slug in PROMO['items']:
+        p=PRODUCTS[slug]; off=round((1-p['price']/p['compare'])*100) if p.get('compare') else None
+        tiles+=f'''<div class="promo-tile">
+      <a class="promo-pic" href="{rel}products/{slug}.html"><img src="{promo_img(slug) or p['image']}" alt="{esc(p['name'])} 特價" class="promo"></a>
+      <div class="promo-info"><b>{esc(p['name'])}</b><div class="promo-price">{price_str(p,with_compare=True)}{f'<span class="promo-off">{off}% OFF</span>' if off else ''}</div>
+      <div class="promo-cta"><a class="btn btn-ghost btn-sm" href="{rel}products/{slug}.html">了解產品</a><a class="btn btn-primary btn-sm ext" data-product="{slug}" href="{buy_url(p,slug)}">立即搶購</a></div></div>
+    </div>'''
+    return f'''<section class="promo-banner{' one' if len(PROMO['items'])==1 else ''}"><div class="wrap">
+  <div class="promo-text"><span class="promo-eyebrow">{esc(PROMO['eyebrow'])}</span><h2>{esc(PROMO['title'])}</h2><p>{esc(PROMO['text'])}</p></div>
+  <div class="promo-tiles">{tiles}</div>
+</div></section>
+'''
+
 def series_card(k, rel):
     # 系列卡片（首頁與六大系列匯總頁共用）
-    return f'''<a class="scard s-{k}" href="{rel}series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]['photo']}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>'''
+    return f'''<a class="scard s-{k}" href="{rel}series/{k}.html"><div class="scard-pic">{series_img(k)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>'''
 
 def build_home():
     rel=''
@@ -930,7 +967,7 @@ def build_home():
     posts=''.join(post_card(p,rel) for p in [POST_BY_SLUG[s] for s in ['eye-patch-vs-steam-mask-vs-eye-drops','melatonin-free-sleep-aid-guide','gum-care-supplement-for-parents']])
     featured=''.join(product_card(s,rel) for s in ['eye-patches','calmoon','dentaforte'])
     body=f'''
-<section class="hero"><div class="wrap">
+{promo_banner(rel)}<section class="hero"><div class="wrap">
   <div><span class="eyebrow">優健堂 UHealthFit × WiseQuest · 醫師研發草本保健</span>
     <h1>不壓制、不依賴，<br><em>從根源支持身體</em></h1>
     <p class="lead">護眼、固齒、舒眠、順暢、肌膚、活力——六大日常養護系列，由中國中西醫結合執業醫師黃醫師研發。傳統草本配方、現代萃取工藝，美國・日本製造，成分全部公開。</p>
@@ -1012,7 +1049,7 @@ def build_series():
         posts=''.join(post_card(p,rel) for p in POSTS if p['series']==k)
         reframe=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(s['reframe']))
         sits=''.join(f'<li>{esc(x)}</li>' for x in s['situations'])
-        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic"><img src="{SERIES[o]["photo"]}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
+        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic">{series_img(o)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
         body=f'''
 {series_hero(k,rel)}
 <section class="sec"><div class="wrap">
@@ -1270,7 +1307,7 @@ ABOUT_US_PICKS = [
 def build_about_us():
     rel=''
     picks=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(ABOUT_US_PICKS))
-    series=''.join(f'<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]["photo"]}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]["en"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
+    series=''.join(f'<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic">{series_img(k)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]["en"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
     body=f'''
 <section class="hero"><div class="wrap">
   <div><div class="crumbs"><a href="index.html">首頁</a><span>›</span><span>關於我們</span></div><span class="eyebrow">關於優健堂 UHealthFit</span>
@@ -1341,7 +1378,7 @@ def build_products_index():
     secs=''
     for i,k in enumerate(SERIES_ORDER):
         sv=SERIES[k]; ps=series_products(k)
-        cards=''.join(product_card(p,rel,wide=(len(ps)==1),promo=True) for p in ps)
+        cards=''.join(product_card(p,rel,wide=(len(ps)==1)) for p in ps)
         secs+=f'''<section class="sec{' bg-cream' if i%2 else ''}" id="{k}"><div class="wrap">
   <div class="sec-head"><span class="series-tag s-{k}"><span class="dot"></span>{sv['name']} · {esc(sv['tag'])}</span><h2>{esc(sv['h1'])}</h2><p class="lead">{esc(sv['lead'])} <a href="{rel}series/{k}.html" style="color:var(--green);font-weight:700;white-space:nowrap">看{sv['name']}系列介紹 →</a></p></div>
   <div class="pgrid{' pgrid-1' if len(ps)==1 else ''}">{cards}</div>
