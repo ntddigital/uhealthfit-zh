@@ -567,3 +567,10 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .promo-cta-m .btn{flex:1;justify-content:center}
 .promo-note{margin-top:8px;font-size:12px;text-align:right}
 @media(max-width:700px){.promo-cta-m{display:flex}.promo-note{text-align:center}}
+
+/* 選購指南：適用全系列的文章、文章封面、參考資料 */
+.s-general{--sc:var(--green)}
+.article-cover{max-width:980px;margin:0 0 30px;border-radius:20px;overflow:hidden;box-shadow:0 24px 50px -30px rgba(8,32,15,.35)}
+.article-cover img{display:block;width:100%;height:auto}
+.article ul.refs{font-size:14px;line-height:1.7;color:var(--ink-3)}
+.article ul.refs a{color:var(--ink-2)}

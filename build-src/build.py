@@ -213,8 +213,12 @@ for fn in sorted(os.listdir(os.path.join(ROOT,'posts'))):
     meta, body = s.split('---END-META---',1)
     m = json.loads(meta.strip()); m['body'] = body.strip(); POSTS.append(m)
 POST_BY_SLUG = {p['slug']:p for p in POSTS}
-POST_ORDER = ['eye-patch-vs-steam-mask-vs-eye-drops','beyond-lutein-eye-care','eye-patch-how-to-use-guide','eye-care-gift-for-parents','eye-patch-ingredients-explained','melatonin-free-sleep-aid-guide','stress-daytime-relax-night-sleep','gentle-digestive-support-no-senna','bloating-after-sitting-herbal-flow','gum-care-supplement-for-parents','brushing-plus-herbal-support','steroid-free-soothing-cream-guide','acne-prone-skin-herbal-cream-guide','anti-fatigue-look-serum-guide','caffeine-free-energy-herbal-guide','winter-tonic-herbal-guide','gaozi-paste-vs-capsule','american-ginseng-vs-ginseng']
+POST_ORDER = ['thanksgiving-gift-for-parents-herbal', 'thanksgiving-parents-supplement-schedule', 'thanksgiving-feast-bloating-care', 'eye-patch-vs-steam-mask-vs-eye-drops', 'beyond-lutein-eye-care', 'eye-patch-how-to-use-guide', 'eye-care-gift-for-parents', 'eye-patch-ingredients-explained', 'eye-cream-buying-guide', 'eye-patch-which-pack-to-buy', 'contact-lens-eye-drops-eye-patch-guide', 'cassia-chrysanthemum-goji-tea-or-capsule', 'dendrobium-shihu-eye-cream-herb', 'melatonin-free-sleep-aid-guide', 'stress-daytime-relax-night-sleep', 'suanzaoren-calming-herbs-explained', 'gentle-digestive-support-no-senna', 'bloating-after-sitting-herbal-flow', 'gum-care-supplement-for-parents', 'brushing-plus-herbal-support', 'steroid-free-soothing-cream-guide', 'acne-prone-skin-herbal-cream-guide', 'herbal-skincare-which-cream-and-order', 'anti-fatigue-look-serum-guide', 'caffeine-free-energy-herbal-guide', 'winter-tonic-herbal-guide', 'gaozi-paste-vs-capsule', 'american-ginseng-vs-ginseng', 'astragalus-huangqi-guide', 'american-ginseng-cold-constitution', 'poria-chinese-yam-everyday-herbs', 'herbal-supplement-safety-checklist']
 POSTS = [POST_BY_SLUG[s] for s in POST_ORDER]
+POST_GENERAL = dict(name='日常保健', short='日常保健', photo=None)  # 文章 series='general'：適用全系列
+
+def pseries(p):
+    return POST_GENERAL if p['series']=='general' else SERIES[p['series']]
 
 # ───────────────────────────── 共用片段 ─────────────────────────────
 def esc(s): return H.escape(s, quote=True)
@@ -900,13 +904,16 @@ POST_IMAGES = {
  'gaozi-paste-vs-capsule':               'https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=900',  # zh 黑膏滋介紹頁主圖：膠囊瓶與草本切片
  'american-ginseng-vs-ginseng':          f'{IMG}/blog/botanical-wellness-hero.png',
 }
-def post_image(p):
+def post_image(p, rel=None):
+    # rel=None：給社群分享與結構化資料用的完整網址；有 rel：頁面內的相對路徑
+    if os.path.exists(os.path.join(ROOT,'src','img',f'post-{p["slug"]}.jpg')):
+        return (SITE_URL+'/' if rel is None else rel)+f'img/post-{p["slug"]}.jpg'
     if p['slug'] in POST_IMAGES: return POST_IMAGES[p['slug']]
-    return SERIES[p['series']]['photo']
+    return pseries(p)['photo'] or SERIES['eye']['photo']
 
 def post_card(p, rel):
-    prod=PRODUCTS[p['primary_product']]; s=SERIES[p['series']]
-    thumb = post_image(p)
+    prod=PRODUCTS[p['primary_product']]; s=pseries(p)
+    thumb = post_image(p, rel)
     return f'''<article class="post-card s-{p['series']}" data-series="{p['series']}">
   <a class="thumb" href="{rel}blog/{p['slug']}.html"><img src="{thumb}" alt="" loading="lazy"></a>
   <div class="body"><div class="meta"><span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span><span>· 約 {p['reading_min']} 分鐘</span></div>
@@ -1182,7 +1189,7 @@ def build_products():
 # ───────────────────────────── 部落格 ─────────────────────────────
 def build_blog():
     rel='../'
-    chips='<div class="chips"><button class="chip on" data-f="all">全部</button>'+''.join(f'<button class="chip" data-f="{k}">{SERIES[k]["short"]}</button>' for k in SERIES_ORDER)+'</div>'
+    chips='<div class="chips"><button class="chip on" data-f="all">全部</button>'+''.join(f'<button class="chip" data-f="{k}">{SERIES[k]["short"]}</button>' for k in SERIES_ORDER)+('<button class="chip" data-f="general">日常保健</button>' if any(p['series']=='general' for p in POSTS) else '')+'</div>'
     cards=''.join(post_card(p,rel) for p in POSTS)
     body=f'''
 <section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
@@ -1196,18 +1203,19 @@ def build_blog():
 '''
     write('blog/index.html', head('選購指南｜護眼、固齒、睡眠、消化、肌膚、活力怎麼選 · 優健堂 × WiseQuest',f'{len(POSTS)} 篇草本保健選購指南：眼貼 vs 蒸氣眼罩、無褪黑素助眠、不含番瀉葉腸道保健、無類固醇修護霜、幫爸媽選口腔保健品……先懂怎麼選，再決定要不要買。',rel,'blog/index.html','blog')+nav(rel,'blog')+body+footer(rel))
     for p in POSTS:
-        prod=PRODUCTS[p['primary_product']]; s=SERIES[p['series']]
+        prod=PRODUCTS[p['primary_product']]; s=pseries(p)
         related=''.join(post_card(q,rel) for q in POSTS if q['slug']!=p['slug'] and q['series']==p['series'])
         more=''.join(post_card(q,rel) for q in POSTS if q['series']!=p['series'])[:0]
-        ld=json.dumps({"@context":"https://schema.org","@type":"Article","headline":p['title'],"description":p['description'],"image":post_image(p),"datePublished":TODAY,"author":{"@type":"Organization","name":"優健堂 UHealthFit"},"publisher":{"@type":"Organization","name":"優健堂 UHealthFit","logo":{"@type":"ImageObject","url":LOGO}}},ensure_ascii=False)
+        ld=json.dumps({"@context":"https://schema.org","@type":"Article","headline":p['title'],"description":p['description'],"image":post_image(p),"datePublished":p.get('date',TODAY),"author":{"@type":"Organization","name":"優健堂 UHealthFit"},"publisher":{"@type":"Organization","name":"優健堂 UHealthFit","logo":{"@type":"ImageObject","url":LOGO}}},ensure_ascii=False)
         body=f'''
 <section class="sec" style="padding-top:clamp(28px,4vw,52px)"><div class="wrap">
   <div class="article-head">
-    <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}blog/index.html">選購指南</a><span>›</span><a href="{rel}series/{p['series']}.html">{s['name']}</a></div>
+    <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}blog/index.html">選購指南</a><span>›</span><a href="{rel}series/{p['series'] if p['series']!='general' else 'index'}.html">{s['name']}</a></div>
     <span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']} · 選購指南</span>
     <h1>{esc(p['title'])}</h1>
-    <div class="meta"><span>優健堂編輯部 · 內容依黃醫師臨床觀點與品牌產品資料整理</span><span>約 {p['reading_min']} 分鐘</span><span>更新 {TODAY}</span></div>
+    <div class="meta"><span>優健堂編輯部 · 內容依黃醫師臨床觀點與品牌產品資料整理</span><span>約 {p['reading_min']} 分鐘</span><span>更新 {p.get('date',TODAY)}</span></div>
   </div>
+  {f'<div class="article-cover"><img src="{post_image(p, rel)}" alt="{esc(p["title"])}" width="1200" height="675" fetchpriority="high"></div>' if 'img/post-' in post_image(p, rel) else ''}
   <div class="article-layout">
     <article class="article">
       {p['body']}
