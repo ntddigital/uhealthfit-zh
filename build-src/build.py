@@ -125,8 +125,8 @@ SERIES_ORDER = ['eye','skin','dental','vitality','sleep','digestive']  # 與 uhe
 PRODUCTS = {
  'eye-patches': dict(series='eye', name='WiseQuest 明目冷敷眼貼', en='Herbal Cooling Eye Patches', badge=('badge-star','明星產品'),
    hook='清涼、放鬆，睡飽的雙眼', desc='睡前貼在眼周，草本透過肌膚緩緩釋放，讓長時間用眼後的雙眼在夜裡好好休息。不入眼、不含防腐劑，日本製造。',
-   long='一天盯著螢幕十個小時之後，眼睛需要的不只是「這一刻舒服一點」，而是一段真正的休息。明目冷敷眼貼貼在內眼角、外眼角與下眼瞼下方的肌膚上，桉葉、菊花、薄荷、甘草等草本透過肌膚緩緩釋放，在你睡著的時候陪著眼睛。',
-   herbs='桉葉、菊花、薄荷、甘草', actives='—（純草本配方）', made='日本製造', form='外用透皮冷敷眼貼', spec='1 盒 60 片（每晚 6 片，約 10 晚）；體驗裝 12 片（約兩晚）',
+   long='一天盯著螢幕十個小時之後，眼睛需要的不只是「這一刻舒服一點」，而是一段真正的休息。明目冷敷眼貼貼在內眼角、外眼角與下眼瞼下方的肌膚上，菊花、決明子、石斛、當歸等九味草本，加上帶來清涼感的冰片與薄荷，透過肌膚緩緩釋放，在你睡著的時候陪著眼睛。',
+   herbs='菊花、決明子、石斛、木賊草、葛根、黃耆、川芎、當歸、五味子（九味草本）＋冰片、薄荷（清涼成分）', actives='—（純草本配方）', made='日本製造', form='外用透皮冷敷眼貼', spec='1 盒 60 片（每晚 6 片，約 10 晚）；體驗裝 12 片（約兩晚）',
    usage='清潔眼周後，睡前貼於內眼角、外眼角與下眼瞼下方，建議每晚 6 片，約 30 分鐘或整晚；早上撕下。第一次使用可先從 2 片開始；白天可用 2–4 片做短暫放鬆。', caution='僅供外用；首次使用前先做局部皮膚測試；孕婦請勿使用；如有不適請停止使用。',
    price=29.99, price_note='1 盒 60 片 · 約 10 晚', handle='草本冷敷眼貼-十天包裝-贈試用裝一袋-價值-5',
    variants=[('兩晚體驗裝（12 片）','$6.00','先試再決定',False),('1 盒 · 60 片','$29.99','約 10 晚',False),('3 盒 · 一個月組','$84.00','推薦入門',True),('6 盒 · 兩個月組','$162.00','',False),('9 盒 · 三個月組','$234.00','單片成本最低',False)],
@@ -156,7 +156,7 @@ PRODUCTS = {
  'eye-care-trio': dict(series='eye', name='護眼三寶（眼貼＋LumiView＋眼霜）', en='Eye Care Trio', badge=('badge-star','招牌組合'), is_bundle=True,
    hook='外、內、日夜，一次到位', desc='睡前眼貼從外舒緩、白天眼霜接力、LumiView 從內支持——三個產品不是三個選擇，而是一天二十四小時的三個時段。',
    long='很多顧客從 $6 的眼貼體驗裝開始，用了一陣子之後問我們：「還能多做什麼？」護眼三寶就是答案——不是「買三樣更划算」的折扣語言，而是一套方案的三個部分：夜裡（眼貼）、白天（眼霜）、內在（膠囊）。',
-   herbs='眼貼：桉葉、菊花、薄荷、甘草｜LumiView：枸杞、菊花、決明子、山藥、茯苓、當歸、黃芪｜眼霜：石斛、菊花、決明子、茯苓、當歸根', actives='詳見各單品頁', made='眼貼日本製造；膠囊與眼霜美國製造', form='外用眼貼＋全植物膠囊＋外用眼霜', spec='依組合頁選擇 1／2／3 個月方案',
+   herbs='眼貼：菊花、決明子、石斛、木賊草、葛根、黃耆、川芎、當歸、五味子＋冰片、薄荷｜LumiView：枸杞、菊花、決明子、山藥、茯苓、當歸、黃芪｜眼霜：石斛、菊花、決明子、茯苓、當歸根', actives='詳見各單品頁', made='眼貼日本製造；膠囊與眼霜美國製造', form='外用眼貼＋全植物膠囊＋外用眼霜', spec='依組合頁選擇 1／2／3 個月方案',
    usage='睡前貼眼貼；每天 2 次各 3 粒 LumiView 隨餐；白天用眼空檔擦眼霜。', caution='孕婦請勿使用眼貼；服藥中請先諮詢醫師再使用膠囊。',
    price=None, price_note='組合價以 zh.uhealthfit.com 護眼三寶頁為準', handle=None, page_url=f'{SHOP}/pages/%E8%AD%B7%E7%9C%BC%E4%B8%89%E5%AF%B6', variants=None, trial_handle='試用裝-2日份-wise-quest-草本冷敷眼貼',
    yes=['已經用過眼貼、想把護眼做完整的人','每天螢幕 10 小時以上、想一次把日夜都顧到的人','重視成分公開與長期習慣的人'], no=['還沒試過眼貼的人——建議先從 $6 體驗裝開始','孕婦與哺乳期（請先諮詢醫師）'],
@@ -374,8 +374,22 @@ def demo_section(slug):
 
 # ───── 成分解析：改寫自 zh.uhealthfit.com 各產品頁的成分說明（2026-10-22 擷取），依 BRIEF.md 合規紅線改寫 ─────
 # 原則：中醫概念以「中醫傳統認為／傳統上用於」表述；不寫疾病名稱、不用療效動詞；外用品只描述使用感受與外觀。
-# 眼貼、固齒膠囊的成分清單在商店不同頁面互相矛盾，待客戶確認後再補，這裡暫不收。
+# 眼貼成分：依客戶指定，採用 zh.uhealthfit.com 試用裝落地頁「9 種草本 全方位護眼」的九味＋客戶確認含冰片、薄荷（清涼感來源）（2026-10-30）；原頁各草本的視網膜、視神經等描述不採用，改為傳統觀點說明。
 INGREDIENTS = {
+ 'eye-patches': dict(
+   title='9 種草本，全方位護眼',
+   intro='眼貼的九味草本，是中醫護眼古方裡常見的組合，三味一組：菊花、決明子、木賊草偏重「明目」，石斛、五味子、葛根偏重「滋潤」，川芎、當歸、黃耆偏重「調養」。貼在眼周肌膚上，在你休息的時候陪著疲勞的雙眼。貼上時的清涼感，則來自冰片與薄荷。',
+   items=[('明目','菊花','中醫傳統上用於清肝明目，是護眼配方中最常見的草本之一。'),
+          ('明目','決明子','傳統上用於清肝明目，常與菊花搭配使用。'),
+          ('明目','木賊草','中醫傳統上用於明目，常見於護眼古方。'),
+          ('滋潤','石斛','中醫傳統上用於養陰、滋潤。'),
+          ('滋潤','五味子','經典的「五味」草本，傳統上用於生津。'),
+          ('滋潤','葛根','傳統上用於生津，舒緩緊繃的感覺。'),
+          ('調養','川芎','中醫傳統認為川芎能「上行頭目」，常見於頭面部的調養配方。'),
+          ('調養','當歸','傳統上用於養血，是中醫最常用的調養草本之一。'),
+          ('調養','黃耆','傳統上用於日常調養，常與當歸搭配。')],
+   note='以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為外用保養品，不是藥品；首次使用請先做局部測試，孕婦請勿使用。',
+   facts=[('清涼成分','冰片、薄荷，帶來貼上時的清涼感'),('劑型','外用透皮冷敷眼貼，貼在眼周肌膚、不入眼'),('製造','日本製造'),('不含','防腐劑'),('規格','每盒 60 片；每晚建議 6 片，約 10 晚')]),
  'calmoon': dict(
    title='七味草本，依「君臣佐使」分工',
    intro='中醫方劑講究「君臣佐使」：君藥定方向，臣藥輔助君藥，佐藥從旁協調，使藥調和諸藥。Calmoon 的七味草本依這套傳統結構配伍，不靠單一成分，而是讓每一味各司其職。',
@@ -495,11 +509,11 @@ def ingredients_section(slug):
     cards=''.join(f'<div class="ing{" has-pic" if show_pics else ""}">{pic(n,u)}<span class="ing-role">{esc(r)}</span><h3>{esc(n)}</h3><p>{esc(t)}</p></div>' for (r,n,t),u in zip(g['items'],imgs))
     facts=''.join(f'<li><b>{esc(k)}</b><span>{esc(v)}</span></li>' for k,v in g.get('facts',[]))
     full=f'<details class="ing-full"><summary>完整成分表（INCI）</summary><p>{esc(g["full"])}</p></details>' if g.get('full') else ''
-    note=('以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為膳食補充劑，不是藥品。' if capsule
+    note=g.get('note') or ('以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為膳食補充劑，不是藥品。' if capsule
           else '以上為成分在配方中的角色說明，描述的是使用感受與肌膚外觀。本品為日常保養品，不是藥品；首次使用請先做局部測試。')
     return f'''<section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分解析</span><h2>{esc(g['title'])}</h2><p class="lead" style="font-size:16px">{esc(g['intro'])}</p></div>
-  <div class="ing-grid">{cards}</div>
+  <div class="ing-grid{' ing-grid-3' if len(g['items'])==9 else ''}">{cards}</div>
   {f'<ul class="ing-facts">{facts}</ul>' if facts else ''}
   {full}
   <p class="note" style="margin-top:14px">{note}</p>
@@ -547,7 +561,7 @@ ING_IMG = {
  '陳皮':'citrus-peel','菊花':'chrysanthemum','玉米鬚':'corn-silk','丹參':'salvia','丹參根油':'salvia','枸杞':'goji','茯苓':'poria',
  '火麻仁（THC-Free）':'hemp-seed','生地黃':'raw-rehmannia','厚朴':'magnolia-bark','萊菔子':'radish-seed','馬齒莧':'purslane',
  '積雪草':'centella-cica','紫草':'comfrey','紫草根油':'comfrey','苦參':'sophora','尤加利 × 薄荷':'eucalyptus-menthol','尤加利葉精油':'eucalyptus-menthol',
- '石斛':'dendrobium','白芍':'white-peony','尤加利 × 薄荷':'eucalyptus-menthol','熟地黃':'prepared-rehmannia','五味子':'schisandra','野菊花':'chrysanthemum','菟絲子':'dodder-seed','胜肽':'peptide-complex','神經醯胺 NP':'ceramides-ha',
+ '石斛':'dendrobium','黃耆':'astragalus','葛根':'pueraria','白芍':'white-peony','尤加利 × 薄荷':'eucalyptus-menthol','熟地黃':'prepared-rehmannia','五味子':'schisandra','野菊花':'chrysanthemum','菟絲子':'dodder-seed','胜肽':'peptide-complex','神經醯胺 NP':'ceramides-ha',
 }
 def ing_img(name):
     k=ING_IMG.get(name); return u_opt(f'ingredients/{k}',800) if k else None

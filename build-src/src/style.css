@@ -321,6 +321,9 @@ h3{font-size:20px;font-weight:700}
 
 /* 成分解析 */
 .ing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.ing-grid.ing-grid-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.ing-grid.ing-grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.ing-grid.ing-grid-3{gap:10px}.ing-grid.ing-grid-3 .ing h3{font-size:16px}}
 .ing{background:var(--cream);border-radius:var(--r);padding:20px 20px 18px;display:flex;flex-direction:column;gap:6px}
 .ing-role{align-self:flex-start;font-size:12px;font-weight:800;color:#fff;background:var(--green);border-radius:999px;padding:2px 10px;letter-spacing:.06em}
 .ing h3{font-size:18px}
