@@ -39,11 +39,19 @@
     }catch(e){}
   });
 
-  // 產品頁固定購買列：捲過主購買區後顯示
-  var bar=document.querySelector('.buybar'), anchor=document.querySelector('.buybox');
-  if(bar&&anchor&&'IntersectionObserver' in window){
+  // 產品頁固定購買列：主購買按鈕沒有完整出現在畫面上時顯示（手機首屏只露出一半也算）
+  var bar=document.querySelector('.buybar'), mainBtn=document.querySelector('.buybox .btn-primary');
+  if(bar&&mainBtn){
     document.body.classList.add('has-buybar');
-    new IntersectionObserver(function(es){es.forEach(function(e){bar.classList.toggle('show',!e.isIntersecting&&e.boundingClientRect.top<0);});},{threshold:0}).observe(anchor);
+    var checkBar=function(){
+      var r=mainBtn.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight;
+      var seen=Math.max(0,Math.min(r.bottom,vh)-Math.max(r.top,0))/(r.height||1);
+      bar.classList.toggle('show',seen<0.9);
+    };
+    window.addEventListener('scroll',checkBar,{passive:true});
+    window.addEventListener('resize',checkBar);
+    window.addEventListener('load',checkBar);
+    checkBar();
   }
 
   // 部落格篩選

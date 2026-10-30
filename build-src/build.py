@@ -1182,17 +1182,17 @@ def build_products():
     <span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span>
     <h1>{esc(p['name'])}</h1><div class="en">{esc(p['en'])} · {esc(p['made'])}</div>
     <div class="hook">{esc(p['hook'])}</div>
-    {stats_row(slug)}
-    <p class="desc">{esc(p['long'])}</p>
-    <ul class="facts"><li>{esc(p['form'])}</li><li>{esc(p['spec'])}</li><li>成分全部公開 · 第三方純度檢測</li><li>30 天內未拆封可退</li></ul>
     <div class="buybox">
       <div class="row"><div class="price">{pr}<small>{esc(p['price_note'])} · USD</small></div>{'<span class="badge badge-oos">補貨中</span>' if p.get('oos') else ('<span class="badge badge-star">單次購買 · 無訂閱</span>' if not p.get('is_bundle') else '<span class="badge badge-star">招牌組合</span>')}</div>
-      {variants}
       <a class="btn btn-primary btn-block ext" data-product="{slug}" href="{url}">{buy_label}</a>
       {trial}{oos}
       <ul class="micro"><li>安全結帳</li><li>美國 {'眼貼滿 $79' if p['series']=='eye' and not p.get('is_bundle') else '滿 $200'} 免運</li><li>48 小時內出貨</li><li>30 天未拆封可退</li></ul>
+      {variants}
       <ol class="flow"><li><b>選規格</b>在商品頁選擇數量／組合</li><li><b>安全結帳</b>Visa・Apple Pay・PayPal・Shop Pay</li><li><b>收到貨</b>工作日 48 小時內出貨</li></ol>
     </div>
+    {stats_row(slug)}
+    <p class="desc">{esc(p['long'])}</p>
+    <ul class="facts"><li>{esc(p['form'])}</li><li>{esc(p['spec'])}</li><li>成分全部公開 · 第三方純度檢測</li><li>30 天內未拆封可退</li></ul>
   </div>
 </div></section>
 <!--zebra-->{showcase_section(slug)}
@@ -1223,7 +1223,7 @@ def build_products():
   <div class="pgrid">{cross}</div>
 </div></section>
 {journey(rel,'product',product=slug)}
-<div class="buybar"><div class="wrap"><div class="t"><span class="price">{pr}</span><span>{esc(p['name'])} · {esc(p['price_note'])}</span></div><a class="btn btn-primary ext" data-product="{slug}" href="{url}">{'查看組合' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else '前往購買')}</a></div></div>
+<div class="buybar"><div class="wrap"><div class="t"><span class="price">{pr}</span><span>{esc(p['name'])} · {esc(p['price_note'])}</span></div><a class="btn btn-primary ext" data-product="{slug}" href="{url}">{'查看組合' if p.get('is_bundle') else buy_label}</a></div></div>
 <script type="application/ld+json">{faq_ld(p['faq'])}</script>
 {('<script type="application/ld+json">'+ld+'</script>') if ld else ''}
 '''

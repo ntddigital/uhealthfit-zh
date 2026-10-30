@@ -367,9 +367,9 @@ h3{font-size:20px;font-weight:700}
 .buybar.show{transform:none}
 .buybar .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px}
 .buybar .t{font-weight:700;font-size:15px;display:flex;gap:10px;align-items:baseline;min-width:0}
-.buybar .t .price{font-size:18px}
+.buybar .t .price{font-size:18px;color:var(--ink);font-weight:800}
 .buybar .t span{color:var(--ink-3);font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:600px){.buybar .t span{display:none}.buybar .btn{padding:12px 18px;font-size:15px}}
+@media(max-width:600px){.buybar .t span:not(.price){display:none}.buybar .btn{padding:12px 18px;font-size:15px}}
 .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:none;gap:10px}
 .sticky-cta .btn{flex:1;padding:13px 10px;font-size:15px}
 @media(max-width:860px){.sticky-cta{display:flex}}
