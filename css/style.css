@@ -564,7 +564,7 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .promo-hero{padding:clamp(14px,2.4vw,28px) 0 0}
 .promo-art{position:relative;border-radius:clamp(14px,2vw,24px);overflow:hidden;box-shadow:0 30px 60px -36px rgba(90,42,18,.55)}
 .promo-art img{display:block;width:100%;height:auto}
-.promo-hot{position:absolute;border-radius:999px}
+.promo-hot{position:absolute;border-radius:16px}
 .promo-hot:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .promo-cta-m{display:none;gap:10px;margin-top:12px}
 .promo-cta-m .btn{flex:1;justify-content:center}

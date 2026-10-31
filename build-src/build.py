@@ -701,6 +701,7 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              offers={'enerbalance':('特價','EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）'),
                      'eye-patches':('每買 3 送 1','明目冷敷眼貼每買 3 盒送 1 盒：買 3 送 1、買 6 送 2、買 9 送 3'),
                      'eye-cream':('第 2 瓶半價','草本舒緩修護眼霜第 2 瓶半價（2 瓶 $88.50）')},
+             chips={'enerbalance':'限時 40% OFF $179'},  # 首頁橫幅下方按鈕的優惠文字（沒寫就用卡片標籤）
              # 產品頁規格：在指定規格加註，或活動期間改用另一組規格（與 zh.uhealthfit.com 商品頁一致）
              variant_tags={'eye-patches':{'3 盒 · 一個月組':'感恩節買 3 送 1','6 盒 · 兩個月組':'感恩節買 6 送 2','9 盒 · 三個月組':'感恩節買 9 送 3'}},
              variants={'eye-cream':[('1 瓶','$59','',False),('2 瓶 · 第 2 瓶半價','$88.50','感恩節優惠',True)]},
@@ -711,9 +712,10 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
                     'eye-cream-buying-guide':['eye-cream'],'dendrobium-shihu-eye-cream-herb':['eye-cream'],
                     'thanksgiving-gift-for-parents-herbal':['enerbalance','eye-patches','eye-cream']},
              # 設計好的橫幅圖（build-src/src/img/）；hot 為圖上兩個按鈕的位置（佔圖片寬高的百分比：左、上、寬、高）
-             banner=dict(lg='promo-thanksgiving-1672.jpg', sm='promo-thanksgiving-900.jpg', w=1672, h=941, product='enerbalance',
-                         alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299），40% OFF',
-                         hot=dict(buy=(3.8,76.0,22.2,10.8), learn=(26.2,76.6,16.4,9.4))))
+             banner=dict(lg='promo-thanksgiving-all-1672.jpg', sm='promo-thanksgiving-all-900.jpg', w=1672, h=941, product='enerbalance',
+                         alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）、明目冷敷眼貼每買 3 送 1、修護眼霜第 2 瓶半價',
+                         hot=[('enerbalance',(2.4,13.8,39.5,61.0)),('enerbalance',(42.8,15.4,17.0,73.3)),
+                              ('eye-patches',(57.7,23.4,20.3,57.4)),('eye-cream',(78.6,41.4,20.6,40.4))]))
 
 def promo_img(slug):
     return DETAILS.get(slug,{}).get('promo_image')
@@ -1028,22 +1030,22 @@ def promo_more(rel, skip):
     # 設計橫幅只放一項產品；其餘優惠列在橫幅下方
     others=[k for k in PROMO['items'] if k!=skip and promo_offer(k)]
     if not others: return ''
-    chips=''.join(f'<a class="promo-chip" href="{rel}products/{k}.html"><img src="{PRODUCTS[k]["image"]}" alt="" loading="lazy"><span><b>{esc(PRODUCTS[k]["name"].replace("WiseQuest ",""))}</b><em>{esc(promo_offer(k)[0])}</em></span><span class="go">看優惠 →</span></a>' for k in others)
-    return f'<div class="promo-more"><span class="promo-more-h">更多感恩節優惠<small>至 {PROMO["ends"]} 止</small></span><div class="promo-chips">{chips}</div></div>'
+    chips=''.join(f'<a class="promo-chip" href="{rel}products/{k}.html"><img src="{PRODUCTS[k]["image"]}" alt="" loading="lazy"><span><b>{esc(re.sub(r"^[A-Za-z]+ ","",PRODUCTS[k]["name"]))}</b><em>{esc(PROMO.get("chips",{}).get(k) or promo_offer(k)[0])}</em></span><span class="go">看優惠 →</span></a>' for k in others)
+    head='更多感恩節優惠' if skip else f'{len(others)} 項感恩節優惠'
+    return f'<div class="promo-more"><span class="promo-more-h">{head}<small>至 {PROMO["ends"]} 止</small></span><div class="promo-chips">{chips}</div></div>'
 
 def promo_banner(rel):
     if not PROMO: return ''
     if PROMO.get('banner'):
         b=PROMO['banner']; slug=b['product']; p=PRODUCTS[slug]
-        pos=lambda k: 'left:{}%;top:{}%;width:{}%;height:{}%'.format(*b['hot'][k])
+        pos=lambda r: 'left:{}%;top:{}%;width:{}%;height:{}%'.format(*r)
+        hots=''.join(f'<a class="promo-hot" href="{rel}products/{k}.html" style="{pos(r)}" aria-label="{esc(PRODUCTS[k]["name"])}：{esc(promo_offer(k)[1] if promo_offer(k) else "")}"></a>' for k,r in b['hot'])
         return f'''<section class="promo-hero"><div class="wrap">
   <div class="promo-art">
     <a href="{rel}products/{slug}.html" aria-label="{esc(p['name'])} 限時特價"><img src="{rel}img/{b['lg']}" srcset="{rel}img/{b['sm']} 900w, {rel}img/{b['lg']} {b['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{b['w']}" height="{b['h']}" fetchpriority="high"></a>
-    <a class="promo-hot ext" data-product="{slug}" href="{buy_url(p,slug)}" style="{pos('buy')}" aria-label="立即搶購 {esc(p['name'])}"></a>
-    <a class="promo-hot" href="{rel}products/{slug}.html" style="{pos('learn')}" aria-label="了解 {esc(p['name'])}"></a>
+    {hots}
   </div>
-  {promo_more(rel, slug)}
-  <div class="promo-cta-m"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即搶購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
+  {promo_more(rel, None)}
   <p class="note promo-note">活動至 {PROMO['ends']} 止；實際價格以官方商店結帳頁為準。</p>
 </div></section>
 '''
