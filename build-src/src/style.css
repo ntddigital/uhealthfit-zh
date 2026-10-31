@@ -599,3 +599,6 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .promo-wide{padding:clamp(10px,2vw,20px) 0 clamp(18px,3vw,32px)}
 .promo-wide a{display:block;border-radius:clamp(14px,2vw,24px);overflow:hidden;box-shadow:0 30px 60px -36px rgba(90,42,18,.55)}
 .promo-wide img{display:block;width:100%;height:auto}
+/* 首頁橫幅：桌機寬版／手機直式各自的可點範圍 */
+.promo-hot.m{display:none}
+@media(max-width:700px){.promo-hot.d{display:none}.promo-hot.m{display:block}}

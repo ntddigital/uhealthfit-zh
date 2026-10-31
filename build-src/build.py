@@ -712,10 +712,16 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              match={'enerbalance':r'EnerBalance|黑膏滋|products/enerbalance','eye-patches':r'眼貼|products/eye-patches',
                     'eye-cream':r'修護眼霜|products/eye-cream|眼霜'},
              # 設計好的橫幅圖（build-src/src/img/）；hot 為圖上兩個按鈕的位置（佔圖片寬高的百分比：左、上、寬、高）
-             banner=dict(lg='promo-thanksgiving-all-1672.jpg', sm='promo-thanksgiving-all-900.jpg', w=1672, h=941, product='enerbalance',
+             # 首頁橫幅：桌機用寬版、手機（≤700px）用直式；hot 為圖上可點範圍（像素：左、上、右、下），依產品連到產品頁
+             banner=dict(product='enerbalance',
                          alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）、明目冷敷眼貼每買 3 送 1、修護眼霜第 2 瓶半價',
-                         hot=[('enerbalance',(2.4,13.8,39.5,61.0)),('enerbalance',(42.8,15.4,17.0,73.3)),
-                              ('eye-patches',(57.7,23.4,20.3,57.4)),('eye-cream',(78.6,41.4,20.6,40.4))]))
+                         desktop=dict(lg='promo-thanksgiving-wide-2000.jpg', sm='promo-thanksgiving-wide-1200.jpg', w=2000, h=667,
+                                      hot=[('enerbalance',(270,40,850,520)),('enerbalance',(870,80,1120,655)),
+                                           ('eye-patches',(1060,115,1365,500)),('eye-patches',(1135,485,1410,590)),
+                                           ('eye-cream',(1370,240,1760,485)),('eye-cream',(1450,485,1730,590))]),
+                         mobile=dict(lg='promo-thanksgiving-mobile-1024.jpg', sm='promo-thanksgiving-mobile-750.jpg', w=1024, h=1536,
+                                     hot=[('enerbalance',(160,60,870,540)),('enerbalance',(375,540,890,1000)),
+                                          ('eye-patches',(10,880,480,1400)),('eye-cream',(540,1000,980,1400))])))
 
 def promo_img(slug):
     return DETAILS.get(slug,{}).get('promo_image')
@@ -1047,13 +1053,17 @@ def promo_more(rel, skip):
 def promo_banner(rel):
     if not PROMO: return ''
     if PROMO.get('banner'):
-        b=PROMO['banner']; slug=b['product']; p=PRODUCTS[slug]
-        pos=lambda r: 'left:{}%;top:{}%;width:{}%;height:{}%'.format(*r)
-        hots=''.join(f'<a class="promo-hot" href="{rel}products/{k}.html" style="{pos(r)}" aria-label="{esc(PRODUCTS[k]["name"])}：{esc(promo_offer(k)[1] if promo_offer(k) else "")}"></a>' for k,r in b['hot'])
+        b=PROMO['banner']; slug=b['product']; p=PRODUCTS[slug]; d=b['desktop']; m=b['mobile']
+        def hots(v, cls):
+            pos=lambda r: 'left:{:.2f}%;top:{:.2f}%;width:{:.2f}%;height:{:.2f}%'.format(r[0]/v['w']*100, r[1]/v['h']*100, (r[2]-r[0])/v['w']*100, (r[3]-r[1])/v['h']*100)
+            return ''.join(f'<a class="promo-hot {cls}" href="{rel}products/{k}.html" style="{pos(r)}" aria-label="{esc(PRODUCTS[k]["name"])}：{esc(promo_offer(k)[1] if promo_offer(k) else "")}"></a>' for k,r in v['hot'])
         return f'''<section class="promo-hero"><div class="wrap">
   <div class="promo-art">
-    <a href="{rel}products/{slug}.html" aria-label="{esc(p['name'])} 限時特價"><img src="{rel}img/{b['lg']}" srcset="{rel}img/{b['sm']} 900w, {rel}img/{b['lg']} {b['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{b['w']}" height="{b['h']}" fetchpriority="high"></a>
-    {hots}
+    <a href="{rel}products/{slug}.html" aria-label="{esc(p['name'])} 限時特價"><picture>
+      <source media="(max-width:700px)" srcset="{rel}img/{m['sm']} 750w, {rel}img/{m['lg']} {m['w']}w" sizes="100vw" width="{m['w']}" height="{m['h']}">
+      <img src="{rel}img/{d['lg']}" srcset="{rel}img/{d['sm']} 1200w, {rel}img/{d['lg']} {d['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{d['w']}" height="{d['h']}" fetchpriority="high">
+    </picture></a>
+    {hots(d,'d')}{hots(m,'m')}
   </div>
   {promo_more(rel, None)}
   <p class="note promo-note">活動至 {PROMO['ends']} 止；實際價格以官方商店結帳頁為準。</p>
