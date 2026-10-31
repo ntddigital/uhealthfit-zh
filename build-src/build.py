@@ -740,6 +740,13 @@ def series_photo(k):
         if promo_img(p): return promo_img(p), True
     return SERIES[k]['photo'], False
 
+def series_card_img(k, rel):
+    # 系列卡片：系列內有產品放了活動橫幅（PROMO['wide']）時，卡片改用該橫幅，否則同 series_img
+    for p in SERIES[k]['products']:
+        b=(PROMO or {}).get('wide',{}).get(p)
+        if b: return f'<img src="{rel}img/{b["sm"]}" alt="" class="banner"'
+    return series_img(k)
+
 def series_img(k, alt=''):
     u,promo=series_photo(k)
     return f'<img src="{u}" alt="{esc(alt)}"'+(' class="promo"' if promo else '')
@@ -1119,7 +1126,7 @@ def promo_banner(rel):
 
 def series_card(k, rel):
     # 系列卡片（首頁與六大系列匯總頁共用）
-    return f'''<a class="scard s-{k}" href="{rel}series/{k}.html"><div class="scard-pic">{series_img(k)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>'''
+    return f'''<a class="scard s-{k}" href="{rel}series/{k}.html"><div class="scard-pic">{series_card_img(k, rel)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>'''
 
 def build_home():
     rel=''
@@ -1209,7 +1216,7 @@ def build_series():
         posts=''.join(post_card(p,rel) for p in POSTS if p['series']==k)
         reframe=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(s['reframe']))
         sits=''.join(f'<li>{esc(x)}</li>' for x in s['situations'])
-        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic">{series_img(o)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
+        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic">{series_card_img(o, rel)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
         body=f'''
 {series_hero(k,rel)}
 {promo_series_banner(k, rel)}{''.join(promo_wide(x, rel) for x in s['products'])}<section class="sec"><div class="wrap">
@@ -1470,7 +1477,7 @@ ABOUT_US_PICKS = [
 def build_about_us():
     rel=''
     picks=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(ABOUT_US_PICKS))
-    series=''.join(f'<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic">{series_img(k)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]["en"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
+    series=''.join(f'<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic">{series_card_img(k, rel)} loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]["en"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
     body=f'''
 <section class="hero"><div class="wrap">
   <div><div class="crumbs"><a href="index.html">首頁</a><span>›</span><span>關於我們</span></div><span class="eyebrow">關於優健堂 UHealthFit</span>

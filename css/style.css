@@ -691,3 +691,5 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .lm-pop .lm-form input{padding:12px 16px;font-size:15px}
 @media(max-width:860px){.lm-pop{left:14px;right:14px;width:auto;bottom:calc(76px + env(safe-area-inset-bottom))}}
 @media(max-width:860px){.lm-pop{padding:16px}.lm-pop-row{grid-template-columns:1fr;margin-bottom:10px}.lm-pop-row img,.lm-pop-row p{display:none}.lm-pop .consent{font-size:11px;line-height:1.5;margin-top:8px}}
+/* 系列卡片用活動橫幅：完整顯示（不裁到文字與價格），上下留白用接近橫幅的暖色 */
+.scard-pic img.banner{object-fit:contain!important;object-position:center!important;background:linear-gradient(180deg,#F6DDB0,#EAD7BF);transform:none}
