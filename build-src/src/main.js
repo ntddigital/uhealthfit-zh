@@ -94,32 +94,89 @@
     show(0);
   }
 
-  // Klaviyo 名單訂閱（client API，公開金鑰）
-  var form=document.querySelector('form[data-klaviyo-list]');
-  if(form){
+  // Klaviyo 名單訂閱（client API，公開金鑰）：測驗電子書、免費下載頁、文章內區塊、小視窗共用
+  var LM_KEY='uhf_lm_done';
+  function lmDone(){try{return JSON.parse(localStorage.getItem(LM_KEY)||'{}')||{};}catch(e){return {};}}
+  function markLm(k){try{var d=lmDone();d[k]=1;localStorage.setItem(LM_KEY,JSON.stringify(d));}catch(e){}}
+  var kforms=[].slice.call(document.querySelectorAll('form[data-klaviyo-list]'));
+  kforms.forEach(function(form){
     form.addEventListener('submit',function(ev){
       ev.preventDefault();
-      var email=form.querySelector('input[type=email]').value.trim(); if(!email) return;
+      var input=form.querySelector('input[type=email]'), email=input.value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ toast('請輸入正確的 Email'); input.focus(); return; }
       var company=form.getAttribute('data-klaviyo-company'), list=form.getAttribute('data-klaviyo-list');
-      var props={source:'uhealthfit-site/'+page}; var r=form.querySelector('input[name="quiz_result"]'); if(r&&r.value){props.quiz_result=r.value;}
-      var lmIn=form.querySelector('input[name="lead_magnet"]'), lmKey=lmIn?lmIn.value:'', ebooks={}; try{ebooks=JSON.parse(form.getAttribute('data-ebooks')||'{}');}catch(e){}
-      var ebook=ebooks[lmKey]; if(ebook){props.lead_magnet=lmKey;}
-      var body={data:{type:'subscription',attributes:{custom_source:'uhealthfit-site '+page,profile:{data:{type:'profile',attributes:{email:email,properties:props}}}},relationships:{list:{data:{type:'list',id:list}}}}};
+      var lmPage=form.getAttribute('data-lm'), place=form.getAttribute('data-lm-place')||'';
+      var props={source:'uhealthfit-site/'+page}, lmKey='', ebook=null;
+      if(lmPage){ // 免費下載品（7 天護眼、節氣月曆）：各自的 List 觸發各自的 Flow
+        lmKey=lmPage; props.lead_magnet=lmKey; props.lead_magnet_place=place;
+      } else { // 測驗電子書
+        var r=form.querySelector('input[name="quiz_result"]'); if(r&&r.value){props.quiz_result=r.value;}
+        var lmIn=form.querySelector('input[name="lead_magnet"]'), ebooks={}; lmKey=lmIn?lmIn.value:'';
+        try{ebooks=JSON.parse(form.getAttribute('data-ebooks')||'{}');}catch(e){}
+        ebook=ebooks[lmKey]||null; if(ebook){props.lead_magnet=lmKey;}else{lmKey='';}
+      }
+      var body={data:{type:'subscription',attributes:{custom_source:'uhealthfit-site '+page+(place?' '+place:''),profile:{data:{type:'profile',attributes:{email:email,properties:props}}}},relationships:{list:{data:{type:'list',id:list}}}}};
       var btn=form.querySelector('button'); btn.disabled=true;
       fetch('https://a.klaviyo.com/client/subscriptions/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(body)})
       .then(function(res){ if(res.status===202||res.ok){done();} else {throw new Error('status '+res.status);} })
       .catch(function(){ btn.disabled=false; toast('暫時無法送出，請稍後再試，或來信 service@uhealthfit.com'); });
       function done(){
-        form.style.display='none';var ok=form.parentNode.querySelector('.email-ok');
-        if(ok){ok.style.display='block';var dl=ok.querySelector('.ebook-dl');if(dl){if(ebook){dl.href=ebook.url;}else{dl.style.display='none';}}}
+        // 同一頁上同一個下載品的表單（頁首、頁尾、小視窗）一起換成「已收到」
+        var same=lmPage?kforms.filter(function(f){return f.getAttribute('data-lm')===lmPage;}):[form];
+        same.forEach(function(f){
+          f.style.display='none'; var ok=f.parentNode.querySelector('.email-ok');
+          if(ok){ok.style.display='block';var dl=ok.querySelector('.ebook-dl');if(dl){if(ebook){dl.href=ebook.url;}else if(!lmPage){dl.style.display='none';}}}
+        });
+        if(lmPage){ markLm(lmPage); document.body.classList.add('lm-submitted'); }
         if(ebook){ // 觸發 Klaviyo「Requested Quiz Ebook」事件，由 Flow 寄出對應的電子書
           var ev={data:{type:'event',attributes:{properties:{ebook:lmKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
           fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
         }
-        if(window.gtag){gtag('event','generate_lead',{method:'quiz_email',lead_magnet:lmKey||'none'});}
-        if(window.fbq){fbq('track','Lead');} // 不傳電子書類別給 Meta，類別只留在 GA4 與 Klaviyo
+        if(window.gtag){gtag('event','generate_lead',{method:lmPage?('lead_magnet_'+(place||'page')):'quiz_email',lead_magnet:lmKey||'none'});}
+        if(window.fbq){fbq('track','Lead');} // 不傳下載品類別給 Meta，類別只留在 GA4 與 Klaviyo
       }
     });
+  });
+
+  // 免費下載頁：手機上表單不在畫面內時，底部出現「免費下載」按鈕，點了捲回表單
+  var lps=document.querySelector('.lp-sticky');
+  if(lps){
+    var lpForms=[].slice.call(document.querySelectorAll('.lp .lm-form'));
+    var chkLp=function(){
+      var vh=window.innerHeight||document.documentElement.clientHeight;
+      var vis=lpForms.some(function(f){var r=f.getBoundingClientRect();return f.style.display!=='none'&&r.bottom>0&&r.top<vh;});
+      lps.classList.toggle('show',!vis&&!document.body.classList.contains('lm-submitted')&&window.scrollY>240);
+    };
+    window.addEventListener('scroll',chkLp,{passive:true}); window.addEventListener('resize',chkLp); chkLp();
+    lps.addEventListener('click',function(e){
+      e.preventDefault(); var f=lpForms[0]; if(!f) return;
+      f.scrollIntoView({behavior:'smooth',block:'center'});
+      setTimeout(function(){var i=f.querySelector('input');if(i){i.focus({preventScroll:true});}},600);
+    });
+  }
+
+  // 免費下載小視窗：每次瀏覽最多一次；捲到 55% 或停留 30 秒才出現；測驗頁、下載頁、已領過的人不出現
+  var pops=[].slice.call(document.querySelectorAll('.lm-pop'));
+  if(pops.length&&page!=='quiz'&&!document.querySelector('main.lp')){
+    var inl=document.querySelector('.lm-inline[data-lm-key]');
+    var popKey=inl?inl.getAttribute('data-lm-key'):'solar-calendar-2027';
+    var pop=pops.filter(function(p){return p.getAttribute('data-lm-key')===popKey;})[0];
+    var seen=false; try{seen=!!sessionStorage.getItem('uhf_pop_seen');}catch(e){}
+    if(pop&&!seen&&!lmDone()[popKey]){
+      var opened=false, tm;
+      var openPop=function(){
+        if(opened||document.body.classList.contains('lm-submitted')) return; opened=true; clearTimeout(tm);
+        try{sessionStorage.setItem('uhf_pop_seen','1');}catch(e){}
+        pop.hidden=false; requestAnimationFrame(function(){pop.classList.add('show');});
+        if(window.gtag){gtag('event','lead_magnet_popup_view',{lead_magnet:popKey});}
+      };
+      var closePop=function(){pop.classList.remove('show');setTimeout(function(){pop.hidden=true;},250);};
+      pop.querySelector('.lm-pop-x').addEventListener('click',closePop);
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pop.hidden){closePop();}});
+      tm=setTimeout(openPop,30000);
+      var onPopScroll=function(){var h=document.documentElement;if((window.scrollY+window.innerHeight)/h.scrollHeight>0.55){openPop();window.removeEventListener('scroll',onPopScroll);}};
+      window.addEventListener('scroll',onPopScroll,{passive:true});
+    }
   }
   // 系列頁頁首輪播：箭頭、圓點、滑動、約 6 秒自動切換（滑鼠移入或觸控時暫停）
   document.querySelectorAll('.slides').forEach(function(box){

@@ -3,6 +3,7 @@
 
 ## 結構
 - index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋32 篇
+- free/eye-care-7-day.html、free/2027-calendar.html 免費下載頁（廣告落地頁，noindex、不進 sitemap；Email 分別進 Klaviyo List T6wWLP／UfVMEF，Flow 上線後把 build.py 的 LEAD_FLOWS_LIVE 改成 True）
 - quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about-us.html 關於我們（優健堂）｜ about.html 研發者黃醫師與品牌理念 ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
