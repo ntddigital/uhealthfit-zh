@@ -693,3 +693,80 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 @media(max-width:860px){.lm-pop{padding:16px}.lm-pop-row{grid-template-columns:1fr;margin-bottom:10px}.lm-pop-row img,.lm-pop-row p{display:none}.lm-pop .consent{font-size:11px;line-height:1.5;margin-top:8px}}
 /* 系列卡片用活動橫幅：完整顯示（不裁到文字與價格），上下留白用接近橫幅的暖色 */
 .scard-pic img.banner{object-fit:contain!important;object-position:center!important;background:linear-gradient(180deg,#F6DDB0,#EAD7BF);transform:none}
+
+/* ───── 免費下載頁（Lead magnet）改版 ───── */
+.lp-center{text-align:center}
+.sec-head.lp-center{max-width:720px;margin-left:auto;margin-right:auto}
+.sec-head.lp-center .eyebrow::before{display:none}
+.lp-hero2{position:relative;background:var(--lp-bg) center/cover no-repeat;overflow:hidden}
+.lp-hero2::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.94) 0%,rgba(255,255,255,.86) 42%,rgba(255,255,255,.35) 72%,rgba(255,255,255,.1) 100%)}
+.lp-hero2 .wrap{position:relative;display:grid;grid-template-columns:1.12fr .88fr;gap:40px;align-items:center;padding-top:clamp(36px,6vw,84px);padding-bottom:clamp(40px,6vw,84px)}
+.lp-pill{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:800;color:var(--green);letter-spacing:.04em;box-shadow:0 6px 16px -10px rgba(8,32,15,.35)}
+.lp-hero2 h1{font-size:clamp(30px,4.6vw,48px);margin:16px 0 14px;line-height:1.22}
+.lp-hero2 h1 em{font-style:normal;color:var(--green)}
+.lp-hero2 .lead{max-width:560px}
+.lp-card{background:#fff;border-radius:22px;padding:20px 20px 16px;margin-top:20px;max-width:580px;box-shadow:0 24px 50px -28px rgba(8,32,15,.45);border:1px solid rgba(0,0,0,.04)}
+.lp-trust{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:14px;font-weight:700;color:var(--ink-2)}
+.lp-trust li::before{content:"✓ ";color:var(--green);font-weight:900}
+.lp-cover2{display:flex;justify-content:center}
+.lp-cover-frame{position:relative;width:min(100%,360px)}
+.lp-cover-frame img{display:block;width:100%;height:auto;border-radius:10px;background:#fff;transform:rotate(3deg);box-shadow:0 40px 70px -30px rgba(8,32,15,.55),0 4px 12px rgba(8,32,15,.08)}
+.lp-sticker{position:absolute;top:-16px;right:-14px;width:86px;height:86px;border-radius:50%;background:#C0392B;color:#fff;font-weight:900;font-size:17px;line-height:1.2;display:flex;align-items:center;justify-content:center;text-align:center;transform:rotate(12deg);box-shadow:0 12px 24px -10px rgba(120,20,10,.6)}
+.lm-next{display:block;margin-top:8px;font-size:14px;font-weight:600;color:var(--ink-2)}
+.lm-next a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+/* 7 天時間軸 */
+.lm-tl{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px}
+.lm-tl li{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 20px 20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 14px 30px -24px rgba(8,32,15,.35)}
+.lm-tl-ic{font-size:30px;line-height:1;margin-bottom:6px}
+.lm-tl .d{font-family:var(--font-en);font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--green)}
+.lm-tl b{font-size:18px;line-height:1.35}
+.lm-tl li>span:last-child{font-size:14px;color:var(--ink-2);line-height:1.65}
+.lm-tl-after{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--green-dark);color:#fff;border-radius:18px;padding:18px 22px;margin-top:16px}
+.lm-tl-after b{display:block;font-size:17px}
+.lm-tl-after span{color:rgba(255,255,255,.82);font-size:15px}
+.lm-tl-after .btn{background:#fff;color:var(--green-dark);border-color:#fff}
+/* 節氣：四季分組 */
+.lm-seasons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.lm-season{--sc:#3E8E5A;--st:#EEF6EF;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.lm-season.s-summer{--sc:#2F7FA6;--st:#EAF4F8}.lm-season.s-autumn{--sc:#C46A2B;--st:#FBF0E6}.lm-season.s-winter{--sc:#3E4E7A;--st:#EDF0F7}
+.lm-season h3{margin-bottom:10px}
+.lm-season h3 span{display:inline-flex;width:38px;height:38px;border-radius:50%;background:var(--sc);color:#fff;align-items:center;justify-content:center;font-size:18px}
+.lm-season ol{display:grid;gap:8px}
+.lm-season li{background:var(--st);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.lm-season .mo{font-family:var(--font-en);font-size:12px;font-weight:800;color:var(--sc);letter-spacing:.06em}
+.lm-season b{font-size:16px}
+.lm-season li>span:last-child{font-size:13px;color:var(--ink-2);line-height:1.55}
+/* 你會收到／適合誰 */
+.lm-gets2 li{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--cream-dark)}
+.lm-gets2 .ic{flex:0 0 46px;height:46px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 8px 18px -12px rgba(8,32,15,.4)}
+.lm-gets2 b{display:block;font-size:17px}
+.lm-gets2 span{font-size:15px;color:var(--ink-2)}
+.lm-who2{display:flex;flex-wrap:wrap;gap:10px}
+.lm-who2 li{background:#fff;border-radius:999px;padding:11px 18px;font-weight:700;box-shadow:0 8px 18px -14px rgba(8,32,15,.4)}
+.lm-who2 li::before{content:"✓ ";color:var(--green);font-weight:900}
+.lm-about2{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;margin:0 auto}
+/* 結尾行動區 */
+.lp-final2{position:relative;background:var(--lp-bg) center/cover no-repeat}
+.lp-final2::before{content:"";position:absolute;inset:0;background:rgba(8,32,15,.55)}
+.lp-final2 .wrap{position:relative}
+.lp-final-card{max-width:680px;margin:0 auto;background:rgba(255,255,255,.96);border-radius:24px;padding:clamp(22px,4vw,36px);text-align:center;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.lp-final-card h2{margin-bottom:8px}
+.lp-final-card .lm-box{text-align:left;margin-top:16px}
+/* 主站：連到免費下載 */
+.lm-site-link{display:block;margin-top:12px;font-weight:700;font-size:15px;color:var(--green)}
+.lm-site-link a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.lm-side{display:flex;gap:12px;align-items:center;background:#FFF8EE;border:1px solid #F1DFC6;border-radius:16px;padding:12px;margin-bottom:16px}
+.lm-side img{width:64px;height:auto;border-radius:6px;box-shadow:0 8px 16px -10px rgba(0,0,0,.4);transform:rotate(-3deg);background:#fff}
+.lm-side span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.lm-side em{font-style:normal;font-size:12px;font-weight:800;color:#B5652A;letter-spacing:.06em}
+.lm-side b{font-size:15px;color:var(--ink)}
+.lm-side small{font-size:12.5px;color:var(--ink-3);line-height:1.5}
+.lm-side i{font-style:normal;font-size:13px;font-weight:800;color:var(--green);margin-top:2px}
+@media(max-width:960px){.lm-tl{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){
+  .lp-hero2::before{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.88))}
+  .lp-hero2 .wrap{grid-template-columns:1fr;gap:28px}
+  .lp-cover-frame{width:min(62%,230px)}
+  .lm-seasons{grid-template-columns:1fr}
+}
+@media(max-width:560px){.lm-tl{grid-template-columns:1fr}.lm-tl li{flex-direction:row;flex-wrap:wrap;align-items:baseline;column-gap:10px}.lm-tl-ic{font-size:24px;margin:0}.lm-tl li>span:last-child{flex-basis:100%}.lp-sticker{width:70px;height:70px;font-size:14px;top:-10px;right:-8px}}

@@ -921,9 +921,18 @@ def journey(rel, stage, series_key=None, post=None, product=None):
         elif stage=='blog' and post: lm_key=lm_series_key(post['series'])
         elif stage=='product' and product: lm_key=lm_series_key(PRODUCTS[product]['series'])
     pre=lm_inline(lm_key, rel) if lm_key else ''
+    # Flow 上線前：下一步區塊放一條連到免費下載頁的小連結
+    free=''
+    if not LEAD_FLOWS_LIVE:
+        fk=None
+        if stage=='series' and series_key: fk=lm_series_key(series_key)
+        elif stage=='blog' and post: fk=lm_series_key(post['series'])
+        elif stage=='product' and product: fk=lm_series_key(PRODUCTS[product]['series'])
+        if fk: free=f'<a class="lm-site-link" href="{rel}{LEAD_MAGNETS[fk]["path"]}">{esc(LEAD_MAGNETS[fk]["site_link"])}</a>'
+        elif stage in ('home','about','faq'): free='<span class="lm-site-link">免費下載：'+'・'.join(f'<a href="{rel}{x["path"]}">{esc(x["name"])}</a>' for x in LEAD_MAGNETS.values())+'</span>'
     html_cards=''.join(f'<div class="jcard"><div class="k">{k}</div><h3>{esc(t)}</h3><p>{esc(d)}</p><a class="btn btn-ghost btn-sm" href="{h}">{b}</a></div>' for k,t,d,h,b in cards)
     return pre+f'''<section class="sec-tight journey"><div class="wrap">
-  <div class="lead-box"><span class="eyebrow">你的下一步</span><h2>開始，比完美更重要</h2><p class="lead" style="font-size:16px">養護是累積出來的。從一件小事開始，剩下的我們陪你慢慢來。</p></div>
+  <div class="lead-box"><span class="eyebrow">你的下一步</span><h2>開始，比完美更重要</h2><p class="lead" style="font-size:16px">養護是累積出來的。從一件小事開始，剩下的我們陪你慢慢來。</p>{free}</div>
   {html_cards}
 </div></section>
 '''
@@ -944,7 +953,7 @@ def footer(rel):
 <footer class="site"><div class="wrap">
   <div><img class="logo" src="{rel}{LOGO_WHITE}" alt="UHealthFit" width="146" height="26"><p>融合傳統智慧與現代科學的健康養護平台。</p><p style="margin-top:10px">Uhealth Trading Inc.<br>90 North St, Suite D, Middletown, NY 10940, USA<br><a href="mailto:service@uhealthfit.com">service@uhealthfit.com</a></p><div class="pay">{pays}</div></div>
   <div><h4>六大系列</h4><ul>{series_links}</ul></div>
-  <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}about-us.html">關於我們</a></li><li><a href="{rel}about.html">研發者・黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
+  <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}free/eye-care-7-day.html">免費下載：7 天護眼小計畫</a></li><li><a href="{rel}free/2027-calendar.html">免費下載：2027 節氣養生月曆</a></li><li><a href="{rel}about-us.html">關於我們</a></li><li><a href="{rel}about.html">研發者・黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
   <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
   <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於 zh.uhealthfit.com 完成。</div>
 </div></footer>
@@ -1368,6 +1377,7 @@ def build_blog():
     </article>
     <aside class="aside">
       <div class="pbox"><img src="{prod['image']}" alt="{esc(prod['name'])}"><b>{esc(prod['name'])}</b><div class="price">{price_str(prod)}</div><p>{esc(prod['hook'])}</p><a class="btn btn-primary btn-sm btn-block" href="{rel}products/{p['primary_product']}.html">看產品與成分</a><a class="btn btn-ghost btn-sm btn-block ext" style="margin-top:8px" data-product="{p['primary_product']}" href="{buy_url(prod,p['primary_product'])}">前往購買</a></div>
+      {lm_side(lm_series_key(p['series']), rel)}
       <div class="tbox"><h4>這篇在講什麼</h4><ul><li>市面選項各自負責什麼</li><li>選購時看的 4 件事</li><li>WiseQuest 的對應做法</li><li>誠實的期待與何時該就醫</li></ul></div>
       <div class="tbox" style="background:var(--green-light)"><h4>不只在意這一件事？</h4><p style="font-size:14px;color:var(--ink-2);margin-bottom:10px">30 秒測驗幫你排序最值得先開始的系列。</p><a class="btn btn-ghost btn-sm btn-block" href="{rel}quiz.html">開始測驗</a></div>
     </aside>
@@ -1609,6 +1619,8 @@ LM_EYE_HABITS = [
  (6,'眼周保濕','洗臉後輕拍保濕，白天用眼空檔補一次。'),
  (7,'到戶外看遠','走到戶外 15 分鐘，看看遠方的綠色。'),
 ]
+LM_EYE_ICONS = ['👀','😌','💧','🌙','🍵','🧴','🌳']  # 7 天護眼每天的小圖示
+LM_SEASONS = [('春','spring',[2,3,4]),('夏','summer',[5,6,7]),('秋','autumn',[8,9,10]),('冬','winter',[11,12,1])]
 LM_TERMS = [  # (月, 節氣, 節氣, 這個月的一句話)
  (1,'小寒','大寒','最冷的月份，保暖與休息最重要'),(2,'立春','雨水','春天來了，從作息開始舒展'),
  (3,'驚蟄','春分','溫差大，穿衣與睡眠都要穩'),(4,'清明','穀雨','踏青與花粉季，眼睛也要照顧'),
@@ -1637,6 +1649,11 @@ LEAD_MAGNETS = {
         ('PDF 怎麼下載？','送出 Email 後，頁面會立即出現下載連結，手機或電腦都能開啟；用 Letter 或 A4 紙列印都可以。')],
    faq_live={1:('會收到很多信嗎？','計畫期間每天一封，共 8 封（含第一封歡迎信）。之後偶爾會收到優健堂的養護內容與會員消息，每封信底部都可以一鍵取消訂閱。')},
    inline_h='免費領取：7 天護眼小計畫', inline_p='每天一個小習慣、每個不到 5 分鐘。可列印的檢查表，加上 7 封每日短信。',
+   # 頁面設計：頁首背景、「你會收到」小圖示、延伸閱讀、送出後的下一步
+   bg='lp-bg-eye.jpg', get_icons=['📄','✏️','🔁'], get_icons_live=['📄','✉️','🩺'],
+   related=['eye-patch-vs-steam-mask-vs-eye-drops','beyond-lutein-eye-care','contact-lens-eye-drops-eye-patch-guide'],
+   next=[('看看護眼保健系列','series/eye.html'),('眼貼、蒸氣眼罩、眼藥水怎麼選','blog/eye-patch-vs-steam-mask-vs-eye-drops.html')],
+   site_link='也可以先免費領取《7 天護眼小計畫》→',
  ),
  'solar-calendar-2027': dict(
    list='UfVMEF', path='free/2027-calendar.html', pdf='downloads/2027-solar-terms-calendar.pdf',
@@ -1657,6 +1674,10 @@ LEAD_MAGNETS = {
         ('PDF 怎麼下載？','送出 Email 後，頁面會立即出現下載連結，手機或電腦都能開啟；用 Letter 或 A4 紙列印都可以。')],
    faq_live={},
    inline_h='免費領取：2027 節氣養生月曆', inline_p='12 個月、24 個節氣，每個節氣一句作息提醒、一道家常食材。可列印，貼在冰箱上。',
+   bg='lp-bg-calendar.jpg', get_icons=['🗓️','🌿','🍂'], get_icons_live=['🗓️','🌿','🍂'],
+   related=['winter-tonic-herbal-guide','thanksgiving-parents-supplement-schedule','caffeine-free-energy-herbal-guide'],
+   next=[('逛逛六大系列','series/index.html'),('立冬進補怎麼選','blog/winter-tonic-herbal-guide.html')],
+   site_link='也可以先免費領取《2027 節氣養生月曆》→',
  ),
 }
 # Klaviyo 的兩個 Flow 上線前保持 False：頁面只承諾「立即下載」，不承諾寄信；站內文章區塊與彈出視窗也先不出現。
@@ -1671,7 +1692,7 @@ def lm_consent():
             '本站另使用 Google Analytics 與 Meta Pixel 記錄「已留資」這個動作，不會把你的 Email 交給它們。詳見 '
             '<a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>')
 
-def lm_form(key, place, rel, fid=''):
+def lm_form(key, place, rel, fid='', after=''):
     m=LEAD_MAGNETS[key]
     btn=m['btn_live'] if LEAD_FLOWS_LIVE else m['btn']
     ok=('✓ 已收到！第一封信幾分鐘內寄到（沒看到的話，查看一下垃圾郵件匣）。也可以' if LEAD_FLOWS_LIVE else '✓ 已收到你的 Email！')
@@ -1681,7 +1702,7 @@ def lm_form(key, place, rel, fid=''):
             f'<input type="email" name="email" placeholder="輸入你的 Email" required aria-label="Email" autocomplete="email" inputmode="email">'
             f'<button class="btn btn-primary" type="submit">{btn}</button></form>'
             f'{lm_consent()}'
-            f'<div class="email-ok">{ok}<a class="ebook-dl" href="{rel}{m["pdf"]}" target="_blank" rel="noopener">{"現在直接下載 PDF →" if LEAD_FLOWS_LIVE else "點這裡下載 PDF →"}</a></div></div>')
+            f'<div class="email-ok">{ok}<a class="ebook-dl" href="{rel}{m["pdf"]}" target="_blank" rel="noopener">{"現在直接下載 PDF →" if LEAD_FLOWS_LIVE else "點這裡下載 PDF →"}</a>{after}</div></div>')
 
 def lm_inline(key, rel):
     m=LEAD_MAGNETS[key]
@@ -1700,6 +1721,11 @@ def lm_popups(rel):
   {lm_form(key,'popup',rel)}
 </div>'''
     return out
+
+def lm_side(key, rel):
+    # 選購指南側欄：連到對應的免費下載頁
+    m=LEAD_MAGNETS[key]
+    return f'<a class="lm-side" href="{rel}{m["path"]}"><img src="{rel}{m["cover"]}" alt="" width="{m["cover_w"]}" height="{m["cover_h"]}" loading="lazy"><span><em>免費下載</em><b>{esc(m["name"])}</b><small>{esc(m["inline_p"])}</small><i>免費領取 →</i></span></a>'
 
 def lp_nav(rel):
     return f'''<header class="nav lp-nav"><div class="wrap">
@@ -1726,54 +1752,70 @@ def build_lead_pages():
     for key,m in LEAD_MAGNETS.items():
         live=LEAD_FLOWS_LIVE
         gets=(m['gets_live'] if live and m.get('gets_live') else m['gets'])
+        icons=(m['get_icons_live'] if live and m.get('gets_live') else m['get_icons'])
         faq=list(m['faq'])
         if live:
             for i,qa in m.get('faq_live',{}).items(): faq[i]=qa
+        nxt='<span class="lm-next">接下來可以看看：'+'・'.join(f'<a href="{rel}{h}">{esc(t)}</a>' for t,h in m['next'])+'</span>'
         if key=='eye-7day':
-            preview=f'''<section class="sec-tight"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">先看看內容</span><h2>7 天，每天只做一件小事</h2><p class="lead">不用一次改變生活。每個習慣都小到今天就能開始。</p></div>
-  <ol class="lm-days">{''.join(f'<li><span class="d">第 {d} 天</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for d,t,x in LM_EYE_HABITS)}<li class="lm-days-cta"><b>第 8 天起</b><span>挑 2–3 個最容易的，留下來變成日常。</span><a class="btn btn-ghost btn-sm" href="#lp-top">免費領取 →</a></li></ol>
+            days=''.join(f'<li><span class="lm-tl-ic" aria-hidden="true">{ic}</span><span class="d">DAY {d}</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for (d,t,x),ic in zip(LM_EYE_HABITS,LM_EYE_ICONS))
+            preview=f'''<section class="sec lp-sec"><div class="wrap">
+  <div class="sec-head lp-center"><span class="eyebrow">先看看內容</span><h2>7 天，每天只做一件小事</h2><p class="lead">不用一次改變生活。每個習慣都小到今天就能開始。</p></div>
+  <ol class="lm-tl">{days}</ol>
+  <div class="lm-tl-after"><div><b>第 8 天起</b><span>挑 2–3 個最容易的，留下來變成日常。</span></div><a class="btn btn-primary btn-sm" href="#lp-top">免費領取 →</a></div>
 </div></section>'''
         else:
-            preview=f'''<section class="sec-tight"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">先看看內容</span><h2>12 個月、24 個節氣</h2><p class="lead">每個月兩個節氣，各配一句作息提醒、一道家常食材或茶飲。下面是每個月的重點。</p></div>
+            byno={mo:(a_,b_,t) for mo,a_,b_,t in LM_TERMS}
+            seasons=''.join(f'<div class="lm-season s-{cls}"><h3><span>{nm}</span></h3><ol>'+''.join(f'<li><span class="mo">{mo} 月</span><b>{byno[mo][0]}・{byno[mo][1]}</b><span>{esc(byno[mo][2])}</span></li>' for mo in mos)+'</ol></div>' for nm,cls,mos in LM_SEASONS)
+            preview=f'''<section class="sec lp-sec"><div class="wrap">
+  <div class="sec-head lp-center"><span class="eyebrow">先看看內容</span><h2>12 個月、24 個節氣</h2><p class="lead">每個月兩個節氣，各配一句作息提醒、一道家常食材或茶飲。下面是每個月的重點。</p></div>
   <div class="lm-cal-wrap"><img class="lm-cal-sample" src="{rel}downloads/2027-calendar-june.jpg" alt="月曆內頁示意：2027 年 6 月，芒種與夏至" width="696" height="900" loading="lazy">
-  <ol class="lm-months">{''.join(f'<li><span class="mo">{mo} 月</span><b>{a}・{b}</b><span>{esc(t)}</span></li>' for mo,a,b,t in LM_TERMS)}</ol></div>
+  <div class="lm-seasons">{seasons}</div></div>
 </div></section>'''
         bottom_lead=('留下 Email，馬上下載 12 頁月曆。' if key!='eye-7day' else ('留下 Email，馬上下載檢查表，明天收到第 1 天的短信。' if live else '留下 Email，馬上下載 7 天檢查表。'))
+        related=''.join(post_card(POST_BY_SLUG[sl], rel) for sl in m['related'] if sl in POST_BY_SLUG)
         body=f'''
-<section class="hero lp-hero" id="lp-top"><div class="wrap">
-  <div>
-    <span class="eyebrow">{m['eyebrow']}</span>
+<section class="lp-hero2" id="lp-top" style="--lp-bg:url('{rel}img/{m['bg']}')"><div class="wrap">
+  <div class="lp-copy">
+    <span class="lp-pill">{m['eyebrow']}</span>
     <h1>{m['h1']}</h1>
     <p class="lead">{esc(m['lead_live'] if live else m['lead'])}</p>
-    {lm_form(key,'page',rel,'lp-form')}
-    <ul class="hero-trust"><li>完全免費</li><li>不用買任何東西</li><li>隨時可取消訂閱</li></ul>
+    <div class="lp-card">
+      {lm_form(key,'page',rel,'lp-form',after=nxt)}
+      <ul class="lp-trust"><li>完全免費</li><li>不用買任何東西</li><li>隨時可取消訂閱</li></ul>
+    </div>
   </div>
-  <div class="lp-cover"><img src="{rel}{m['cover']}" alt="《{m['name']}》封面" width="{m['cover_w']}" height="{m['cover_h']}" fetchpriority="high"></div>
+  <div class="lp-cover2"><div class="lp-cover-frame"><img src="{rel}{m['cover']}" alt="《{m['name']}》封面" width="{m['cover_w']}" height="{m['cover_h']}" fetchpriority="high"><span class="lp-sticker">免費<br>PDF</span></div></div>
 </div></section>
 {preview}
-<section class="sec-tight bg-cream"><div class="wrap lm-two">
+<section class="sec lp-sec bg-cream"><div class="wrap lm-two">
   <div><span class="eyebrow">你會收到</span><h2>下載就能用</h2>
-    <ul class="lm-gets">{''.join(f'<li><b>{esc(t)}</b><span>{esc(d)}</span></li>' for t,d in gets)}</ul></div>
+    <ul class="lm-gets2">{''.join(f'<li><span class="ic" aria-hidden="true">{ic}</span><div><b>{esc(t)}</b><span>{esc(d)}</span></div></li>' for (t,d),ic in zip(gets,icons))}</ul></div>
   <div><span class="eyebrow">適合誰</span><h2>如果你是……</h2>
-    <ul class="lm-who">{''.join(f'<li>{esc(w)}</li>' for w in m['who'])}</ul></div>
+    <ul class="lm-who2">{''.join(f'<li>{esc(w)}</li>' for w in m['who'])}</ul></div>
 </div></section>
-<section class="sec-tight"><div class="wrap lm-about">
+<section class="sec lp-sec"><div class="wrap lm-about lm-about2">
   <img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang" width="160" height="200" loading="lazy">
   <div><span class="eyebrow">關於優健堂</span><h2>只講日常做得到的事</h2>
   <p>優健堂 UHealthFit 是 WiseQuest 草本養護系列的美國中文站。WiseQuest 的配方由黃醫師研發：中國中西醫結合執業醫師、中醫全科醫師，有二十年臨床經驗。</p>
   <p>這份《{esc(m['name'])}》依照我們的內容原則整理：只講日常做得到的小事，不誇大、不製造焦慮，也不取代醫療。</p>
   <a class="lm-more" href="{rel}about.html">認識黃醫師 →</a></div>
 </div></section>
-<section class="sec-tight bg-cream"><div class="wrap"><div class="faq-list">
+<section class="sec lp-sec bg-cream"><div class="wrap"><div class="faq-list">
   <span class="eyebrow">常見問題</span><h2 style="margin:10px 0 18px">領取前想先知道的事</h2>
   {faq_block(faq)}
 </div></div></section>
-<section class="sec-tight bg-dark lp-final"><div class="wrap">
-  <h2>{esc('今天就從第一個習慣開始' if key=='eye-7day' else '把 2027 的節奏貼在冰箱上')}</h2>
-  <p class="lead">{esc(bottom_lead)}</p>
-  {lm_form(key,'page-bottom',rel)}
+<section class="sec lp-final2" style="--lp-bg:url('{rel}img/{m['bg']}')"><div class="wrap">
+  <div class="lp-final-card">
+    <h2>{esc('今天就從第一個習慣開始' if key=='eye-7day' else '把 2027 的節奏貼在冰箱上')}</h2>
+    <p class="lead">{esc(bottom_lead)}</p>
+    {lm_form(key,'page-bottom',rel,after=nxt)}
+  </div>
+</div></section>
+<section class="sec lp-sec lp-related"><div class="wrap">
+  <div class="sec-head lp-center"><span class="eyebrow">延伸閱讀</span><h2>想多了解一點</h2><p class="lead">優健堂的選購指南：市面上有哪些選項、各自負責什麼、怎麼開始。</p></div>
+  <div class="bgrid">{related}</div>
+  <p class="lp-center" style="margin-top:22px"><a class="lm-more" href="{rel}blog/index.html">看全部選購指南 →</a></p>
 </div></section>
 <a class="lp-sticky btn btn-primary" href="#lp-form">{m['btn_live'] if live else m['btn']}</a>
 '''
