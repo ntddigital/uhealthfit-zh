@@ -695,7 +695,20 @@ DETAILS = {
 # 其他產品特價：在該產品 DETAILS 加 promo_image（商店特價圖），再把 slug 加進 items。
 PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              text='感謝這一年的陪伴。精選草本保健限時特價，實際價格與活動期間以官方商店結帳頁為準。',
-             items=['enerbalance'],
+             items=['enerbalance','eye-patches','eye-cream'],
+             # 各產品的優惠：(卡片標籤, 一句話說明)。標籤會成為產品卡片與產品頁的紅色標籤
+             offers={'enerbalance':('特價','EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）'),
+                     'eye-patches':('買三送一','明目冷敷眼貼買三送一'),
+                     'eye-cream':('第 2 瓶半價','草本舒緩修護眼霜第 2 瓶半價（2 瓶 $88.50）')},
+             # 產品頁規格：在指定規格加註，或活動期間改用另一組規格（與 zh.uhealthfit.com 商品頁一致）
+             variant_tags={'eye-patches':{'3 盒 · 一個月組':'感恩節買三送一'}},
+             variants={'eye-cream':[('1 瓶','$59','',False),('2 瓶 · 第 2 瓶半價','$88.50','感恩節優惠',True)]},
+             # 文章頂部的優惠提示：文章 slug → 相關的優惠產品
+             posts={'eye-patch-which-pack-to-buy':['eye-patches'],'contact-lens-eye-drops-eye-patch-guide':['eye-patches','eye-cream'],
+                    'eye-patch-how-to-use-guide':['eye-patches'],'eye-patch-ingredients-explained':['eye-patches'],
+                    'eye-patch-vs-steam-mask-vs-eye-drops':['eye-patches'],'eye-care-gift-for-parents':['eye-patches','eye-cream'],
+                    'eye-cream-buying-guide':['eye-cream'],'dendrobium-shihu-eye-cream-herb':['eye-cream'],
+                    'thanksgiving-gift-for-parents-herbal':['enerbalance','eye-patches','eye-cream']},
              # 設計好的橫幅圖（build-src/src/img/）；hot 為圖上兩個按鈕的位置（佔圖片寬高的百分比：左、上、寬、高）
              banner=dict(lg='promo-thanksgiving-1672.jpg', sm='promo-thanksgiving-900.jpg', w=1672, h=941, product='enerbalance',
                          alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299），40% OFF',
@@ -720,6 +733,14 @@ for _k,_d in DETAILS.items():
     if _d.get('caution'): PRODUCTS[_k]['caution']=_d['caution']
     if _d.get('faq'): PRODUCTS[_k]['faq']=_d['faq']
     if _d.get('promo_image'): PRODUCTS[_k]['badge']=('badge-sale','特價')
+if PROMO:
+    for _k,(_tag,_t) in PROMO.get('offers',{}).items(): PRODUCTS[_k]['badge']=('badge-sale',_tag)
+    for _k,_v in PROMO.get('variants',{}).items(): PRODUCTS[_k]['variants']=_v
+    for _k,_m in PROMO.get('variant_tags',{}).items():
+        PRODUCTS[_k]['variants']=[(n,pr,_m.get(n,t),best) for n,pr,t,best in PRODUCTS[_k]['variants']]
+
+def promo_offer(slug):
+    return (PROMO or {}).get('offers',{}).get(slug)
 
 def stats_row(slug):
     st=DETAILS.get(slug,{}).get('stats')
@@ -996,6 +1017,19 @@ def gallery(slug):
     dots=''.join(f'<button type="button" aria-label="第 {i+1} 張"'+(' aria-current="true"' if i==0 else '')+'></button>' for i in range(len(imgs)))
     return f'<div class="{cls} slides"><div class="slides-track">{slides}</div><button class="slides-prev" type="button" aria-label="上一張">‹</button><button class="slides-next" type="button" aria-label="下一張">›</button><div class="slides-dots">{dots}</div></div>'
 
+def post_promo(p, rel):
+    ks=[k for k in (PROMO or {}).get('posts',{}).get(p['slug'],[]) if promo_offer(k)]
+    if not ks: return ''
+    lis=''.join(f'<li><a href="{rel}products/{k}.html">{esc(promo_offer(k)[1])}</a></li>' for k in ks)
+    return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠</b><ul>{lis}</ul><small>實際優惠與活動期間以官方商店結帳頁為準。</small></div>'
+
+def promo_more(rel, skip):
+    # 設計橫幅只放一項產品；其餘優惠列在橫幅下方
+    others=[k for k in PROMO['items'] if k!=skip and promo_offer(k)]
+    if not others: return ''
+    chips=''.join(f'<a class="promo-chip" href="{rel}products/{k}.html"><img src="{PRODUCTS[k]["image"]}" alt="" loading="lazy"><span><b>{esc(PRODUCTS[k]["name"].replace("WiseQuest ",""))}</b><em>{esc(promo_offer(k)[0])}</em></span><span class="go">看優惠 →</span></a>' for k in others)
+    return f'<div class="promo-more"><span class="promo-more-h">更多感恩節優惠</span><div class="promo-chips">{chips}</div></div>'
+
 def promo_banner(rel):
     if not PROMO: return ''
     if PROMO.get('banner'):
@@ -1007,6 +1041,7 @@ def promo_banner(rel):
     <a class="promo-hot ext" data-product="{slug}" href="{buy_url(p,slug)}" style="{pos('buy')}" aria-label="立即搶購 {esc(p['name'])}"></a>
     <a class="promo-hot" href="{rel}products/{slug}.html" style="{pos('learn')}" aria-label="了解 {esc(p['name'])}"></a>
   </div>
+  {promo_more(rel, slug)}
   <div class="promo-cta-m"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即搶購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
   <p class="note promo-note">實際價格與活動期間以官方商店結帳頁為準。</p>
 </div></section>
@@ -1183,6 +1218,7 @@ def build_products():
     <h1>{esc(p['name'])}</h1><div class="en">{esc(p['en'])} · {esc(p['made'])}</div>
     <div class="hook">{esc(p['hook'])}</div>
     <div class="buybox">
+      {f'<div class="promo-line">🍁 感恩節優惠｜{esc(promo_offer(slug)[1])}<small>實際優惠以官方商店結帳頁為準</small></div>' if promo_offer(slug) else ''}
       <div class="row"><div class="price">{pr}<small>{esc(p['price_note'])} · USD</small></div>{'<span class="badge badge-oos">補貨中</span>' if p.get('oos') else ('<span class="badge badge-star">單次購買 · 無訂閱</span>' if not p.get('is_bundle') else '<span class="badge badge-star">招牌組合</span>')}</div>
       <a class="btn btn-primary btn-block ext" data-product="{slug}" href="{url}">{buy_label}</a>
       {trial}{oos}
@@ -1262,6 +1298,7 @@ def build_blog():
   {f'<div class="article-cover"><img src="{post_image(p, rel)}" alt="{esc(p["title"])}" width="1200" height="675" fetchpriority="high"></div>' if 'img/post-' in post_image(p, rel) else ''}
   <div class="article-layout">
     <article class="article">
+      {post_promo(p, rel)}
       {p['body']}
       <div class="disc-inline"><b>免責聲明：</b>本文為一般性資訊與選購觀點，不構成醫療建議；文中產品為膳食補充劑或日常保養品，非藥品，不用於診斷、治療、治癒或預防任何疾病。中醫相關敘述為傳統觀點的說明。效果因人而異；孕婦、哺乳期、服藥中或有健康疑慮者請先諮詢醫師。</div>
     </article>
