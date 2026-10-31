@@ -595,7 +595,7 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .article .post-promo ul{margin:8px 0 6px 20px;font-size:16px}
 .article .post-promo a{color:#8E3B16;font-weight:700}
 .article .post-promo small{color:#A0664A;font-size:13px}
-/* 單品活動橫幅（產品頁購買區下方、系列頁頁首下方） */
+/* 單品活動橫幅（系列頁頁首下方） */
 .promo-wide{padding:clamp(10px,2vw,20px) 0 clamp(18px,3vw,32px)}
 .promo-wide a{display:block;border-radius:clamp(14px,2vw,24px);overflow:hidden;box-shadow:0 30px 60px -36px rgba(90,42,18,.55)}
 .promo-wide img{display:block;width:100%;height:auto}

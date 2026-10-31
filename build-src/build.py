@@ -701,8 +701,8 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              offers={'enerbalance':('特價','EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）'),
                      'eye-patches':('每買 3 送 1','明目冷敷眼貼每買 3 盒送 1 盒：買 3 送 1、買 6 送 2、買 9 送 3'),
                      'eye-cream':('第 2 瓶半價','草本舒緩修護眼霜第 2 瓶半價（2 瓶 $88.50）')},
-             chips={'enerbalance':'限時 40% OFF $179'},
-             # 單品活動橫幅：放在該產品頁購買區下方、所屬系列頁的頁首下方
+             chips={'enerbalance':'40% OFF'},
+             # 單品活動橫幅：放在所屬系列頁的頁首下方
              wide={'enerbalance':dict(lg='promo-thanksgiving-enerbalance-1672.jpg', sm='promo-thanksgiving-enerbalance-900.jpg', w=1672, h=941,
                                       alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299），40% OFF')},  # 首頁橫幅下方按鈕的優惠文字（沒寫就用卡片標籤）
              # 產品頁規格：在指定規格加註，或活動期間改用另一組規格（與 zh.uhealthfit.com 商品頁一致）
@@ -1029,14 +1029,11 @@ def post_promo(p, rel):
     lis=''.join(f'<li><a href="{rel}products/{k}.html">{esc(promo_offer(k)[1])}</a></li>' for k in ks)
     return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠（至 {PROMO["ends"]} 止）</b><ul>{lis}</ul><small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準。</small></div>'
 
-def promo_wide(slug, rel, on_product=False):
+def promo_wide(slug, rel):
     b=(PROMO or {}).get('wide',{}).get(slug)
     if not b: return ''
-    p=PRODUCTS[slug]
-    # 產品頁上點橫幅直接前往官方商店購買；系列頁上點橫幅前往產品頁
-    href, cls = (buy_url(p,slug), ' class="ext" data-product="'+slug+'"') if on_product else (f'{rel}products/{slug}.html', '')
     return f'''<section class="promo-wide"><div class="wrap">
-  <a href="{href}"{cls} aria-label="{esc(b['alt'])}"><img src="{rel}img/{b['lg']}" srcset="{rel}img/{b['sm']} 900w, {rel}img/{b['lg']} {b['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{b['w']}" height="{b['h']}" loading="lazy"></a>
+  <a href="{rel}products/{slug}.html" aria-label="{esc(b['alt'])}"><img src="{rel}img/{b['lg']}" srcset="{rel}img/{b['sm']} 900w, {rel}img/{b['lg']} {b['w']}w" sizes="(max-width:1240px) 100vw, 1200px" alt="{esc(b['alt'])}" width="{b['w']}" height="{b['h']}" loading="lazy"></a>
   <p class="note promo-note">活動至 {PROMO['ends']} 止；實際價格以官方商店結帳頁為準。</p>
 </div></section>
 '''
@@ -1249,7 +1246,7 @@ def build_products():
     <ul class="facts"><li>{esc(p['form'])}</li><li>{esc(p['spec'])}</li><li>成分全部公開 · 第三方純度檢測</li><li>30 天內未拆封可退</li></ul>
   </div>
 </div></section>
-{promo_wide(slug, rel, on_product=True)}<!--zebra-->{showcase_section(slug)}
+<!--zebra-->{showcase_section(slug)}
 {compare_section(slug)}
 {pillars_section(slug)}
 <section class="sec"><div class="wrap">
