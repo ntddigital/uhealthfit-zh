@@ -708,12 +708,9 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              # 產品頁規格：在指定規格加註，或活動期間改用另一組規格（與 zh.uhealthfit.com 商品頁一致）
              variant_tags={'eye-patches':{'3 盒 · 一個月組':'感恩節買 3 送 1','6 盒 · 兩個月組':'感恩節買 6 送 2','9 盒 · 三個月組':'感恩節買 9 送 3'}},
              variants={'eye-cream':[('1 瓶','$59','',False),('2 瓶 · 第 2 瓶半價','$88.50','感恩節優惠',True)]},
-             # 文章頂部的優惠提示：文章 slug → 相關的優惠產品
-             posts={'eye-patch-which-pack-to-buy':['eye-patches'],'contact-lens-eye-drops-eye-patch-guide':['eye-patches','eye-cream'],
-                    'eye-patch-how-to-use-guide':['eye-patches'],'eye-patch-ingredients-explained':['eye-patches'],
-                    'eye-patch-vs-steam-mask-vs-eye-drops':['eye-patches'],'eye-care-gift-for-parents':['eye-patches','eye-cream'],
-                    'eye-cream-buying-guide':['eye-cream'],'dendrobium-shihu-eye-cream-herb':['eye-cream'],
-                    'thanksgiving-gift-for-parents-herbal':['enerbalance','eye-patches','eye-cream']},
+             # 文章頂部的優惠提示：文章提到這些產品（名稱或連到產品頁）就顯示該產品的優惠，提到最多次的排前面
+             match={'enerbalance':r'EnerBalance|黑膏滋|products/enerbalance','eye-patches':r'眼貼|products/eye-patches',
+                    'eye-cream':r'修護眼霜|products/eye-cream|眼霜'},
              # 設計好的橫幅圖（build-src/src/img/）；hot 為圖上兩個按鈕的位置（佔圖片寬高的百分比：左、上、寬、高）
              banner=dict(lg='promo-thanksgiving-all-1672.jpg', sm='promo-thanksgiving-all-900.jpg', w=1672, h=941, product='enerbalance',
                          alt='歲末感恩大回饋：EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）、明目冷敷眼貼每買 3 送 1、修護眼霜第 2 瓶半價',
@@ -1024,7 +1021,8 @@ def gallery(slug):
     return f'<div class="{cls} slides"><div class="slides-track">{slides}</div><button class="slides-prev" type="button" aria-label="上一張">‹</button><button class="slides-next" type="button" aria-label="下一張">›</button><div class="slides-dots">{dots}</div></div>'
 
 def post_promo(p, rel):
-    ks=[k for k in (PROMO or {}).get('posts',{}).get(p['slug'],[]) if promo_offer(k)]
+    counts={k:len(re.findall(r,p['body'])) for k,r in (PROMO or {}).get('match',{}).items() if promo_offer(k)}
+    ks=sorted([k for k,n in counts.items() if n], key=lambda k:-counts[k])
     if not ks: return ''
     lis=''.join(f'<li><a href="{rel}products/{k}.html">{esc(promo_offer(k)[1])}</a></li>' for k in ks)
     return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠（至 {PROMO["ends"]} 止）</b><ul>{lis}</ul><small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準。</small></div>'
