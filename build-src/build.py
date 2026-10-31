@@ -1485,7 +1485,7 @@ def build_series_index():
     cards=''.join(series_card(k,rel) for k in SERIES_ORDER)
     organs=''.join(f'<a class="scard s-{k}" href="{rel}series/{k}.html"><span class="series-tag"><span class="dot"></span>{SERIES[k]["organ"]}</span><h3>{SERIES[k]["name"]}</h3><div class="hook">{SERIES[k]["h1"]}</div><span class="go">看系列 →</span></a>' for k in SERIES_ORDER)
     body=f'''
-<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
+{promo_banner(rel)}<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
   <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span></div>
   <span class="eyebrow">六大系列 · {len(PRODUCT_ORDER)} 款產品</span><h1>從最在意的那一件事開始</h1>
   <p class="lead" style="max-width:760px">護眼保健、肌膚健康、固齒健齦、元氣活力、睡眠健康、腸胃舒暢——每個系列都可以單獨開始，也可以彼此搭配。不確定從哪裡開始？先做 30 秒測驗。</p>
