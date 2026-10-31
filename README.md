@@ -15,6 +15,7 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
 - 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER
 - 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`
 - 文案合規規範：`build-src/BRIEF.md`
+- 選購指南文章封面：`build-src/covers/`（背景圖在 bg/；先 `sh build-src/covers/fetch.sh` 下載官網產品與草本實拍，再 `swift build-src/covers/covers.swift [slug]` 重畫，輸出到 build-src/src/img/post-<slug>.jpg）
 - 本機預覽：`python3 build-src/serve.py`（模擬 Cloudflare 的乾淨網址與 404；.claude/launch.json 的 static-site 也是用它）。本機不會載入 GTM／GA4／Meta，追蹤碼只在 us.uhealthfit.com 啟用
 - Logo 與圖片：導覽列用 uhealthfit.com 的優健堂 SVG（LOGO）、頁尾用 zh.uhealthfit.com 商店頁首的 UHealthFit 白色字標（`build-src/src/img/`）；六大系列情境照與產品實拍取自 zh.uhealthfit.com（Shopify CDN，見 build.py 的 SHOP_CDN／shop_img，`&width=` 可調尺寸），其餘產品圖取自 uhealthfit.com
 上線前：
