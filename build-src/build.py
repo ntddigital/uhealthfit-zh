@@ -1514,7 +1514,7 @@ def build_products_index():
 </div></section>
 '''
     body=f'''
-<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
+{promo_banner(rel)}<section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
   <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>全部產品</span></div>
   <span class="eyebrow">全部產品 · {len(PRODUCT_ORDER)} 款</span><h1>全部產品，一頁看完</h1>
   <p class="lead" style="max-width:760px">依六大系列整理。點「了解」看完整成分、用法與常見問題；點「購買」前往官方商店安全結帳。價格為美金（USD），以結帳頁為準。</p>
