@@ -694,7 +694,8 @@ DETAILS = {
 # 首頁大橫幅。活動結束：把 PROMO 設成 None，並刪除各產品 DETAILS 裡的 promo_image。
 # 其他產品特價：在該產品 DETAILS 加 promo_image（商店特價圖），再把 slug 加進 items。
 PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
-             text='感謝這一年的陪伴。精選草本保健限時特價，實際價格與活動期間以官方商店結帳頁為準。',
+             ends='11/30',  # 活動截止日（顯示在橫幅、產品頁優惠說明、文章提示）
+             text='感謝這一年的陪伴。精選草本保健限時特價，活動至 11/30 止；實際價格以官方商店結帳頁為準。',
              items=['enerbalance','eye-patches','eye-cream'],
              # 各產品的優惠：(卡片標籤, 一句話說明)。標籤會成為產品卡片與產品頁的紅色標籤
              offers={'enerbalance':('特價','EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）'),
@@ -1021,14 +1022,14 @@ def post_promo(p, rel):
     ks=[k for k in (PROMO or {}).get('posts',{}).get(p['slug'],[]) if promo_offer(k)]
     if not ks: return ''
     lis=''.join(f'<li><a href="{rel}products/{k}.html">{esc(promo_offer(k)[1])}</a></li>' for k in ks)
-    return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠</b><ul>{lis}</ul><small>實際優惠與活動期間以官方商店結帳頁為準。</small></div>'
+    return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠（至 {PROMO["ends"]} 止）</b><ul>{lis}</ul><small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準。</small></div>'
 
 def promo_more(rel, skip):
     # 設計橫幅只放一項產品；其餘優惠列在橫幅下方
     others=[k for k in PROMO['items'] if k!=skip and promo_offer(k)]
     if not others: return ''
     chips=''.join(f'<a class="promo-chip" href="{rel}products/{k}.html"><img src="{PRODUCTS[k]["image"]}" alt="" loading="lazy"><span><b>{esc(PRODUCTS[k]["name"].replace("WiseQuest ",""))}</b><em>{esc(promo_offer(k)[0])}</em></span><span class="go">看優惠 →</span></a>' for k in others)
-    return f'<div class="promo-more"><span class="promo-more-h">更多感恩節優惠</span><div class="promo-chips">{chips}</div></div>'
+    return f'<div class="promo-more"><span class="promo-more-h">更多感恩節優惠<small>至 {PROMO["ends"]} 止</small></span><div class="promo-chips">{chips}</div></div>'
 
 def promo_banner(rel):
     if not PROMO: return ''
@@ -1043,7 +1044,7 @@ def promo_banner(rel):
   </div>
   {promo_more(rel, slug)}
   <div class="promo-cta-m"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即搶購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
-  <p class="note promo-note">實際價格與活動期間以官方商店結帳頁為準。</p>
+  <p class="note promo-note">活動至 {PROMO['ends']} 止；實際價格以官方商店結帳頁為準。</p>
 </div></section>
 '''
     tiles=''
@@ -1218,7 +1219,7 @@ def build_products():
     <h1>{esc(p['name'])}</h1><div class="en">{esc(p['en'])} · {esc(p['made'])}</div>
     <div class="hook">{esc(p['hook'])}</div>
     <div class="buybox">
-      {f'<div class="promo-line">🍁 感恩節優惠｜{esc(promo_offer(slug)[1])}<small>實際優惠以官方商店結帳頁為準</small></div>' if promo_offer(slug) else ''}
+      {f'<div class="promo-line">🍁 感恩節優惠｜{esc(promo_offer(slug)[1])}<small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準</small></div>' if promo_offer(slug) else ''}
       <div class="row"><div class="price">{pr}<small>{esc(p['price_note'])} · USD</small></div>{'<span class="badge badge-oos">補貨中</span>' if p.get('oos') else ('<span class="badge badge-star">單次購買 · 無訂閱</span>' if not p.get('is_bundle') else '<span class="badge badge-star">招牌組合</span>')}</div>
       <a class="btn btn-primary btn-block ext" data-product="{slug}" href="{url}">{buy_label}</a>
       {trial}{oos}
