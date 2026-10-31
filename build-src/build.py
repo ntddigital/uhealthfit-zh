@@ -698,10 +698,10 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
              items=['enerbalance','eye-patches','eye-cream'],
              # 各產品的優惠：(卡片標籤, 一句話說明)。標籤會成為產品卡片與產品頁的紅色標籤
              offers={'enerbalance':('特價','EnerBalance 黑膏滋膠囊限時特價 $179（原價 $299）'),
-                     'eye-patches':('買三送一','明目冷敷眼貼買三送一'),
+                     'eye-patches':('每買 3 送 1','明目冷敷眼貼每買 3 盒送 1 盒：買 3 送 1、買 6 送 2、買 9 送 3'),
                      'eye-cream':('第 2 瓶半價','草本舒緩修護眼霜第 2 瓶半價（2 瓶 $88.50）')},
              # 產品頁規格：在指定規格加註，或活動期間改用另一組規格（與 zh.uhealthfit.com 商品頁一致）
-             variant_tags={'eye-patches':{'3 盒 · 一個月組':'感恩節買三送一'}},
+             variant_tags={'eye-patches':{'3 盒 · 一個月組':'感恩節買 3 送 1','6 盒 · 兩個月組':'感恩節買 6 送 2','9 盒 · 三個月組':'感恩節買 9 送 3'}},
              variants={'eye-cream':[('1 瓶','$59','',False),('2 瓶 · 第 2 瓶半價','$88.50','感恩節優惠',True)]},
              # 文章頂部的優惠提示：文章 slug → 相關的優惠產品
              posts={'eye-patch-which-pack-to-buy':['eye-patches'],'contact-lens-eye-drops-eye-patch-guide':['eye-patches','eye-cream'],
