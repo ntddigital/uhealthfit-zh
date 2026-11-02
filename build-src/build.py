@@ -1684,7 +1684,7 @@ LEAD_MAGNETS = {
 }
 # Klaviyo 的兩個 Flow 上線前保持 False：頁面只承諾「立即下載」，不承諾寄信；站內文章區塊與彈出視窗也先不出現。
 # Flow 上線後改成 True 並重建：下載頁換成寄信的說法，系列頁／產品頁／選購指南會出現免費下載區塊與一次性的小視窗。
-LEAD_FLOWS_LIVE = False
+LEAD_FLOWS_LIVE = True   # 2026-11-02 兩個 Flow 已上線（7 天護眼 TEef5H：8 封；節氣月曆 SEFaUZ：1 封）
 
 def lm_series_key(series_key):
     return 'eye-7day' if series_key=='eye' else 'solar-calendar-2027'
@@ -1843,7 +1843,7 @@ def build_misc():
 
 ## 結構
 - index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋{len(POSTS)} 篇
-- free/eye-care-7-day.html、free/2027-calendar.html 免費下載頁（廣告落地頁，noindex、不進 sitemap；Email 分別進 Klaviyo List T6wWLP／UfVMEF，Flow 上線後把 build.py 的 LEAD_FLOWS_LIVE 改成 True）
+- free/eye-care-7-day.html、free/2027-calendar.html 免費下載頁（廣告落地頁，noindex、不進 sitemap；Email 分別進 Klaviyo List T6wWLP／UfVMEF，觸發 Flow TEef5H（7 天護眼 8 封）／SEFaUZ（月曆寄送 1 封）；build.py 的 LEAD_FLOWS_LIVE 已是 True，Flow 若暫停請改回 False 重建）
 - quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about-us.html 關於我們（優健堂）｜ about.html 研發者黃醫師與品牌理念 ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
