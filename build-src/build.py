@@ -1659,7 +1659,7 @@ LEAD_MAGNETS = {
  ),
  'solar-calendar-2027': dict(
    list='UfVMEF', path='free/2027-calendar.html', pdf='downloads/2027-solar-terms-calendar.pdf',
-   cover='downloads/2027-calendar-cover.jpg', cover_w=696, cover_h=900, name='2027 節氣養生月曆',
+   cover='img/lm-calendar-cover.jpg', cover_w=696, cover_h=900, name='2027 節氣養生月曆',  # 網頁用縮圖；原圖在 downloads/2027-calendar-cover.jpg（build-src/covers/calendar-cover.swift 畫的）
    title='免費領取｜2027 節氣養生月曆：24 節氣作息與家常食材 · 優健堂 UHealthFit',
    desc='12 個月、24 個節氣，每個節氣一句作息提醒、一道家常食材。中醫傳統的順時養生，整理成可列印的月曆，免費下載。',
    eyebrow='免費下載 · 2027 年版', h1='跟著 24 節氣，<em>把 2027 過得剛剛好</em>',
