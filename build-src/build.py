@@ -1732,7 +1732,7 @@ def lm_side(key, rel):
 def lp_nav(rel):
     return f'''<header class="nav lp-nav"><div class="wrap">
   <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit" width="101" height="34"></a>
-  <span class="lp-nav-tag">WiseQuest × 優健堂 · 免費下載</span>
+  <div class="lp-nav-r"><span class="lp-nav-tag">WiseQuest × 優健堂 · 免費下載</span><a class="lp-nav-home" href="{rel}index.html">回到優健堂 →</a></div>
 </div></header>
 <main class="lp">
 '''

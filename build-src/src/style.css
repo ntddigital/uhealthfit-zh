@@ -616,7 +616,10 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .lp-nav{position:static}
 .lp-nav .wrap{height:60px}
 .lp-nav-tag{font-size:13px;color:var(--ink-3);font-weight:500}
-@media(max-width:520px){.lp-nav-tag{display:none}}
+.lp-nav-r{display:flex;align-items:center;gap:16px}
+.lp-nav-home{font-size:14px;font-weight:700;color:var(--green);border:1px solid var(--line);border-radius:999px;padding:6px 14px;white-space:nowrap;transition:background .2s}
+.lp-nav-home:hover{background:var(--green-light)}
+@media(max-width:520px){.lp-nav-tag{display:none}.lp-nav-home{font-size:13px;padding:5px 12px}}
 .lp-hero .wrap{grid-template-columns:1.15fr .85fr;padding-top:clamp(28px,5vw,64px);padding-bottom:clamp(36px,5vw,64px)}
 .lp-hero h1{font-size:clamp(30px,4.6vw,46px)}
 .lp-hero .lead{margin-bottom:22px}
