@@ -1435,9 +1435,9 @@ def build_quiz():
     <p class="note" style="margin-top:6px">{second} 結果依你的回答排序，僅供參考。</p>
     <div class="email-box ebook-box">
       <div class="ebook-row">
-        <div class="ebook-pic"><img data-eb="eye-care" src="{rel}downloads/eye-care-guide-cover.jpg" alt="《螢幕族護眼自救指南》封面" width="240" height="320" loading="lazy"><img data-eb="body-balance" src="{rel}downloads/body-balance-guide-cover.jpg" alt="《現代人身體調養指南》封面" width="240" height="320" loading="lazy" style="display:none"></div>
+        <div class="ebook-pic"><img data-eb="eye-care" src="{rel}img/ebook-eye-care-cover.jpg" alt="《螢幕族護眼自救指南》封面" width="240" height="311" loading="lazy"><img data-eb="body-balance" src="{rel}downloads/body-balance-guide-cover.jpg" alt="《現代人身體調養指南》封面" width="240" height="320" loading="lazy" style="display:none"></div>
         <div class="ebook-copy"><span class="eyebrow">免費電子書 · 黃醫師</span>
-          <div data-eb="eye-care"><h4>《螢幕族護眼自救指南》</h4><ul><li>眼睛為什麼越來越累：眨眼、過熱、眼藥水三個關鍵</li><li>門診最常見的 5 個護眼誤區</li><li>4 種用眼類型對照，加上居家養護小貼士</li></ul></div>
+          <div data-eb="eye-care"><h4>《螢幕族護眼自救指南》</h4><ul><li>眼睛為什麼越來越累：眨眼、過熱、眼藥水三個關鍵</li><li>門診最常見的 5 個護眼誤區</li><li>每天能做的 7 件小事、4 種用眼類型對照，加上居家養護小貼士</li></ul></div>
           <div data-eb="body-balance" style="display:none"><h4>《現代人身體調養指南》</h4><ul><li>眼睛、睡眠、腸胃、生活：四大面向 16 項身體訊號清單</li><li>對照你的狀態，知道這個月該先照顧哪裡</li><li>七天微調養計畫，小到一定做得到</li></ul></div>
           <p class="ebook-note">{'留下 Email，指南 PDF 會連同你的測驗結果寄到信箱。' if EBOOK_EMAIL_FLOW_LIVE else '留下 Email，立即取得指南 PDF 下載連結。'}</p>
         </div>
