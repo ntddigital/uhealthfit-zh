@@ -1634,14 +1634,14 @@ LM_TERMS = [  # (月, 節氣, 節氣, 這個月的一句話)
 LEAD_MAGNETS = {
  'eye-7day': dict(
    list='T6wWLP', path='free/eye-care-7-day.html', pdf='downloads/eye-care-7-day-checklist.pdf',
-   cover='downloads/eye-care-7-day-checklist-cover.jpg', cover_w=696, cover_h=900, name='7 天護眼小計畫',
+   cover='img/lm-eye-cover.jpg', cover_w=696, cover_h=900, name='7 天護眼小計畫',  # 網頁用縮圖；原圖在 downloads/eye-care-7-day-checklist-cover.jpg
    title='免費領取｜7 天護眼小計畫：螢幕族的 7 個小習慣 · 優健堂 UHealthFit',
-   desc='每天一件小事、每件不到 5 分鐘、不花錢。螢幕族的 7 天護眼作息檢查表，免費下載，可列印打勾。',
+   desc='每天加入一個小習慣、每個不到 5 分鐘、不花錢。螢幕族的 7 天護眼習慣檢查表，免費下載，可列印打勾。',
    eyebrow='免費下載 · 7 天護眼小計畫', h1='盯了一整天螢幕？<em>給眼睛 7 個小習慣</em>',
-   lead='一天一件小事，每件不到 5 分鐘、不花錢。留下 Email，馬上下載可列印的 7 天檢查表，貼在螢幕旁邊，每做到一項就打個勾。',
-   lead_live='一天一件小事，每件不到 5 分鐘、不花錢。留下 Email，馬上下載可列印的 7 天檢查表；接下來 7 天，每天一封短信帶你做一件。',
+   lead='每天加入一個小習慣，每個不到 5 分鐘、不花錢。留下 Email，馬上下載可列印的 7 天檢查表，貼在螢幕旁邊，做到就打個勾。',
+   lead_live='每天加入一個小習慣，每個不到 5 分鐘、不花錢。留下 Email，馬上下載可列印的 7 天檢查表；接下來 7 天，每天一封短信帶你多做一件。',
    btn='免費下載檢查表', btn_live='免費領取 7 天計畫',
-   gets=[('7 天打勾表','一頁就好，印出來貼在螢幕旁，每做到一項就打個勾。'),('每個習慣怎麼做','第 2 頁逐條說明做法和小訣竅，不用另外查。'),('做完可以重來','7 天做完，下週再印一張；習慣是一遍一遍練出來的。')],
+   gets=[('7 天打勾表','第 1 頁：每天加入一個新習慣，做到就打個勾。印出來貼在螢幕旁。'),('每個習慣怎麼做','第 2 頁逐條說明做法和小訣竅，也整理了什麼時候該看眼科。'),('留下一個習慣','表格下方寫下最想留下的習慣和這週的發現；下週可以再印一張重來。')],
    gets_live=[('7 天打勾表（PDF）','兩頁：一張打勾表、一頁做法說明，印出來貼在螢幕旁。'),('7 封每日短信','每天一封，每封只講一個習慣，3 分鐘讀完。'),('什麼時候該找眼科','最後一封整理給你：哪些情況別自己撐，直接找眼科醫師。')],
    who=['每天看螢幕超過 6 小時','長時間待在冷氣房','戴隱形眼鏡','下班後還在滑手機'],
    faq=[('真的免費嗎？需要買東西嗎？','完全免費，不需要購買任何產品。7 個習慣都是日常就能做到的小事，不花錢。'),
@@ -1652,7 +1652,7 @@ LEAD_MAGNETS = {
    faq_live={1:('會收到很多信嗎？','計畫期間每天一封，共 8 封（含第一封歡迎信）。之後偶爾會收到優健堂的養護內容與會員消息，每封信底部都可以一鍵取消訂閱。')},
    inline_h='免費領取：7 天護眼小計畫', inline_p='每天一個小習慣、每個不到 5 分鐘。可列印的檢查表，加上 7 封每日短信。',
    # 頁面設計：頁首背景、「你會收到」小圖示、延伸閱讀、送出後的下一步
-   bg='lp-bg-eye.jpg', get_icons=['📄','✏️','🔁'], get_icons_live=['📄','✉️','🩺'],
+   bg='lp-bg-eye.jpg', get_icons=['📄','✏️','🌱'], get_icons_live=['📄','✉️','🩺'],
    related=['eye-patch-vs-steam-mask-vs-eye-drops','beyond-lutein-eye-care','contact-lens-eye-drops-eye-patch-guide'],
    next=[('看看護眼保健系列','series/eye.html'),('眼貼、蒸氣眼罩、眼藥水怎麼選','blog/eye-patch-vs-steam-mask-vs-eye-drops.html')],
    site_link='也可以先免費領取《7 天護眼小計畫》→',
@@ -1762,9 +1762,13 @@ def build_lead_pages():
         if key=='eye-7day':
             days=''.join(f'<li><span class="lm-tl-ic" aria-hidden="true">{ic}</span><span class="d">DAY {d}</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for (d,t,x),ic in zip(LM_EYE_HABITS,LM_EYE_ICONS))
             preview=f'''<section class="sec lp-sec"><div class="wrap">
-  <div class="sec-head lp-center"><span class="eyebrow">先看看內容</span><h2>7 天，每天只做一件小事</h2><p class="lead">不用一次改變生活。每個習慣都小到今天就能開始。</p></div>
+  <div class="sec-head lp-center"><span class="eyebrow">先看看內容</span><h2>7 天，每天加入一個新習慣</h2><p class="lead">第 1 天只做一件，之後每天多加一件。每個習慣都小到今天就能開始。</p></div>
+  <div class="lm-pages">
+    <figure><img src="{rel}img/lm-eye-checklist.jpg" alt="檢查表第 1 頁：7 個習慣 × 7 天的打勾表，每天多加入一個習慣" width="696" height="900" loading="lazy"><figcaption>第 1 頁・7 天打勾表</figcaption></figure>
+    <figure><img src="{rel}img/lm-eye-howto.jpg" alt="檢查表第 2 頁：7 個小習慣怎麼做比較容易" width="696" height="900" loading="lazy"><figcaption>第 2 頁・每個習慣怎麼做</figcaption></figure>
+  </div>
   <ol class="lm-tl">{days}</ol>
-  <div class="lm-tl-after"><div><b>第 8 天起</b><span>挑 2–3 個最容易的，留下來變成日常。</span></div><a class="btn btn-primary btn-sm" href="#lp-top">免費領取 →</a></div>
+  <div class="lm-tl-after"><div><b>做完 7 天</b><span>不用每格都打滿。寫下最想留下的一個習慣，讓它變成日常。</span></div><a class="btn btn-primary btn-sm" href="#lp-top">免費領取 →</a></div>
 </div></section>'''
         else:
             byno={mo:(a_,b_,t) for mo,a_,b_,t in LM_TERMS}
