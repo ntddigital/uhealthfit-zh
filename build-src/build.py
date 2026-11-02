@@ -270,7 +270,7 @@ SLIDES = {
  'soothing-cream':   dict(svg='calming',             bg='#F2DDC6', headline='鎮靜 舒適／更柔軟的肌膚',        intro='不含刺激性活性成分的植萃修護，為乾燥與壓力肌帶來每日的溫和呵護。', shot='herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide'),
  'clarifying-cream': dict(svg='clarifying-cream',    bg='#F6E9D9', headline='為易長痘肌膚／精選的草本',      intro='溫和淨顏的植萃面霜，讓膚色看起來更勻淨、更安定。', shot='herbal-clarifying-cream/clarifying-cream-product-shot-wide'),
  'lifting-serum':    dict(svg='lifting-serum',       bg='#D3CFAD', headline='更緊緻 更亮澤／更年輕的肌膚',    intro='高濃度植萃精華，日復一日，見證肌膚的提升與煥亮。', shot='herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide'),
- 'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-bottle-open-capsules', avif=False),
+ 'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-bottle-open-capsules', avif=False, local='enerbalance-banner-1600.jpg'),
 }
 def series_hero(k, rel):
     """系列頁頁首輪播：同 uhealthfit.com/zh-TW 首頁 slides——滿版、左文右圖、自動切換。
@@ -299,7 +299,7 @@ def series_hero(k, rel):
         <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
         <div class="hero-cta"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即選購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
       </div>
-      <div class="slide-pic"><picture>{avif}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
+      <div class="slide-pic">{f'<img class="slide-banner" src="{rel}img/{sl["local"]}" alt="{esc(p["name"])}" loading="lazy">' if sl.get('local') else f'<picture>{avif}<img src="{IMG}/products/{sl["shot"]}.png" alt="{esc(p["name"])}" loading="lazy"></picture>'}</div>
     </div>
   </article>''')
     cur_attr=' aria-current="true"'
@@ -570,9 +570,9 @@ DETAILS = {
  'enerbalance': dict(
    image='https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=1000',  # zh 黑膏滋介紹頁主圖：瓶身與草本切片
    promo_image='https://cdn.shopify.com/s/files/1/0706/1287/7467/files/heigaozi-single-thanksgiving-clean-v2.png?v=1791939199&width=1000',  # 商店「感恩回饋 40% OFF $179」特價圖；活動結束請刪除這一行
-   stats=[('0%','咖啡因'),('7 味','傳統草本'),('1,500 mg','每份草本精粹')],
-   showcase=dict(img=u_png('products/enerbalance/enerbalance-bottle-open-capsules'), eyebrow='產品介紹', title='傳統黑膏滋，做成每天方便吃的膠囊',
-     text='膏滋，是中醫把草本反覆煎煮、去渣後濃縮成膏的傳統工藝。EnerBalance 保留同樣的合煎精華，濃縮進標準化的植物膠囊：每份劑量固定、獨立取用、常溫保存，出門也方便帶。',
+   stats=[('0%','咖啡因'),('1 瓶 = 3 瓶','膏滋精華'),('7 味','傳統草本')],
+   showcase=dict(img='img:enerbalance-intro-1200.jpg', ratio='2000/1659', eyebrow='產品介紹', title='1 瓶膠囊 = 3 瓶膏滋精華',
+     text='膏滋，是中醫把草本反覆煎煮、去渣後濃縮成膏的傳統工藝。EnerBalance 保留同樣的合煎精華，草本精粉直接封裝、不經糖水稀釋——1 瓶膠囊，就是 3 瓶膏滋的草本精華。每份劑量固定、獨立取用、常溫保存，出門也方便帶。',
      bullets=['植物性膠囊殼（羥丙甲纖維素），適合素食者','明確標示 5:1 濃縮比例，無添加糖','每份 3 粒，每瓶 60 份','不含咖啡因與強刺激性成分，不以短暫提神為目的']),
    compare=dict(title='傳統膏滋與膠囊，差在哪裡', cols=['傳統膏滋','EnerBalance 膠囊'], rows=[
      ('衛生與取用','開罐後反覆用勺挖取，長期接觸空氣','獨立密封膠囊，取用不接觸空氣與器具'),
@@ -776,12 +776,14 @@ def zebra(html):
     def f(m):
         n[0]+=1; return '<section class="sec'+('' if n[0]%2 else ' bg-cream')+'"'
     return re.sub(r'<section class="sec(?: bg-cream| bg-green-light)?"',f,html)
-def showcase_section(slug):
+def showcase_section(slug, rel='../'):
     sc=DETAILS.get(slug,{}).get('showcase')
     if not sc: return ''
+    img=f"{rel}img/{sc['img'][4:]}" if sc['img'].startswith('img:') else sc['img']  # img:檔名 = 本站 build-src/src/img/
+    ratio=f' style="aspect-ratio:{sc["ratio"]}"' if sc.get('ratio') else ''
     bl=''.join(f'<li>{esc(x)}</li>' for x in sc.get('bullets',[]))
     return f'''<section class="sec"><div class="wrap showcase">
-  <div class="showcase-pic"><img src="{sc['img']}" alt="{esc(PRODUCTS[slug]['name'])}" loading="lazy"></div>
+  <div class="showcase-pic{' fit' if sc.get('ratio') else ''}"{ratio}><img src="{img}" alt="{esc(PRODUCTS[slug]['name'])}" loading="lazy"></div>
   <div><span class="eyebrow">{esc(sc.get('eyebrow','產品介紹'))}</span><h2>{esc(sc['title'])}</h2><p class="lead" style="font-size:16px">{esc(sc.get('text',''))}</p>{f'<ul class="showcase-list">{bl}</ul>' if bl else ''}</div>
 </div></section>
 '''
