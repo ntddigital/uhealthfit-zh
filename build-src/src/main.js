@@ -2,7 +2,22 @@
 (function(){
   // 手機選單
   var mb=document.querySelector('.menu-btn'), mm=document.querySelector('.mobile-menu');
-  if(mb&&mm){mb.addEventListener('click',function(){var o=mm.classList.toggle('open');mb.setAttribute('aria-expanded',o?'true':'false');});}
+  // 開啟時 body 加 menu-open（收起底部按鈕列與小視窗）；點選單外、按 Esc、切回桌機寬度都會關閉
+  if(mb&&mm){
+    var setMenu=function(o){mm.classList.toggle('open',o);document.body.classList.toggle('menu-open',o);mb.setAttribute('aria-expanded',o?'true':'false');};
+    mb.addEventListener('click',function(){setMenu(!mm.classList.contains('open'));});
+    document.addEventListener('click',function(e){if(mm.classList.contains('open')&&!mm.contains(e.target)&&!mb.contains(e.target)){setMenu(false);}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&mm.classList.contains('open')){setMenu(false);mb.focus();}});
+    window.addEventListener('resize',function(){if(window.innerWidth>960&&mm.classList.contains('open')){setMenu(false);}});
+  }
+
+  // 回到頂端：捲過兩個畫面高度才出現（長頁面在手機上很需要）
+  var tt=document.querySelector('.to-top');
+  if(tt){
+    var chkTop=function(){var on=window.scrollY>window.innerHeight*2;if(on){tt.hidden=false;}tt.classList.toggle('show',on);};
+    window.addEventListener('scroll',chkTop,{passive:true}); chkTop();
+    tt.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+  }
 
   // 外站購買連結：沿用廣告來源參數、記錄事件（GA4 / Meta Pixel 若存在）
   // 訪客若從廣告或帶 UTM 的連結進站，把來源參數與點擊編號存在本次瀏覽，
@@ -128,6 +143,7 @@
           if(ok){ok.style.display='block';var dl=ok.querySelector('.ebook-dl');if(dl){if(ebook){dl.href=ebook.url;}else if(!lmPage){dl.style.display='none';}}}
         });
         if(lmPage){ markLm(lmPage); document.body.classList.add('lm-submitted'); }
+        var pp=form.closest&&form.closest('.lm-pop'); if(pp&&pp._close){setTimeout(pp._close,6000);} // 小視窗送出後顯示「已收到」6 秒再收起
         if(ebook){ // 觸發 Klaviyo「Requested Quiz Ebook」事件，由 Flow 寄出對應的電子書
           var ev={data:{type:'event',attributes:{properties:{ebook:lmKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
           fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
@@ -165,12 +181,15 @@
     if(pop&&!seen&&!lmDone()[popKey]){
       var opened=false, tm;
       var openPop=function(){
-        if(opened||document.body.classList.contains('lm-submitted')) return; opened=true; clearTimeout(tm);
+        if(opened||document.body.classList.contains('lm-submitted')) return;
+        if(document.body.classList.contains('menu-open')){clearTimeout(tm);tm=setTimeout(openPop,8000);return;} // 選單開著就晚點再試
+        opened=true; clearTimeout(tm);
         try{sessionStorage.setItem('uhf_pop_seen','1');}catch(e){}
-        pop.hidden=false; requestAnimationFrame(function(){pop.classList.add('show');});
+        pop.hidden=false; document.body.classList.add('pop-open'); requestAnimationFrame(function(){pop.classList.add('show');});
         if(window.gtag){gtag('event','lead_magnet_popup_view',{lead_magnet:popKey});}
       };
-      var closePop=function(){pop.classList.remove('show');setTimeout(function(){pop.hidden=true;},250);};
+      var closePop=function(){pop.classList.remove('show');document.body.classList.remove('pop-open');setTimeout(function(){pop.hidden=true;},250);};
+      pop._close=closePop;
       pop.querySelector('.lm-pop-x').addEventListener('click',closePop);
       document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pop.hidden){closePop();}});
       tm=setTimeout(openPop,30000);

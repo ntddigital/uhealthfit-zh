@@ -808,6 +808,7 @@ def compare_section(slug):
     note=f'<p class="note" style="margin-top:12px">{esc(c["note"])}</p>' if c.get('note') else ''
     return f'''<section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">比較</span><h2>{esc(c['title'])}</h2>{intro}</div>
+  <p class="cmp-hint">表格可左右滑動查看 →</p>
   <div class="cmp-wrap"><table class="cmp"><thead>{head}</thead><tbody>{rows}</tbody></table></div>
   {note}
 </div></section>
@@ -861,7 +862,7 @@ def nav(rel, active=''):
     def a(href,label,key):
         cls = ' class="active"' if active==key else ''
         return f'<a href="{href}"{cls}>{label}</a>'
-    return f'''<div class="topbar">美國地區：眼貼滿 <b>USD $79</b>、其他商品滿 <b>USD $200</b> 免運 · 30 天內未拆封可退 · 官方商店安全結帳</div>
+    return f'''<div class="topbar"><span class="tb-l">美國地區：眼貼滿 <b>USD $79</b>、其他商品滿 <b>USD $200</b> 免運 · 30 天內未拆封可退 · 官方商店安全結帳</span><span class="tb-s">眼貼滿 <b>$79</b>、其他滿 <b>$200</b> 美國免運 · 30 天可退</span></div>
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit" width="101" height="34"></a>
@@ -950,6 +951,7 @@ def footer(rel):
   <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
   <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於 zh.uhealthfit.com 完成。</div>
 </div></footer>
+<button class="to-top" type="button" aria-label="回到頂端" hidden>↑</button>
 {lm_popups(rel) if LEAD_FLOWS_LIVE else ''}
 <script src="{rel}js/main.js?v={JS_VER}" defer></script>
 </body></html>

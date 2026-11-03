@@ -784,3 +784,33 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .showcase-pic.fit img{object-fit:cover}
 .slide-pic .slide-banner{width:100%;max-height:none;border-radius:20px;filter:none;box-shadow:0 24px 50px -30px rgba(8,32,15,.45)}
 .slide-title-text{font-size:clamp(36px,4.6vw,60px);font-weight:900;line-height:1.2;letter-spacing:.04em;color:var(--green-dark)}
+
+/* ───── 手機版 UI/UX 優化（2026-11-02） ───── */
+/* 頂部提示列：手機只顯示單行短版，省下一行高度 */
+.topbar .tb-s{display:none}
+@media(max-width:640px){.topbar{padding:7px 14px;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.topbar .tb-l{display:none}.topbar .tb-s{display:inline}}
+/* 手機選單：內容多時可捲動；開啟時收起底部按鈕列、購買列與免費下載小視窗 */
+@media(max-width:960px){.mobile-menu.open{max-height:calc(100dvh - 67px);overflow-y:auto;-webkit-overflow-scrolling:touch}body.menu-open .lm-pop,body.menu-open .sticky-cta,body.menu-open .buybar,body.menu-open .to-top{display:none!important}}
+/* 商品頁圖片輪播：手機上圓點要跟著圖片走（原本 static 會讓圓點掉到價格框裡） */
+@media(max-width:900px){.pdp .gallery{position:relative;top:auto}}
+/* 比較表：手機固定第一欄、縮小字級、提示可左右滑動 */
+.cmp-hint{display:none;font-size:13px;color:var(--ink-3);margin:-6px 0 10px}
+@media(max-width:640px){.cmp-hint{display:block}.cmp{min-width:520px;font-size:14px}.cmp th,.cmp td{padding:12px 12px}.cmp tbody th,.cmp thead th:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:1px 0 0 var(--line)}.cmp thead th:first-child{background:var(--cream)}.cmp tbody th{width:36%;min-width:118px}}
+/* 點擊目標加大：輪播圓點、麵包屑、頁尾連結（原本 8×8 與 20px 高太難點） */
+.slides-dots button{position:relative}
+.slides-dots button::before{content:"";position:absolute;inset:-14px -8px}
+.crumbs a{display:inline-block;padding:4px 0}
+footer.site li a{display:inline-block;padding:5px 0}
+footer.site .copy{font-size:13px;opacity:.8}
+/* 免費下載小視窗（手機）：輸入框 16px 避免 iOS 自動放大；同意文字不小於 12px；開啟時收起底部按鈕列、改貼底 */
+@media(max-width:860px){.lm-pop .lm-form input{font-size:16px}.lm-pop .consent{font-size:12px}.lm-pop{max-height:calc(100dvh - 110px);overflow-y:auto}body.pop-open .sticky-cta,body.pop-open .buybar,body.pop-open .to-top{display:none!important}body.pop-open .lm-pop{bottom:calc(14px + env(safe-area-inset-bottom))}}
+/* 文章內優惠框：手機縮小字級與留白 */
+@media(max-width:640px){.article .post-promo{padding:14px 16px;margin-bottom:20px}.article .post-promo b{font-size:15px}.article .post-promo ul{font-size:15px;margin-left:18px}}
+/* 回到頂端按鈕：捲過兩個畫面才出現，避開底部按鈕列 */
+.to-top{position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:55;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.95);box-shadow:0 8px 20px rgba(8,32,15,.15);color:var(--green-dark);font-size:20px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;font-family:var(--font)}
+.to-top.show{display:flex}
+.to-top[hidden]{display:none}
+@media(min-width:861px){body:not(.has-buybar) .to-top{bottom:24px}}
+.to-top:hover{background:#fff}
+.post-card .go,.journey .jcard a:not(.btn){display:inline-block;padding:6px 0}
+footer.site p a{display:inline-block;padding:4px 0}
