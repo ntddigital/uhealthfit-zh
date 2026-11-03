@@ -57,7 +57,7 @@ EBOOKS = {
 }
 # Klaviyo 寄電子書的 Flow（觸發事件：Requested Quiz Ebook）上線前保持 False：測驗頁不承諾寄信，只提供下載連結。
 # Flow 上線後改成 True 並重建，就會換回「寄到信箱」的說法。
-EBOOK_EMAIL_FLOW_LIVE = False
+EBOOK_EMAIL_FLOW_LIVE = True
 TODAY = '2026-10-19'
 
 def shop_url(handle):
