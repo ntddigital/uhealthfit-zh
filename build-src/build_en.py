@@ -19,7 +19,8 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 SHOP = 'https://uhealthfit.com'                     # English store: every Buy button goes to /products/<handle>
 U = 'https://uhealthfit.com'                        # image host
 LOGO_EN = f'{U}/uhealthfit/uhealthfit_logo.svg'
-GTM_EN = 'GTM-KR36VL29'                             # uhealthfit.com container (GA4 G-BM2J1L0NM9 + Meta Pixel 1617768182710522 inside)
+GTM_EN = 'GTM-KR36VL29'
+GA4_EN = 'G-BM2J1L0NM9'                           # inside GTM_EN; page events need send_to this ID (see main.js track())                             # uhealthfit.com container (GA4 G-BM2J1L0NM9 + Meta Pixel 1617768182710522 inside)
 CONSENT_SCOPE = ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","AX","GF","GP","MQ","RE","YT","MF","IS","LI","NO","GB","GG","JE","IM","GI","CH","US-WA","US-NV","US-CT"]  # same list as uhealthfit.com
 
 def esc(s): return H.escape(s, quote=True)
@@ -477,7 +478,7 @@ def head(B, title, desc, path, page_id, og_image=None, noindex=False, extra=''):
     consent = ("<!-- Consent + Google Tag Manager (uhealthfit.com container __GTM__): same logic as uhealthfit.com. "
       "GTM loads only on __HOST__, and only when consent isn't required for the visitor's region (cookie uh-ip-country, set by functions/en/_middleware.js) or the visitor has chosen. -->\n"
       "<script>(function(){try{var h=location.hostname,isProd=h==='__HOST__';"
-      "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;"
+      "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;window.__uhGaId='__GA4__';"
       "function ck(n){var m=document.cookie.match('(?:^|; )'+n+'=([^;]*)');return m?decodeURIComponent(m[1]):null;}"
       "var q=/[?&]uh-geo=([A-Za-z]{2}(?:-[A-Za-z0-9]{1,3})?)/.exec(location.search);if(q&&!isProd){document.cookie='uh-ip-country='+q[1].toUpperCase()+'; path=/';}"
       "var choice=/^v1:a([01])m([01])$/.exec(ck('uh-consent')||''),country=ck('uh-ip-country'),list=__SCOPE__,cc=country?country.toUpperCase():'';"
@@ -491,7 +492,7 @@ def head(B, title, desc, path, page_id, og_image=None, noindex=False, extra=''):
       "var loaded=false;window.__uhLoadGtm=function(){if(loaded||!isProd)return;loaded=true;"
       "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','__GTM__');};"
       "if(status==='not-required'||(status==='chosen'&&(a||m)))window.__uhLoadGtm();"
-      "}catch(e){}})();</script>\n<!-- End consent + GTM -->").replace('__GTM__', GTM_EN).replace('__HOST__', B.PROD_HOST).replace('__SCOPE__', scope)
+      "}catch(e){}})();</script>\n<!-- End consent + GTM -->").replace('__GTM__', GTM_EN).replace('__GA4__', GA4_EN).replace('__HOST__', B.PROD_HOST).replace('__SCOPE__', scope)
     robots = '<meta name="robots" content="noindex">' if noindex else f'<link rel="canonical" href="{B.page_url(path)}">'
     og = og_image or f'{U}/og/uhealthfit-en.jpg'
     return f'''<!DOCTYPE html>

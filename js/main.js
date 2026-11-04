@@ -19,6 +19,10 @@
     tt.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
   }
 
+  // GA4 自訂事件。英文頁的 GA4（G-BM2J1L0NM9）由 uhealthfit.com 的 GTM 容器載入：頁面上的 gtag('event') 必須帶 send_to 才會送到它
+  // （2026-11-04 線上實測：不帶 send_to 的事件停在 dataLayer，沒有送出）。中文頁用頁面上的 gtag config，不需要 send_to。
+  function track(name,params){if(!window.gtag)return;params=params||{};if(window.__uhGaId){params.send_to=window.__uhGaId;}gtag('event',name,params);}
+
   // 外站購買連結：沿用廣告來源參數、記錄事件（GA4 / Meta Pixel 若存在）
   // 訪客若從廣告或帶 UTM 的連結進站，把來源參數與點擊編號存在本次瀏覽，
   // 前往商店時原樣帶過去，讓 Shopify、GA4、Meta、Google Ads 能把訂單歸回原本的廣告。
@@ -50,7 +54,7 @@
       a.setAttribute('rel','noopener'); a.setAttribute('target','_blank'); // 另開新分頁，保留本站
       a.addEventListener('click',function(){
         var label=a.getAttribute('data-product')||page;
-        if(window.gtag){gtag('event','begin_checkout_redirect',{product:label,page:page});}
+        track('begin_checkout_redirect',{product:label,page:page});
         // Meta 只收到「前往商店」這個動作，不帶產品或頁面名稱，避免被視為健康相關資料
         if(!EN&&window.fbq){fbq('trackCustom','ShopRedirect');}
       });
@@ -127,7 +131,7 @@
       var lm=result.querySelector('input[name="lead_magnet"]'); if(lm){lm.value=eb;}
       result.classList.add('on'); if(back)back.style.visibility='hidden';
       result.scrollIntoView({behavior:'smooth',block:'start'});
-      if(window.gtag){gtag('event','quiz_complete',{result:top});}
+      track('quiz_complete',{result:top});
     }
     show(0);
   }
@@ -171,7 +175,7 @@
           var ev={data:{type:'event',attributes:{properties:{ebook:lmKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
           fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
         }
-        if(window.gtag){gtag('event','generate_lead',{method:lmPage?('lead_magnet_'+(place||'page')):'quiz_email',lead_magnet:lmKey||'none'});}
+        track('generate_lead',{method:lmPage?('lead_magnet_'+(place||'page')):'quiz_email',lead_magnet:lmKey||'none'});
         if(window.fbq){fbq('track','Lead');} // 不傳下載品類別給 Meta，類別只留在 GA4 與 Klaviyo
       }
     });
@@ -209,7 +213,7 @@
         opened=true; clearTimeout(tm);
         try{sessionStorage.setItem('uhf_pop_seen','1');}catch(e){}
         pop.hidden=false; document.body.classList.add('pop-open'); requestAnimationFrame(function(){pop.classList.add('show');});
-        if(window.gtag){gtag('event','lead_magnet_popup_view',{lead_magnet:popKey});}
+        track('lead_magnet_popup_view',{lead_magnet:popKey});
       };
       var closePop=function(){pop.classList.remove('show');document.body.classList.remove('pop-open');setTimeout(function(){pop.hidden=true;},250);};
       pop._close=closePop;
