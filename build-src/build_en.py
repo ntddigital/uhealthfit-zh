@@ -119,6 +119,7 @@ COLL = {
 # ───────────────────────────── Products ─────────────────────────────
 # kind: supplement (dietary supplement, † claims) | cosmetic (appearance and feel only)
 PRODUCT_ORDER = ['eye-patches', 'lumiview', 'eye-cream', 'dentaforte', 'enerbalance', 'calmoon', 'soothing-cream', 'clarifying-cream', 'lifting-serum', 'herbalflow']
+# in_stock=False on a product switches its JSON-LD offer to OutOfStock (default: in stock). Check uhealthfit.com before changing.
 P = {
  'eye-patches': dict(coll='eye', kind='cosmetic', name='WiseQuest Eye Patches', short='Eye Patches', line='Cooling hydrogel eye patches', badge=('badge-star', 'Star product'),
    hook='A cooling wind-down ritual for screen-heavy days',
@@ -489,7 +490,7 @@ def head(B, title, desc, path, page_id, og_image=None, noindex=False, extra=''):
       "gtag('consent','default',{ad_storage:g(m),ad_user_data:g(m),ad_personalization:g(m),analytics_storage:g(a)});gtag('set','url_passthrough',true);"
       "if(!m){var nf=function(){};nf.__uhBlocked=true;window.fbq=nf;gtag('set','ads_data_redaction',true);}"
       "window.__uhConsent={status:status,analytics:a,marketing:m,gpc:gpc};"
-      "var loaded=false;window.__uhLoadGtm=function(){if(loaded||!isProd)return;loaded=true;"
+      "var loaded=false;window.__uhLoadGtm=function(){if(loaded||!isProd)return;loaded=true;window.__uhGtmLoaded=true;"
       "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','__GTM__');};"
       "if(status==='not-required'||(status==='chosen'&&(a||m)))window.__uhLoadGtm();"
       "}catch(e){}})();</script>\n<!-- End consent + GTM -->").replace('__GTM__', GTM_EN).replace('__GA4__', GA4_EN).replace('__HOST__', B.PROD_HOST).replace('__SCOPE__', scope)
@@ -769,7 +770,7 @@ def build_home(B):
 <section class="sec doctor bg-dark"><div class="wrap">
   <div><img src="{U}/home/dr-h.png" alt="Dr. Huang, who developed the WiseQuest formulas" loading="lazy"></div>
   <div><span class="eyebrow">Developed with Dr. Huang</span><h2>Two decades of looking at the whole person</h2>
-  <p>Dr. Huang is a New York State–licensed acupuncturist with two decades of clinical and botanical-formulation experience. She graduated from the China Academy of Chinese Medical Sciences and trained with nationally recognized practitioners in Beijing, and she holds a Chinese national invention patent for a herbal cosmetic formula she developed.</p>
+  <p>Dr. Huang is a New York State–licensed acupuncturist with two decades of practice and botanical-formulation experience. She graduated from the China Academy of Chinese Medical Sciences and trained with nationally recognized practitioners in Beijing, and she holds a Chinese national invention patent for a herbal cosmetic formula she developed.</p>
   <p style="margin-top:12px">Her approach looks at the whole person rather than a single complaint — the starting point for every WiseQuest formula: support the body, don't override it.</p>
   <div class="hero-cta" style="margin-top:22px"><a class="btn btn-light" href="{L('en/about.html')}#dr-huang">About Dr. Huang and UHealthFit</a></div></div>
 </div></section>
@@ -873,7 +874,7 @@ def build_products(B):
         yes = ''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no = ''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         kind_label = 'Dietary supplement' if p['kind'] == 'supplement' else 'Cosmetic'
         ld = json.dumps({"@context": "https://schema.org", "@type": "Product", "name": p['name'], "image": p['og'], "description": p['desc'].replace('†', ''), "brand": {"@type": "Brand", "name": "WiseQuest"}, "url": B.page_url(path),
-                         "offers": {"@type": "Offer", "priceCurrency": "USD", "price": f'{p["price"]:.2f}', "availability": "https://schema.org/InStock", "url": shop(p['handle'])}}, ensure_ascii=False)
+                         "offers": {"@type": "Offer", "priceCurrency": "USD", "price": f'{p["price"]:.2f}', "availability": "https://schema.org/InStock" if p.get('in_stock', True) else "https://schema.org/OutOfStock", "url": shop(p['handle'])}}, ensure_ascii=False)
         body = f'''
 <section class="pdp"><div class="wrap">
   <div class="gallery contain"><img src="{p['image']}" alt="{esc(p['name'])}" width="1200" height="800" fetchpriority="high"></div>
@@ -987,7 +988,7 @@ def build_guides(B):
     <div class="crumbs"><a href="{L('en/index.html')}">Home</a><span>›</span><a href="{L('en/guides/index.html')}">Guides</a><span>›</span>{crumb_coll}</div>
     <span class="series-tag s-{k}"><span class="dot"></span>{c['name']} · Buying guide</span>
     <h1>{esc(p['title'])}</h1>
-    <div class="meta"><span>UHealthFit editorial team · informed by Dr. Huang's clinical approach</span><span>{p['reading_min']} min read</span><span>Updated {p.get('date', '2026-11-04')}</span></div>
+    <div class="meta"><span>UHealthFit editorial team · informed by Dr. Huang's practice</span><span>{p['reading_min']} min read</span><span>Updated {p.get('date', '2026-11-04')}</span></div>
   </div>
   <div class="article-cover en-cover"><img src="{cover(p)}" alt="" width="1200" height="675" fetchpriority="high"></div>
   <div class="article-layout">
@@ -1134,8 +1135,8 @@ def build_about(B):
 <section class="sec doctor bg-dark" id="dr-huang"><div class="wrap">
   <div><img src="{U}/home/dr-h.png" alt="Dr. Huang" loading="lazy"></div>
   <div><span class="eyebrow">Developed with Dr. Huang</span><h2>Meet the practitioner behind the formulas</h2>
-  <p>Dr. Huang is a New York State–licensed acupuncturist with two decades of clinical and botanical-formulation experience. She graduated from the China Academy of Chinese Medical Sciences and was selected to continue the clinical teachings of renowned physicians in Beijing, studying herbal and acupuncture methods with nationally recognized practitioners.</p>
-  <p style="margin-top:12px">Her clinical work has spanned digestion, sleep and stress, skin and more, using herbs, acupuncture and related methods. After two decades researching botanical skincare, she holds a Chinese national invention patent for a herbal cosmetic formula she developed.</p>
+  <p>Dr. Huang is a New York State–licensed acupuncturist with two decades of practice and botanical-formulation experience. She graduated from the China Academy of Chinese Medical Sciences and was selected to continue the teachings of renowned physicians in Beijing, studying herbal and acupuncture methods with nationally recognized practitioners.</p>
+  <p style="margin-top:12px">Her practice has spanned digestion, sleep and stress, skin and more, using herbs, acupuncture and related methods. After two decades researching botanical skincare, she holds a Chinese national invention patent for a herbal cosmetic formula she developed.</p>
   <p style="margin-top:12px">Every WiseQuest formula starts from the way she practices: look at the whole person, and support the body rather than override it.</p></div>
 </div></section>
 <section class="sec bg-cream"><div class="wrap">
@@ -1175,7 +1176,7 @@ FAQS = {
   ("What does the $6 trial include?", "Two nights of WiseQuest Eye Patches, shipping included.")],
  'About us': [
   ("How are UHealthFit and WiseQuest related?", "UHealthFit is the online home of WiseQuest — the brand's own store, run by Uhealth Trading Inc. in Middletown, New York."),
-  ("Who is Dr. Huang?", "A New York State–licensed acupuncturist with two decades of clinical and botanical-formulation experience, who developed the WiseQuest formulas."),
+  ("Who is Dr. Huang?", "A New York State–licensed acupuncturist with two decades of practice and botanical-formulation experience, who developed the WiseQuest formulas."),
   ("How accurate is the quiz?", "It ranks the six collections from your answers to help you decide where to start. It's for orientation only — not a medical assessment.")],
 }
 def build_faq(B):

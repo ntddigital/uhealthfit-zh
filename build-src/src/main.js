@@ -72,9 +72,11 @@
       var v=b.getAttribute('data-cc'), an=v!=='0', mk=v==='1'&&!cs.gpc; // Global Privacy Control：行銷一律關閉
       try{document.cookie='uh-consent=v1:a'+(an?1:0)+'m'+(mk?1:0)+'; path=/; max-age=31536000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch(e){}
       var g=function(on){return on?'granted':'denied';};
-      if(mk&&window.fbq&&window.fbq.__uhBlocked){try{delete window.fbq;}catch(e){window.fbq=undefined;}} // 先拿掉空的 fbq，GTM 裡的 Meta Pixel 才會真正載入
+      var unblock=mk&&window.fbq&&window.fbq.__uhBlocked;
+      if(unblock){try{delete window.fbq;}catch(e){window.fbq=undefined;}} // 先拿掉空的 fbq，GTM 裡的 Meta Pixel 才會真正載入
       if(window.gtag){gtag('set','ads_data_redaction',!mk);gtag('consent','update',{ad_storage:g(mk),ad_user_data:g(mk),ad_personalization:g(mk),analytics_storage:g(an)});}
       cs.status='chosen'; cs.analytics=an; cs.marketing=mk;
+      if(unblock&&window.__uhGtmLoaded){ccHide();location.reload();return;} // GTM 已載過（之前選了僅分析），Pixel 基本碼不會再跑：重載頁面讓它載入
       if((an||mk)&&window.__uhLoadGtm){window.__uhLoadGtm();}
       ccHide();
     });});
