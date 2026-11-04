@@ -438,7 +438,7 @@ POST_COVERS = {
  'screen-tired-eyes-evening-routine': (opt('concerns/eye-care'), f'{U}/concerns/eye-care.png'),
  'goji-chrysanthemum-eye-nutrition': (opt('ingredients/goji'), f'{U}/ingredients/goji.png'),
  'melatonin-free-sleep-support': (opt('concerns/sleep-health'), f'{U}/concerns/sleep-health.png'),
- 'herbal-supplement-safety-checklist': (f'{U}/blog/botanical-wellness-hero-1200.avif', f'{U}/blog/botanical-wellness-hero.png'),
+ 'herbal-supplement-safety-checklist': (f'{U}/_optimized/blog/botanical-wellness-hero-1200.avif', f'{U}/blog/botanical-wellness-hero.png'),
  'senna-free-digestive-support': (opt('ingredients/hemp-seed'), f'{U}/ingredients/hemp-seed.png'),
  'caffeine-free-energy-american-ginseng': (COLL['vitality']['photo'], COLL['vitality']['og']),
  'gum-care-after-40': (opt('concerns/dental-health'), f'{U}/concerns/dental-health.png'),
@@ -1084,7 +1084,7 @@ def build_approach(B):
     <h1>Chinese herbalism, <em>explained without the mystique</em></h1>
     <p class="lead">Traditional Chinese medicine (TCM) is one of the world's oldest continuously documented herbal traditions. You don't have to adopt its whole philosophy to benefit from what it does well — combining plants thoughtfully, for steady everyday support. Here's how we use it, and where we draw the lines.</p>
     <div class="hero-cta"><a class="btn btn-primary" href="{L('en/collections/index.html')}">Shop by concern</a><a class="btn btn-ghost" href="{L('en/guides/herbal-supplement-safety-checklist.html') if any(p['slug'] == 'herbal-supplement-safety-checklist' for p in POSTS) else L('en/guides/index.html')}">How to vet an herbal supplement</a></div></div>
-  <div class="hero-visual photo"><img src="{U}/blog/botanical-wellness-hero-1200.avif" alt="Dried botanicals and herbs" width="1200" height="900" fetchpriority="high"></div>
+  <div class="hero-visual photo"><img src="{U}/_optimized/blog/botanical-wellness-hero-1200.avif" alt="Dried botanicals and herbs" width="1200" height="900" fetchpriority="high"></div>
 </div></section>
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">The short version</span><h2>What TCM is — and what it isn't</h2></div>
