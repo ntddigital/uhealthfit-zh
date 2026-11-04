@@ -6,6 +6,8 @@
 - /about.html → 308 轉址到 /about（Cloudflare 也是這樣）
 - 不存在的網址 → 以 404.html 回應 HTTP 404
 追蹤碼只在 us.uhealthfit.com 啟用，本機預覽不會把資料送進 GA4／GTM／Meta。
+- /en/ 英文頁：模擬 functions/en/_middleware.js，設定 uh-ip-country cookie（預設 US-NY，可用環境變數 UH_GEO=US-WA 等改變；
+  也可在網址加 ?uh-geo=US-WA）。不需要同意的地區不會出現 Cookie 同意列。
 """
 import os, sys, posixpath
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -40,11 +42,19 @@ class Handler(SimpleHTTPRequestHandler):
             return self._redirect(path + '/' + query)
         return self._not_found()
 
+    def end_headers(self):
+        # 模擬 Cloudflare Pages Function（functions/en/_middleware.js）的地區 cookie
+        if urlsplit(self.path).path.startswith('/en') and 'uh-ip-country=' not in (self.headers.get('Cookie') or ''):
+            self.send_header('Set-Cookie', f"uh-ip-country={os.environ.get('UH_GEO', 'US-NY')}; Path=/; Max-Age=86400; SameSite=Lax")
+        super().end_headers()
+
     def _redirect(self, to):
         self.send_response(308); self.send_header('Location', to); self.end_headers()
 
     def _not_found(self):
-        page = os.path.join(DIST, '404.html')
+        # Cloudflare Pages 會用最近的 404.html（/en/... 用 en/404.html，其餘用根目錄的 404.html）
+        page = os.path.join(DIST, 'en', '404.html') if urlsplit(self.path).path.startswith('/en/') else os.path.join(DIST, '404.html')
+        if not os.path.isfile(page): page = os.path.join(DIST, '404.html')
         if not os.path.isfile(page): return self.send_error(404)
         body = open(page, 'rb').read()
         self.send_response(404); self.send_header('Content-Type', 'text/html; charset=utf-8')
