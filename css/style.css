@@ -814,3 +814,31 @@ footer.site .copy{font-size:13px;opacity:.8}
 .to-top:hover{background:#fff}
 .post-card .go,.journey .jcard a:not(.btn){display:inline-block;padding:6px 0}
 footer.site p a{display:inline-block;padding:4px 0}
+
+/* ───── 中英切換＋英文頁（/en/）───── */
+.lang-switch{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:38px;padding:0 10px;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:700;color:var(--ink-2);font-family:var(--font-en)}
+.lang-switch:hover{border-color:var(--green);color:var(--green)}
+html[lang="en"]{--font:"Manrope",-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;--font-en:"Manrope",-apple-system,"Segoe UI",sans-serif}
+html[lang="en"] h1,html[lang="en"] h2{letter-spacing:-.01em;font-weight:800}
+html[lang="en"] body{letter-spacing:0}
+html[lang="en"] .nav-links{font-size:14.5px}
+.prod .pic.cut img{object-fit:contain;padding:10px 14px}
+.herb-in{margin-top:auto;padding-top:6px;font-size:13px;font-weight:700;color:var(--green)}
+.article-cover.en-cover{background:var(--cream)}
+.article-cover.en-cover img{aspect-ratio:16/8;object-fit:cover}
+footer.site .cc-open{background:none;border:0;color:inherit;font:inherit;padding:5px 0;cursor:pointer;text-align:left}
+footer.site .cc-open:hover{color:#fff;text-decoration:underline}
+/* 英文頁 Cookie／健康資料同意（與 uhealthfit.com 相同邏輯；只在需要同意的地區或尚未判斷地區時出現） */
+.cc{position:fixed;left:12px;right:12px;bottom:12px;z-index:90;display:flex;justify-content:center;pointer-events:none}
+.cc[hidden]{display:none}
+.cc-in{pointer-events:auto;max-width:880px;width:100%;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 60px -24px rgba(0,0,0,.35);padding:18px 20px;display:grid;gap:12px;font-size:14px;color:var(--ink-2);line-height:1.6}
+.cc-in b{color:var(--ink)}
+.cc-in a{color:var(--green);text-decoration:underline;text-underline-offset:2px}
+.cc-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.cc-btns .btn{padding:9px 16px;font-size:14px}
+body.cc-on .sticky-cta,body.cc-on .buybar{visibility:hidden}
+@media(max-width:600px){.cc-btns{justify-content:stretch}.cc-btns .btn{flex:1 1 auto}}
+.buybox .btn-block{white-space:normal;text-align:center;line-height:1.35}
+.article .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 24px;border-radius:8px}
+.article .table-scroll table{margin:0;min-width:560px}
+.article-layout>*{min-width:0}

@@ -41,7 +41,10 @@
     }
     return u.toString();
   }
-  document.querySelectorAll('a[href^="https://zh.uhealthfit.com"]').forEach(function(a){
+  // 英文頁（/en/）：購買按鈕連到 uhealthfit.com 英文商品頁；事件經 uhealthfit.com 的 GTM 送到它的 GA4。
+  // 英文頁不從頁面直接送 Meta 自訂事件（Pixel 由 uhealthfit.com 的 GTM 容器管理，且需行銷同意）
+  var EN=document.documentElement.lang==='en';
+  document.querySelectorAll(EN?'a[href^="https://uhealthfit.com/products/"]':'a[href^="https://zh.uhealthfit.com"]').forEach(function(a){
     try{
       a.href=shopHref(a.href);
       a.setAttribute('rel','noopener'); a.setAttribute('target','_blank'); // 另開新分頁，保留本站
@@ -49,10 +52,30 @@
         var label=a.getAttribute('data-product')||page;
         if(window.gtag){gtag('event','begin_checkout_redirect',{product:label,page:page});}
         // Meta 只收到「前往商店」這個動作，不帶產品或頁面名稱，避免被視為健康相關資料
-        if(window.fbq){fbq('trackCustom','ShopRedirect');}
+        if(!EN&&window.fbq){fbq('trackCustom','ShopRedirect');}
       });
     }catch(e){}
   });
+
+  // 英文頁的 Cookie／健康資料同意（同 uhealthfit.com：cookie uh-consent=v1:a{0|1}m{0|1}）
+  // 需要同意的地區（歐盟、英國、華盛頓州、內華達州、康乃狄克州）或判斷不出地區時才出現；選完才載入 GTM
+  var cc=document.getElementById('uh-consent'), cs=window.__uhConsent;
+  if(cc&&cs){
+    var ccShow=function(){cc.hidden=false;document.body.classList.add('cc-on');};
+    var ccHide=function(){cc.hidden=true;document.body.classList.remove('cc-on');};
+    if(cs.status==='required'||cs.status==='unknown'){ccShow();}
+    cc.querySelectorAll('[data-cc]').forEach(function(b){b.addEventListener('click',function(){
+      var v=b.getAttribute('data-cc'), an=v!=='0', mk=v==='1'&&!cs.gpc; // Global Privacy Control：行銷一律關閉
+      try{document.cookie='uh-consent=v1:a'+(an?1:0)+'m'+(mk?1:0)+'; path=/; max-age=31536000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch(e){}
+      var g=function(on){return on?'granted':'denied';};
+      if(mk&&window.fbq&&window.fbq.__uhBlocked){try{delete window.fbq;}catch(e){window.fbq=undefined;}} // 先拿掉空的 fbq，GTM 裡的 Meta Pixel 才會真正載入
+      if(window.gtag){gtag('set','ads_data_redaction',!mk);gtag('consent','update',{ad_storage:g(mk),ad_user_data:g(mk),ad_personalization:g(mk),analytics_storage:g(an)});}
+      cs.status='chosen'; cs.analytics=an; cs.marketing=mk;
+      if((an||mk)&&window.__uhLoadGtm){window.__uhLoadGtm();}
+      ccHide();
+    });});
+    document.querySelectorAll('.cc-open').forEach(function(b){b.addEventListener('click',ccShow);});
+  }
 
   // 產品頁固定購買列：主購買按鈕沒有完整出現在畫面上時顯示（手機首屏只露出一半也算）
   var bar=document.querySelector('.buybar'), mainBtn=document.querySelector('.buybox .btn-primary');

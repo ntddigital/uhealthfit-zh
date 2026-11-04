@@ -3,7 +3,7 @@
 位置：repo/build-src/build.py　執行：python3 build-src/build.py　→ 直接輸出到 repo 根目錄（GitHub Pages 的發布根）
 改文案的地方：本檔的 SERIES / PRODUCTS / QUIZ / FAQS 資料區、posts/ 內的選購指南文章、src/style.css、src/main.js
 """
-import json, os, re, shutil, hashlib, datetime, posixpath, html as H
+import json, os, re, sys, shutil, hashlib, datetime, posixpath, html as H
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -829,6 +829,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 {'<link rel="canonical" href="'+page_url(canonical_path)+'">' if canonical_path else '<meta name="robots" content="noindex">'}
+<!--HREFLANG-->
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
@@ -876,13 +877,14 @@ def nav(rel, active=''):
       <li>{a(rel+'about.html','黃醫師','about')}</li>
       <li>{a(rel+'faq.html','常見問題','faq')}</li>
     </ul></nav>
-    <div class="nav-cta"><a class="btn btn-primary btn-sm" href="{rel}series/index.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
+    <div class="nav-cta"><a class="lang-switch" href="__ALT__" hreflang="en" lang="en" aria-label="English site">EN</a><a class="btn btn-primary btn-sm" href="{rel}series/index.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
   </div>
   <div class="mobile-menu"><div class="wrap">
     <a href="{rel}index.html">主頁</a>
     <a href="{rel}series/index.html">六大系列</a><div class="sub">{mob_sub}</div>
     <details class="mm-dd"><summary>全部產品</summary><div class="sub">{mob_prod}<a class="sub-all" href="{rel}products/index.html">瀏覽全部產品 →</a></div></details>
     <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about-us.html">關於我們</a><a href="{rel}about.html">黃醫師</a><a href="{rel}faq.html">常見問題</a>
+    <a href="__ALT__" hreflang="en" lang="en">English</a>
   </div></div>
 </header>
 <main>
@@ -1031,11 +1033,28 @@ def externalize(content):
         return tag[:-1]+' target="_blank" rel="noopener">'
     return re.sub(r'<a\s[^>]*href="https://zh\.uhealthfit\.com[^"]*"[^>]*>', fix, content)
 
+# ───── 中英文對應頁（英文頁在 /en/，由 build_en.py 產生）─────
+# ALT：中文頁 ↔ 英文頁的嚴格對應（輸出 hreflang）；ALT_SWITCH：沒有對應頁時，語言切換連結要去哪裡。build_en.register() 會填好兩者。
+ALT = {}
+ALT_SWITCH = {}
+def alt_links(content, path):
+    if '__ALT__' not in content and '<!--HREFLANG-->' not in content: return content
+    en_page = path.startswith('en/')
+    alt = ALT.get(path)
+    target = alt or ALT_SWITCH.get(path) or ('index.html' if en_page else 'en/index.html')
+    content = content.replace('__ALT__', '/'+target)  # clean_links 會再轉成乾淨網址
+    tags = ''
+    if alt:
+        zh, en = (alt, path) if en_page else (path, alt)
+        tags = (f'<link rel="alternate" hreflang="zh-Hant" href="{page_url(zh)}">\n<link rel="alternate" hreflang="en" href="{page_url(en)}">\n'
+                f'<link rel="alternate" hreflang="x-default" href="{page_url(en)}">')
+    return content.replace('<!--HREFLANG-->', tags)
+
 def write(path, content):
     full=os.path.join(DIST,path); os.makedirs(os.path.dirname(full),exist_ok=True)
     if path.endswith('.html'):
-        content=clean_links(externalize(content), path)
-        if path!='404.html':
+        content=clean_links(externalize(alt_links(content, path)), path)
+        if not path.endswith('404.html'):
             h=_content_hash(content); e=LASTMOD.get(path)
             if not e or e.get('hash')!=h: LASTMOD[path]={'hash':h,'date':BUILD_DATE}
     open(full,'w',encoding='utf8').write(content)
@@ -1821,8 +1840,8 @@ def build_lead_pages():
         write(m['path'], head(m['title'], m['desc'], rel, None, 'lm-'+key, f"{SITE_URL}/{m['cover']}")+lp_nav(rel)+body+lp_footer(rel))
 
 
-def build_misc():
-    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
+def build_misc(en_pages=()):
+    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]+list(en_pages)
     sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{LASTMOD.get(p,{}).get("date",BUILD_DATE)}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     json.dump({k:LASTMOD[k] for k in sorted(LASTMOD) if k in pages}, open(LASTMOD_FILE,'w',encoding='utf8'), ensure_ascii=False, indent=1)
@@ -1839,6 +1858,7 @@ def build_misc():
 - free/eye-care-7-day.html、free/2027-calendar.html 免費下載頁（廣告落地頁，noindex、不進 sitemap；Email 分別進 Klaviyo List T6wWLP／UfVMEF，觸發 Flow TEef5H（7 天護眼 8 封）／SEFaUZ（月曆寄送 1 封）；build.py 的 LEAD_FLOWS_LIVE 已是 True，Flow 若暫停請改回 False 重建）
 - quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about-us.html 關於我們（優健堂）｜ about.html 研發者黃醫師與品牌理念 ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
+- **en/ 英文頁**（https://us.uhealthfit.com/en/）：首頁、6 個 collections、10 個產品頁、guides 首頁＋{len(build_en.POSTS) if 'build_en' in sys.modules else 8} 篇、quiz、approach（中醫觀念白話說明）、about、faq、en/404.html。不是中文翻譯，而是依美國主流讀者對中醫與草藥的認知角度另外撰寫；撰寫規範見 `build-src/BRIEF_EN.md`。資料與模板在 `build-src/build_en.py`，英文文章在 `build-src/posts-en/`。英文頁的「Buy」一律連到 uhealthfit.com 英文商品頁（沒有護眼三寶組合，因為英文商店沒有）；中英對應頁互相輸出 hreflang，導覽列有 EN／中文 切換
 
 ## 部署
 Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。正式網址 https://us.uhealthfit.com/（自訂網域，DNS 在 GoDaddy：CNAME us → uhealthfit-zh.pages.dev）；Cloudflare 預設網址 https://uhealthfit-zh.pages.dev/。更換網域時改 build-src/build.py 的 SITE_URL 重建。Cloudflare 會把 .html 網址 308 轉址成乾淨網址（/about、/products/calmoon、/blog/）；站內連結、標準網址、sitemap 與結構化資料都輸出乾淨網址（build.py 的 clean_links／page_url），不存在的網址由 404.html 回應 404。sitemap 的 lastmod 來自 build-src/lastmod.json（內容雜湊有變才更新日期，請一起 commit）。GitHub Pages 已不再使用（ntddigital.github.io 上的舊副本仍帶著追蹤碼，請下架）。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`\n- 選購指南文章封面：`build-src/covers/`（背景圖在 bg/；先 `sh build-src/covers/fetch.sh` 下載官網產品與草本實拍，再 `swift build-src/covers/covers.swift [slug]` 重畫，輸出到 build-src/src/img/post-<slug>.jpg）
@@ -1849,10 +1869,14 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
 2. 追蹤碼已安裝（build.py 的 GTM_ID／GA4_ID／META_PIXEL_ID，與 zh.uhealthfit.com 相同），只在正式網域 us.uhealthfit.com 載入：GTM GTM-W58N8HRV、GA4 G-M63Z9F6FR7（gtag.js）、Meta Pixel 2216128798841618。js/main.js 會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect、測驗完成送 quiz_complete、留資送 generate_lead 與 Lead；
 3. 所有「購買」按鈕都指向 zh.uhealthfit.com 商品頁：訪客若從廣告或帶 UTM 的連結進站，會原樣帶上原本的 UTM 與點擊編號（fbclid、gclid 等）；沒有來源時不加任何參數（兩個子網域共用 GA4 資源與 _ga cookie，自製 UTM 會把自然流量的來源改記成 uhealthfit-site／referral；請在 GA4 管理 → 資料串流 → 列出不想要的參照連結 加入 uhealthfit.com）。Meta 事件不帶產品、頁面或電子書類別；
 4. Klaviyo：公開 company_id Xxa5rp、List TKC3Bu（Email List, single opt-in）；留資會帶 quiz_result 屬性，可用來建 Flow。
+5. 英文頁追蹤：只裝 uhealthfit.com 的 GTM 容器 GTM-KR36VL29（容器內含 GA4 G-BM2J1L0NM9 與 Meta Pixel 1617768182710522，不另外放 Pixel 基本碼，避免 PageView 重複），只在 us.uhealthfit.com 載入，並沿用 uhealthfit.com 的同意邏輯：`functions/en/_middleware.js`（Cloudflare Pages Function，只跑 /en/*）依訪客 IP 設定 uh-ip-country cookie；歐盟／英國與華盛頓州、內華達州、康乃狄克州（消費者健康資料法）先顯示同意列，選了才載入 GTM，其他地區直接載入；Global Privacy Control 一律關閉行銷。購買點擊送 begin_checkout_redirect、測驗完成送 quiz_complete（經 GTM 的 GA4 設定）；英文頁不直接送 Meta 自訂事件、不收 Email。部署後請到 /en/ 確認瀏覽器有 uh-ip-country cookie（沒有的話代表 Function 沒有部署，頁面會對所有人顯示同意列）。GA4 G-BM2J1L0NM9 的資料串流也請把 us.uhealthfit.com 列入「不想要的參照連結」或跨網域設定，避免結帳 session 記成 us.uhealthfit.com 參照。
 '''
     write('README.md', readme)
 
 if __name__=='__main__':
-    build_home(); build_series(); build_series_index(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_404(); build_lead_pages(); build_misc()
+    import build_en  # 英文頁（/en/）；先登記中英對應，中文頁的語言切換與 hreflang 才找得到英文頁
+    _B=sys.modules[__name__]; build_en.register(_B)
+    build_home(); build_series(); build_series_index(); build_products(); build_products_index(); build_blog(); build_quiz(); build_about_us(); build_about(); build_faq(); build_404(); build_lead_pages()
+    build_misc(build_en.build(_B))
     open(os.path.join(DIST,'.nojekyll'),'w').close()  # 停用 GitHub Pages 的 Jekyll 處理
     print('built →',DIST)
