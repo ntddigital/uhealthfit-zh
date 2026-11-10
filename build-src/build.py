@@ -158,7 +158,7 @@ PRODUCTS = {
    long='很多顧客從 $6 的眼貼體驗裝開始，用了一陣子之後問我們：「還能多做什麼？」護眼三寶就是答案——不是「買三樣更划算」的折扣語言，而是一套方案的三個部分：夜裡（眼貼）、白天（眼霜）、內在（膠囊）。',
    herbs='眼貼：菊花、決明子、石斛、木賊草、葛根、黃耆、川芎、當歸、五味子＋冰片、薄荷｜LumiView：枸杞、菊花、決明子、山藥、茯苓、當歸、黃芪｜眼霜：石斛、菊花、決明子、茯苓、當歸根', actives='詳見各單品頁', made='眼貼日本製造；膠囊與眼霜美國製造', form='外用眼貼＋全植物膠囊＋外用眼霜', spec='依組合頁選擇 1／2／3 個月方案',
    usage='睡前貼眼貼；每天 2 次各 3 粒 LumiView 隨餐；白天用眼空檔擦眼霜。', caution='孕婦請勿使用眼貼；服藥中請先諮詢醫師再使用膠囊。',
-   price=None, price_note='組合價以 zh.uhealthfit.com 護眼三寶頁為準', handle=None, page_url=f'{SHOP}/pages/%E8%AD%B7%E7%9C%BC%E4%B8%89%E5%AF%B6', variants=None, trial_handle='試用裝-2日份-wise-quest-草本冷敷眼貼',
+   price=None, price_note='組合價以官方商店護眼三寶頁為準', handle=None, page_url=f'{SHOP}/pages/%E8%AD%B7%E7%9C%BC%E4%B8%89%E5%AF%B6', variants=None, trial_handle='試用裝-2日份-wise-quest-草本冷敷眼貼',
    yes=['已經用過眼貼、想把護眼做完整的人','每天螢幕 10 小時以上、想一次把日夜都顧到的人','重視成分公開與長期習慣的人'], no=['還沒試過眼貼的人——建議先從 $6 體驗裝開始','孕婦與哺乳期（請先諮詢醫師）'],
    faq=[('一定要三樣一起用嗎？','不一定。可以從眼貼開始，再依需要加入膠囊或眼霜；三寶是為了想一次到位的人準備的。'),('膠囊和眼貼會衝突嗎？','不會。膠囊每天從內在支持，眼貼在睡前提供外部的清涼舒緩，眼霜則照顧白天；三者路徑不同，可以一起使用。'),('可以和眼藥水一起用嗎？','可以，只要稍微錯開時間：膠囊隨餐服用即可；眼貼建議在點完眼藥水約 30 分鐘後再貼。正在使用醫師開立的眼藥，請先諮詢醫師。'),('三個月方案適合誰？','已經用過一個月、確定適合自己習慣的人。單次購買，沒有訂閱。'),('有免運嗎？','美國地區眼貼訂單滿 $79、其他商品滿 $200 免運；組合訂單依結帳頁顯示為準。')],
    image=f'{IMG}/_optimized/concerns/eye-care-1200.avif', cross=['eye-patches','lumiview','eye-cream']),
@@ -225,7 +225,7 @@ PRODUCTS = {
    price=179, price_note='180 粒 · 約 1 個月 · 原價 $299', handle='wisequest-enerbalance',
    variants=[('1 瓶','$179','',True),('2 瓶','$340','',False),('3 瓶','$456','單瓶成本最低',False)], trial_handle=None,
    yes=['工作壓力大、常覺得精力不足的成年人','想少喝一杯咖啡的人','重視天然草本日常調養的人'], no=['孕婦、哺乳期','正在服用處方藥者（請先諮詢醫師）','18 歲以下'],
-   faq=[('會像咖啡一樣讓人睡不著嗎？','不含咖啡因與強刺激性成分，思路是日常滋養；建議隨餐服用並觀察。'),('黑膏滋是什麼？','傳統的草本膏方，EnerBalance 把它濃縮成膠囊，更方便、更衛生。'),('和傳統黑膏滋有什麼不同？','膏滋是把草本反覆煎煮、去渣濃縮成膏的傳統工藝，開罐後要長期存放、反覆挖取。EnerBalance 保留同樣的七味配方，濃縮進獨立膠囊：每份劑量標準化、常溫保存、方便攜帶，也不用冰糖或蜂蜜收膏。'),('一天要吃多少？','成人每天 2 次、每次 3 粒，每日共 6 粒（約 3,000 mg），建議隨餐服用；一瓶 180 粒共 60 份，約 30 天。'),('現在的價格是多少？','商店目前以 $179 供應（原價 $299），實際金額以 zh.uhealthfit.com 結帳頁顯示為準。'),('適合哪些人？','經常熬夜、工作節奏緊湊的上班族，運動後想多一份日常滋養的人，希望日常溫補的中老年人，以及想減少咖啡因、改用草本支持活力的人。'),('體質偏寒或腸胃比較弱，適合嗎？','中醫傳統認為西洋參性偏涼，單用不一定適合每種體質；EnerBalance 以西洋參搭配性溫的黃芪，再加入山藥、陳皮等健脾草本平衡，設計為較多人都能日常食用的複方。仍不確定時，請先諮詢醫師或中醫師。'),('哪些人不適合？','孕婦及哺乳期女性請勿使用；18 歲以下、正在服用抗凝血藥物（如華法林）或其他藥物、有健康狀況或正在接受醫療照護者，使用前請先諮詢醫師。瓶口封膜破損請勿使用。')],
+   faq=[('會像咖啡一樣讓人睡不著嗎？','不含咖啡因與強刺激性成分，思路是日常滋養；建議隨餐服用並觀察。'),('黑膏滋是什麼？','傳統的草本膏方，EnerBalance 把它濃縮成膠囊，更方便、更衛生。'),('和傳統黑膏滋有什麼不同？','膏滋是把草本反覆煎煮、去渣濃縮成膏的傳統工藝，開罐後要長期存放、反覆挖取。EnerBalance 保留同樣的七味配方，濃縮進獨立膠囊：每份劑量標準化、常溫保存、方便攜帶，也不用冰糖或蜂蜜收膏。'),('一天要吃多少？','成人每天 2 次、每次 3 粒，每日共 6 粒（約 3,000 mg），建議隨餐服用；一瓶 180 粒共 60 份，約 30 天。'),('現在的價格是多少？','商店目前以 $179 供應（原價 $299），實際金額以官方商店結帳頁顯示為準。'),('適合哪些人？','經常熬夜、工作節奏緊湊的上班族，運動後想多一份日常滋養的人，希望日常溫補的中老年人，以及想減少咖啡因、改用草本支持活力的人。'),('體質偏寒或腸胃比較弱，適合嗎？','中醫傳統認為西洋參性偏涼，單用不一定適合每種體質；EnerBalance 以西洋參搭配性溫的黃芪，再加入山藥、陳皮等健脾草本平衡，設計為較多人都能日常食用的複方。仍不確定時，請先諮詢醫師或中醫師。'),('哪些人不適合？','孕婦及哺乳期女性請勿使用；18 歲以下、正在服用抗凝血藥物（如華法林）或其他藥物、有健康狀況或正在接受醫療照護者，使用前請先諮詢醫師。瓶口封膜破損請勿使用。')],
    image=f'{IMG}/_optimized/products/enerbalance/enerbalance-product-shot-wide-1200.avif', cross=['calmoon','herbalflow','lifting-serum']),
 }
 PRODUCT_ORDER = ['eye-patches','lumiview','eye-cream','eye-care-trio','dentaforte','calmoon','herbalflow','soothing-cream','clarifying-cream','lifting-serum','enerbalance']
@@ -322,16 +322,16 @@ REVIEWS = {
  'eye-patches': [
   dict(author='nancy', verified=True, date='2026-10-09', rating=4, text='眼貼感覺很好，只是運輸時間太長了', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
   dict(author='Yin Z.', verified=True, date='2026-10-05', rating=5, text='很好的產品，用在穴位上即可', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
-  dict(author='Ming Yao', verified=True, date='2026-02-17', rating=5, text='体验很好，清凉润眼，有rosemary的感觉。', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
-  dict(author='QING Liang', verified=True, date='2026-02-16', rating=5, text='感覺很好', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
-  dict(author='刘宏庆 刘', verified=True, date='2026-02-05', rating=1, text='还好效不明显', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
-  dict(author='心敏 羅', verified=True, date='2026-02-01', rating=1, text='不知是否有任何問題，拆開信封袋內空無一物，並沒有任何東西可以試用的。', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
-  dict(author='力工 谭', verified=True, date='2025-12-31', rating=5, text='很好', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
-  dict(author='A.W.', verified=True, date='2025-11-18', rating=5, text='good', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
+  dict(author='Ming Yao', verified=True, date='2026-02-17', rating=5, text='体验很好，清凉润眼，有rosemary的感觉。', item='明目冷敷眼貼', src='官方商店', url='SHOP:eye-patches'),
+  dict(author='QING Liang', verified=True, date='2026-02-16', rating=5, text='感覺很好', item='兩晚體驗裝', src='官方商店', url='SHOP_TRIAL:eye-patches'),
+  dict(author='刘宏庆 刘', verified=True, date='2026-02-05', rating=1, text='还好效不明显', item='明目冷敷眼貼', src='官方商店', url='SHOP:eye-patches'),
+  dict(author='心敏 羅', verified=True, date='2026-02-01', rating=1, text='不知是否有任何問題，拆開信封袋內空無一物，並沒有任何東西可以試用的。', item='兩晚體驗裝', src='官方商店', url='SHOP_TRIAL:eye-patches'),
+  dict(author='力工 谭', verified=True, date='2025-12-31', rating=5, text='很好', item='明目冷敷眼貼', src='官方商店', url='SHOP:eye-patches'),
+  dict(author='A.W.', verified=True, date='2025-11-18', rating=5, text='good', item='兩晚體驗裝', src='官方商店', url='SHOP_TRIAL:eye-patches'),
  ],
  'eye-cream': [
   dict(author='nancy', verified=True, date='2026-10-02', rating=5, text='很好用，清清涼涼的', item='草本舒緩修護眼霜', src='uhealthfit.com', url=UH_EYE_CREAM),
-  dict(author='Tay Chea kiang', verified=False, date='2026-07-29', rating=5, text='很好', item='草本舒緩修護眼霜', src='zh.uhealthfit.com', url='SHOP:eye-cream'),
+  dict(author='Tay Chea kiang', verified=False, date='2026-07-29', rating=5, text='很好', item='草本舒緩修護眼霜', src='官方商店', url='SHOP:eye-cream'),
  ],
 }
 # 合規盤點 A6：眼貼使用示範影片可用；原頁文字「瞬間帶走酸澀」「重拾明亮眼神」已改為中性描述
@@ -357,7 +357,7 @@ def reviews_section(slug):
     return f'''<section class="sec" id="reviews"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">買家評價</span><h2>買家怎麼說</h2>
     <p class="rev-sum">{stars(round(avg))}<b>{avg:.1f}</b> / 5 · {len(rs)} 則評價</p>
-    <p class="note">評價取自 uhealthfit.com 與 zh.uhealthfit.com 兩個官方商店的 Judge.me 評價，原文照登（簡體字保留原文），正面與負面評價一併呈現，不含品牌或代理商人員撰寫的評價。每則為個人使用感受，效果因人而異。</p></div>
+    <p class="note">評價取自 uhealthfit.com 與官方商店的 Judge.me 評價，原文照登（簡體字保留原文），正面與負面評價一併呈現，不含品牌或代理商人員撰寫的評價。每則為個人使用感受，效果因人而異。</p></div>
   <div class="rev-grid">{cards}</div>
 </div></section>
 '''
@@ -938,7 +938,7 @@ def disclaimer():
     return '''<section class="disclaimer" aria-label="免責聲明"><div class="wrap">
 <p><b>免責聲明：</b>本站所述膠囊類產品為膳食補充劑，乳霜、精華液與眼貼為日常保養用品，皆非藥品。相關敘述未經美國食品藥物管理局（FDA）評估；本產品不用於診斷、治療、治癒或預防任何疾病。「生產設施具 FDA 登記」指設施登記資訊，不代表 FDA 核准或背書任何產品。</p>
 <p>These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure, or prevent any disease.</p>
-<p>本站資訊僅供參考，不可取代醫師或其他專業醫療人員的建議；請勿依據本站內容自行診斷或處理任何健康問題。若有或疑似有任何健康問題，請諮詢你的醫療照護人員。使用者分享與買家評價皆為個人經驗，效果因人而異。孕婦、哺乳期、18 歲以下、服藥中或有慢性健康狀況者，使用前請先諮詢醫師。中醫相關敘述為傳統觀點的說明，非醫療診斷。部分情境圖片可能為示意圖；實際包裝可能與圖片略有差異。所有購買於 zh.uhealthfit.com 完成，價格以結帳頁顯示為準。</p>
+<p>本站資訊僅供參考，不可取代醫師或其他專業醫療人員的建議；請勿依據本站內容自行診斷或處理任何健康問題。若有或疑似有任何健康問題，請諮詢你的醫療照護人員。使用者分享與買家評價皆為個人經驗，效果因人而異。孕婦、哺乳期、18 歲以下、服藥中或有慢性健康狀況者，使用前請先諮詢醫師。中醫相關敘述為傳統觀點的說明，非醫療診斷。部分情境圖片可能為示意圖；實際包裝可能與圖片略有差異。所有購買於官方商店完成，價格以結帳頁顯示為準。</p>
 </div></section>
 '''
 
@@ -951,8 +951,8 @@ def footer(rel):
   <div><img class="logo" src="{rel}{LOGO_WHITE}" alt="UHealthFit" width="146" height="26"><p>融合傳統智慧與現代科學的健康養護平台。</p><p style="margin-top:10px">Uhealth Trading Inc.<br>90 North St, Suite D, Middletown, NY 10940, USA<br><a href="mailto:service@uhealthfit.com">service@uhealthfit.com</a></p><div class="pay">{pays}</div></div>
   <div><h4>六大系列</h4><ul>{series_links}</ul></div>
   <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}free/eye-care-7-day.html">免費下載：7 天護眼小計畫</a></li><li><a href="{rel}free/2027-calendar.html">免費下載：2027 節氣養生月曆</a></li><li><a href="{rel}about-us.html">關於我們</a></li><li><a href="{rel}about.html">研發者・黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
-  <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
-  <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於 zh.uhealthfit.com 完成。</div>
+  <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往官方商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
+  <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於官方商店完成。</div>
 </div></footer>
 <button class="to-top" type="button" aria-label="回到頂端" hidden>↑</button>
 {lm_popups(rel) if LEAD_FLOWS_LIVE else ''}
@@ -1206,10 +1206,10 @@ def build_home():
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">購買流程</span><h2>在這裡了解，到官方商店安全結帳</h2><p class="lead">本站專注於幫你「選對」；按下購買後會前往我們的官方商店 zh.uhealthfit.com 完成結帳。整個流程三步：</p></div>
+  <div class="sec-head"><span class="eyebrow">購買流程</span><h2>在這裡了解，到官方商店安全結帳</h2><p class="lead">本站專注於幫你「選對」；按下購買後會前往我們的官方商店完成結帳。整個流程三步：</p></div>
   <div class="steps">
     <div class="step"><div class="k">1</div><h3>在本站選好產品與規格</h3><p>看系列頁、單品頁與選購指南，確定適合自己的起點與用量。</p><div class="why">不確定？做 30 秒測驗。</div></div>
-    <div class="step"><div class="k">2</div><h3>前往商店安全結帳</h3><p>按「購買」會開啟 zh.uhealthfit.com 商品頁；支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等。</p><div class="why">美國眼貼滿 $79、其他商品滿 $200 免運。</div></div>
+    <div class="step"><div class="k">2</div><h3>前往商店安全結帳</h3><p>按「購買」會開啟官方商店商品頁；支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等。</p><div class="why">美國眼貼滿 $79、其他商品滿 $200 免運。</div></div>
     <div class="step"><div class="k">3</div><h3>48 小時內出貨</h3><p>工作日 48 小時內處理並寄出出貨通知；30 天內未拆封可退。</p><div class="why">有問題隨時來信 service@uhealthfit.com。</div></div>
   </div>
 </div></section>
@@ -1286,7 +1286,7 @@ def build_products():
         url=buy_url(p,slug)
         variants=''
         if p.get('variants'):
-            variants='<ul class="variants">'+''.join(f'<li class="{"best" if best else ""}"><span>{esc(n)}{(" <span class=tag>· "+esc(t)+"</span>") if t else ""}</span><b>{pr}</b></li>' for n,pr,t,best in p['variants'])+'</ul><p class="note">規格於 zh.uhealthfit.com 商品頁選擇；價格以結帳頁顯示為準。</p>'
+            variants='<ul class="variants">'+''.join(f'<li class="{"best" if best else ""}"><span>{esc(n)}{(" <span class=tag>· "+esc(t)+"</span>") if t else ""}</span><b>{pr}</b></li>' for n,pr,t,best in p['variants'])+'</ul><p class="note">規格於官方商店商品頁選擇；價格以結帳頁顯示為準。</p>'
         trial=''
         if p.get('trial_handle'):
             trial=f'<a class="btn btn-ghost btn-block ext" style="margin-top:8px" data-product="{slug}-trial" href="{shop_url(p["trial_handle"])}">先從 $6 兩晚體驗裝開始</a>'
@@ -1543,7 +1543,7 @@ def build_about_us():
 FAQS = {
  '產品與使用':[('這些產品是藥嗎？可以取代我現在的治療或藥物嗎？','不是。膠囊類為膳食補充劑，乳霜、精華液與眼貼為日常保養品，都不是藥品，也不能取代醫師的診斷、治療或處方。若你正在服藥、懷孕或哺乳、或有任何健康疑慮，請在使用前先諮詢醫師或藥師。'),('多久會有感覺？','草本日常養護是累積型的，建議規律使用。效果因人而異，我們不做任何時效或結果的保證。'),('膠囊怎麼吃？需要一直吃下去嗎？','每瓶 180 粒約一個月份，建議每天兩次、每次三粒，隨餐服用（Calmoon 建議午餐後與睡前一小時）。全植物膠囊、全素。建議規律使用，當作每天的日常養護。'),('可以同時用好幾個系列嗎？','可以依需要搭配（例如護眼三寶）。若同時使用多種補充劑或正在服藥，請先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？會過敏嗎？','眼貼貼在眼周肌膚上，不入眼。日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。第一次使用前建議先做局部皮膚測試；孕婦請勿使用。')],
  '品質與製造':[('產品在哪裡製造？成分安全嗎？','明目冷敷眼貼於日本製造；膠囊、乳霜與精華液於美國依 cGMP 規範生產，生產設施具 FDA 登記（登記不等於 FDA 核准）。產品經第三方純度檢測，成分全部公開，無人工色素與防腐劑、非轉基因。'),('「FDA 登記」是什麼意思？','指我們核查相關企業與生產設施在 FDA 的登記資訊。這與「FDA 核准」不同——膳食補充劑與化妝品不經 FDA 上市前核准。'),('素食者可以吃嗎？','膠囊類皆為全植物膠囊，全素。')],
- '購買、運送與退貨':[('在這個網站可以直接結帳嗎？','本站專注於幫你「選對」。按下「購買」會前往我們的官方商店 zh.uhealthfit.com 商品頁，在那裡完成安全結帳（支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等）。'),('運費與到貨時間？','訂單於 48 小時內（工作日）處理。美國地區：眼貼滿 USD $79 免運、其他商品滿 USD $200 免運；未達門檻時運費於結帳頁顯示。眼貼與其他商品由不同倉庫出貨，可能分開送達。'),('可以退貨嗎？','收到商品後 30 天內，未拆封、封條完整並附原始包裝的商品可申請退貨；基於衛生考量，已拆封的個人護理商品無法退貨。請先來信 service@uhealthfit.com 取得退貨指引。'),('商店顯示的幣別是美金嗎？','本站所有購買連結都會帶你到 zh.uhealthfit.com 的美國市場（USD）頁面，價格與本站標示一致；若你在美國以外結帳，系統可能依配送地切換幣別，實際金額以結帳頁顯示為準。')],
+ '購買、運送與退貨':[('在這個網站可以直接結帳嗎？','本站專注於幫你「選對」。按下「購買」會前往我們的官方商店商品頁，在那裡完成安全結帳（支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等）。'),('運費與到貨時間？','訂單於 48 小時內（工作日）處理。美國地區：眼貼滿 USD $79 免運、其他商品滿 USD $200 免運；未達門檻時運費於結帳頁顯示。眼貼與其他商品由不同倉庫出貨，可能分開送達。'),('可以退貨嗎？','收到商品後 30 天內，未拆封、封條完整並附原始包裝的商品可申請退貨；基於衛生考量，已拆封的個人護理商品無法退貨。請先來信 service@uhealthfit.com 取得退貨指引。'),('商店顯示的幣別是美金嗎？','本站所有購買連結都會帶你到官方商店的美國市場（USD）頁面，價格與本站標示一致；若你在美國以外結帳，系統可能依配送地切換幣別，實際金額以結帳頁顯示為準。')],
  '關於平台':[('優健堂 UHealthFit 和 WiseQuest 是什麼關係？','優健堂 UHealthFit 是專注於健康與保健產品的平台，由美國紐約的 Uhealth Trading Inc. 經營；WiseQuest 是平台上由黃醫師研發的草本保健系列。'),('30 秒測驗的結果準嗎？','測驗依你的回答為六個系列排序，目的是幫你找到「先從哪裡開始」，僅供參考，不是醫療診斷。')],
 }
 def build_series_index():
