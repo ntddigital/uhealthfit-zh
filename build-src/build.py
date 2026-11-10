@@ -320,8 +320,8 @@ UH_EYE_PATCHES = 'https://uhealthfit.com/zh-TW/products/wisequest-eye-patches'
 UH_EYE_CREAM = 'https://uhealthfit.com/zh-TW/products/wisequest-herbal-soothing-repair-eye-cream'
 REVIEWS = {
  'eye-patches': [
-  dict(author='nancy', verified=True, date='2026-10-09', rating=4, text='眼貼感覺很好，只是運輸時間太長了', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
-  dict(author='Yin Z.', verified=True, date='2026-10-05', rating=5, text='很好的產品，用在穴位上即可', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
+  dict(author='nancy', verified=True, date='2026-10-09', rating=4, text='眼貼感覺很好，只是運輸時間太長了', item='明目冷敷眼貼', src='官方網站', url=UH_EYE_PATCHES),
+  dict(author='Yin Z.', verified=True, date='2026-10-05', rating=5, text='很好的產品，用在穴位上即可', item='明目冷敷眼貼', src='官方網站', url=UH_EYE_PATCHES),
   dict(author='Ming Yao', verified=True, date='2026-02-17', rating=5, text='体验很好，清凉润眼，有rosemary的感觉。', item='明目冷敷眼貼', src='官方商店', url='SHOP:eye-patches'),
   dict(author='QING Liang', verified=True, date='2026-02-16', rating=5, text='感覺很好', item='兩晚體驗裝', src='官方商店', url='SHOP_TRIAL:eye-patches'),
   dict(author='刘宏庆 刘', verified=True, date='2026-02-05', rating=1, text='还好效不明显', item='明目冷敷眼貼', src='官方商店', url='SHOP:eye-patches'),
@@ -330,7 +330,7 @@ REVIEWS = {
   dict(author='A.W.', verified=True, date='2025-11-18', rating=5, text='good', item='兩晚體驗裝', src='官方商店', url='SHOP_TRIAL:eye-patches'),
  ],
  'eye-cream': [
-  dict(author='nancy', verified=True, date='2026-10-02', rating=5, text='很好用，清清涼涼的', item='草本舒緩修護眼霜', src='uhealthfit.com', url=UH_EYE_CREAM),
+  dict(author='nancy', verified=True, date='2026-10-02', rating=5, text='很好用，清清涼涼的', item='草本舒緩修護眼霜', src='官方網站', url=UH_EYE_CREAM),
   dict(author='Tay Chea kiang', verified=False, date='2026-07-29', rating=5, text='很好', item='草本舒緩修護眼霜', src='官方商店', url='SHOP:eye-cream'),
  ],
 }
@@ -357,7 +357,7 @@ def reviews_section(slug):
     return f'''<section class="sec" id="reviews"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">買家評價</span><h2>買家怎麼說</h2>
     <p class="rev-sum">{stars(round(avg))}<b>{avg:.1f}</b> / 5 · {len(rs)} 則評價</p>
-    <p class="note">評價取自 uhealthfit.com 與官方商店的 Judge.me 評價，原文照登（簡體字保留原文），正面與負面評價一併呈現，不含品牌或代理商人員撰寫的評價。每則為個人使用感受，效果因人而異。</p></div>
+    <p class="note">評價取自官方網站與官方商店的 Judge.me 評價，原文照登（簡體字保留原文），正面與負面評價一併呈現，不含品牌或代理商人員撰寫的評價。每則為個人使用感受，效果因人而異。</p></div>
   <div class="rev-grid">{cards}</div>
 </div></section>
 '''
