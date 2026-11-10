@@ -1456,7 +1456,7 @@ def build_quiz():
         </div>
       </div>
       <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" data-ebooks='{EBOOKS_JSON}' novalidate><input type="hidden" name="quiz_result" value=""><input type="hidden" name="lead_magnet" value="body-balance"><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">免費領取</button></form>
-      <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。你的 Email 會交由我們的電子郵件服務商 Klaviyo 處理，只用於寄送上述內容；本站另使用 Google Analytics 與 Meta Pixel 記錄「已留資」這個動作，不會把你的 Email 交給它們。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
+      <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
       <div class="email-ok">{'✓ 已寄出！請留意信箱（沒看到的話，查看一下垃圾郵件匣）。也可以' if EBOOK_EMAIL_FLOW_LIVE else '✓ 已收到你的 Email！指南已經準備好，'}<a class="ebook-dl" href="#" target="_blank" rel="noopener">{'現在直接下載 PDF →' if EBOOK_EMAIL_FLOW_LIVE else '點這裡下載 PDF →'}</a></div>
     </div>
   </div>
@@ -1703,8 +1703,7 @@ def lm_series_key(series_key):
     return 'eye-7day' if series_key=='eye' else 'solar-calendar-2027'
 
 def lm_consent():
-    return ('<p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員消息 Email，可隨時取消訂閱。你的 Email 由我們的電子郵件服務商 Klaviyo 處理；'
-            '本站另使用 Google Analytics 與 Meta Pixel 記錄「已留資」這個動作，不會把你的 Email 交給它們。詳見 '
+    return ('<p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員消息 Email，可隨時取消訂閱。詳見 '
             '<a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>')
 
 def lm_form(key, place, rel, fid='', after=''):
