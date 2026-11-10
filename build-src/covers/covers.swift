@@ -194,8 +194,8 @@ let covers: [Cover] = [
         text("爸媽的保健品時間表", font(26), pal.accent, CGRect(x: card.minX + 28, y: card.minY + 24, width: 480, height: 40))
         let colX: [CGFloat] = [258, 330, 402, 474]
         for (i, c) in ["早餐", "午餐", "晚餐", "睡前"].enumerated() { label(c, centerX: card.minX + colX[i], y: card.minY + 86, size: 19, color: pal.ink.withAlphaComponent(0.7)) }
-        let rows: [(String, [Bool])] = [("明目膠囊", [true, false, true, false]), ("固齒膠囊", [true, false, true, false]), ("黑膏滋膠囊", [true, false, true, false]),
-                                       ("潤暢膠囊", [true, false, true, false]), ("安睡膠囊", [false, true, false, true])]
+        let rows: [(String, [Bool])] = [("明目膠囊", [true, false, true, false]), ("護齒膠囊", [true, false, true, false]), ("黑膏滋膠囊", [true, false, true, false]),
+                                       ("通腹膠囊", [true, false, true, false]), ("助眠膠囊", [false, true, false, true])]
         for (r, row) in rows.enumerated() {
             let y = card.minY + 140 + CGFloat(r) * 76
             fillRect(CGRect(x: card.minX + 24, y: y - 12, width: card.width - 48, height: 1), hex("#EAD9C2"))
