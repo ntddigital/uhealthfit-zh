@@ -70,7 +70,7 @@ SERIES = {
    lead='長時間盯螢幕的一天結束後，眼睛也需要自己的「下班時間」。眼貼負責睡前的外部舒緩、膠囊從內支持、眼霜負責白天——三件合稱「護眼三寶」。',
    situations=['每天盯螢幕超過 8 小時，到了下午眼睛就覺得乾澀、沒電','睡前還在滑手機，早上起來眼睛沒有休息到的感覺','葉黃素吃了一陣子，但長時間用眼後的疲勞感還在'],
    reframe=[('即時舒緩','眼藥水、熱敷眼罩負責「這一刻舒服一點」，它們很重要，但用完就結束。'),('夜間休息','睡著的六到八個小時，是眼睛最長的一段休息時間——冷敷眼貼在這段時間陪著它。'),('內在支持','中醫傳統認為「肝開竅於目」，七味東方養目草本從內支持眼睛的長期健康。')],
-   products=['eye-patches','lumiview','eye-cream'], bundle='eye-care-trio',
+   products=['eye-patches','lumiview','eye-cream'], bundle='eye-care-trio', trial='eye-patches-trial',
    combo=('護眼三寶怎麼搭','睡前貼眼貼（外），每天兩次 LumiView（內），白天不方便貼眼貼時擦眼霜（日）。三個產品不是三個選擇，而是一天二十四小時的三個時段。'),
    faq=[('眼貼和蒸氣眼罩有什麼不同？','蒸氣眼罩是熱敷放鬆，十五分鐘結束；冷敷眼貼貼在眼周肌膚上，草本透過肌膚緩緩釋放，陪你度過整晚。兩者用途不同，可以依習慣選擇。'),('我已經在吃葉黃素，還需要嗎？','葉黃素補充的是視網膜相關的營養；長時間用眼後的乾澀疲勞感是另一個面向。兩者不衝突，是否同時使用建議先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？','不會。眼貼貼在內眼角、外眼角與下眼瞼下方的肌膚上，不入眼；日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。首次使用前先做局部皮膚測試，孕婦請勿使用。')],
    photo=shop_img('collections/1_46cb0e74-a579-49cb-92db-27a44cc036be.jpg?v=1776886629',900), image=f'{IMG}/_optimized/concerns/eye-care-1200.avif', image_fallback=f'{IMG}/products/eye-patches/eye-patches-box-front.png'),
@@ -134,6 +134,20 @@ PRODUCTS = {
    yes=['每天盯螢幕超過 8 小時的上班族與學生','睡前習慣滑手機、想讓眼睛好好休息的人','想先用 $6 試兩晚再決定的人'], no=['孕婦','眼周肌膚有傷口或正在發炎者','對配方任一成分過敏者'],
    faq=[('會進到眼睛裡嗎？','不會。眼貼貼在眼周肌膚上，不入眼。日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。'),('白天可以用嗎？','可以。白天用 2–4 片做一次螢幕空檔的輕量護理；睡前再貼滿。白天不方便貼時，可以改用草本舒緩修護眼霜。'),('為什麼建議睡前使用？','因為這是最容易用滿完整配戴時間的時段：眼貼成為睡前放鬆的一部分，隔天早上再取下即可。白天也可以用，當作一段較短的清涼小歇。'),('剛貼上會泛淚嗎？','部分人剛貼上會泛淚，通常很快緩解，若持續不適請停用。'),('戴隱形眼鏡的人可以用嗎？','可以，請先取下隱形眼鏡再貼。通勤族、學生、長輩、整天看螢幕的人都適合，任何想為眼周留一段清涼、放鬆時光的人都可以使用。'),('可以和眼藥水一起用嗎？','可以，只要稍微錯開時間：建議點完眼藥水約 30 分鐘後再貼，讓眼藥水先吸收。正在使用醫師開立的眼藥，請先諮詢醫師。'),('會過敏嗎？','配方不含防腐劑、力求溫和，但任何草本成分都可能讓部分人的肌膚起反應。首次使用前，請先在前臂內側做 24 小時貼膚測試；肌膚容易敏感的人更應如此。'),('多久會有感覺？','多數人在使用時就能感受到清涼放鬆；整體的舒適感會隨著持續使用慢慢累積，效果因人而異。'),('體驗裝多少錢？','兩晚體驗裝 12 片 $6，是最低門檻的開始；實際金額與運費以官方商店結帳頁為準。')],
    image=shop_img('files/XXT36515.jpg?v=1781960251'), cross=['lumiview','eye-cream','eye-care-trio']),
+ 'eye-patches-trial': dict(series='eye', name='WiseQuest 明目冷敷眼貼・兩晚體驗裝', en='Herbal Cooling Eye Patches · 2-Night Trial', badge=('badge-star','$6 體驗'),
+   hook='先用兩晚，再決定', desc='和正裝同一款日本製冷敷眼貼，一袋 12 片、約兩晚的用量。單獨訂購 $6 免運，每個家庭限購一份。',
+   long='還沒用過草本眼貼，不確定自己喜不喜歡那種清涼感？體驗裝就是為這個準備的：和正裝同一款日本製冷敷眼貼，菊花、決明子、石斛、當歸等九味草本，加上帶來清涼感的冰片與薄荷，一袋 12 片，夠你在睡前用兩晚。先感受看看，再決定要不要入手正裝。',
+   herbs='菊花、決明子、石斛、木賊草、葛根、黃耆、川芎、當歸、五味子（九味草本）＋冰片、薄荷（清涼成分）', actives='—（純草本配方）', made='日本製造', form='外用透皮冷敷眼貼', spec='每袋 12 片（每晚建議 6 片，約 2 晚）',
+   usage='清潔眼周後，睡前貼於內眼角、外眼角與下眼瞼下方，建議每晚 6 片，約 30 分鐘或整晚；早上撕下。第一次使用可先從 2 片開始。', caution='僅供外用；首次使用前先在手臂內側做皮膚測試；孕婦請勿使用；如有不適請停止使用；開封後請放回袋內保存。',
+   price=6, price_note='12 片 · 約 2 晚', handle='試用裝-2日份-wise-quest-草本冷敷眼貼', variants=None, trial_handle=None,
+   buy_label='以 $6 體驗兩晚', ship_note='單獨訂購免運',
+   yes=['第一次接觸草本眼貼、想先試試看的人','每天盯螢幕、想找一個睡前放鬆方式的人','想先確認自己喜不喜歡清涼感，再決定買正裝的人'], no=['孕婦','眼周肌膚有傷口或正在發炎者','對配方任一成分過敏者'],
+   faq=[('體驗裝和正裝有什麼不同？','是同一款眼貼、同樣的配方，日本製造。體驗裝一袋 12 片，約兩晚的用量；正裝 1 盒 60 片，約 10 晚。'),
+        ('有購買限制嗎？','每個家庭限購一份，僅限美國及加拿大的顧客購買，且不與其他優惠券或促銷活動疊加。'),
+        ('運費怎麼算？','單獨訂購體驗裝免運。和其他產品一起購買時，依標準運費計算（眼貼美國滿 $79 免運）。完成付款後在訂單確認頁加購的商品，會和體驗裝合併出貨。'),
+        ('一晚要用幾片？','建議每晚 6 片，貼在內眼角、外眼角與下眼瞼下方。第一次使用可先從 2 片開始，並先在手臂內側做皮膚測試。'),
+        ('用完之後呢？','喜歡的話，可以接著選 1 盒（60 片，約 10 晚）或 3 盒一個月組；不適合也沒關係，體驗裝是單次購買，沒有訂閱，也不用辦取消。')],
+   image=shop_img('files/free-trial-package.jpg?v=1758563648'), cross=['eye-patches','eye-cream','lumiview']),
  'lumiview': dict(series='eye', name='LumiView 草本明目膠囊', en='Herbal Eye Support Capsules', badge=None,
    hook='由內支持眼睛的長期健康', desc='七種東方養目草本濃縮成膠囊，從營養與整體狀態支持眼睛；搭配眼貼，外內更完整。180 粒／約 1 個月。',
    long='中醫傳統認為「肝開竅於目、肝腎同源」——眼睛的狀態，與身體整體的滋養有關。LumiView 以枸杞、菊花、決明子、山藥、茯苓、當歸、黃芪七味傳統草本，從內在支持眼睛的長期健康，是護眼三寶裡負責「內」的那一件。',
@@ -230,6 +244,7 @@ PRODUCTS = {
    image=f'{IMG}/_optimized/products/enerbalance/enerbalance-product-shot-wide-1200.avif', cross=['calmoon','herbalflow','lifting-serum']),
 }
 PRODUCT_ORDER = ['eye-patches','lumiview','eye-cream','eye-care-trio','dentaforte','calmoon','herbalflow','soothing-cream','clarifying-cream','lifting-serum','enerbalance']
+PRODUCT_PAGES = PRODUCT_ORDER + ['eye-patches-trial']  # 體驗裝有自己的產品頁，但不算進「N 款產品」
 
 # 部落格
 POSTS = []
@@ -340,6 +355,7 @@ DEMOS = {
  'eye-patches': dict(src='https://cdn.shopify.com/videos/c/o/v/dc358b61932e4aee89b25db5585fa201.mp4', title='簡單 3 步，給雙眼一段草本放鬆時間',
    steps=[('即開即用','撕開包裝，取出草本眼貼，隨時隨地開始放鬆。'),('輕輕一貼','順著眼周曲線，貼在內眼角、外眼角與下眼瞼下方的肌膚上，不入眼，帶來清涼感。'),('靜靜休息','閉上雙眼，讓雙眼放鬆。白天可短暫使用，睡前可貼整晚。')]),
 }
+REVIEWS['eye-patches-trial']=REVIEWS['eye-patches']; DEMOS['eye-patches-trial']=DEMOS['eye-patches']
 def _rev_url(r):
     u=r['url']
     if u.startswith('SHOP_TRIAL:'): return shop_url(PRODUCTS[u.split(':',1)[1]]['trial_handle'])
@@ -500,6 +516,8 @@ INGREDIENTS = {
    facts=[('容量','30ml'),('使用','潔面後、面霜之前取 3–4 滴，輕柔按壓於臉部與頸部；早晚皆可')],
    full='Water (Aqua), Glycerin, Caprylic/Capric Triglyceride, Limnanthes alba (Meadowfoam) Seed Oil, Squalane, Camellia sinensis Leaf Extract, Panax Ginseng Root Oil, Paeonia lactiflora Root Oil, Angelica sinensis Root Oil, Poria cocos Oil, Centella asiatica Oil, Glyceryl Stearate, Polysorbate 60, Polyglyceryl-10 Stearate, Bifida Ferment Lysate, Sodium Hyaluronate, Xanthan Gum, Palmitoyl Tripeptide-1, Palmitoyl Tripeptide-7, Ceramide NP, Bisabolol, Panthenol, Tetrahexyldecyl Ascorbate, Tocopherol, Dipotassium Glycyrrhizate, Parfum, Propanediol, Caprylhydroxamic Acid.'),
 }
+INGREDIENTS['eye-patches-trial']=INGREDIENTS['eye-patches']
+
 def ingredients_section(slug):
     g=INGREDIENTS.get(slug)
     if not g: return ''
@@ -655,6 +673,8 @@ DETAILS = {
    stats=[('6 片','每晚建議用量'),('約 10 晚','每盒 60 片'),('0','防腐劑')],
    how_title=('使用時的感受','貼上之後，清涼感會這樣慢慢展開'),
    how=[('約 30 秒','眼周開始出現清涼感。'),('約 1 分鐘','清涼感擴散到整個眼周。'),('3–5 分鐘','眼睛周圍一片清爽。'),('整晚','柔軟的水凝膠保持濕潤，配戴數小時依然舒適；隔天早上取下。')]),
+ 'eye-patches-trial': dict(
+   stats=[('12 片','每袋'),('約 2 晚','每晚建議 6 片'),('$6','單獨訂購免運')]),
  'eye-cream': dict(
    stats=[('6 種','草本精萃'),('20g','隨身裝'),('0','苯氧乙醇、人工香精')],
    showcase=dict(img=u_png('products/herbal-soothing-repair-eye-cream/herbal-soothing-repair-eye-cream-ingredients'), eyebrow='產品介紹', title='不方便貼眼貼的時候，點一點就好',
@@ -723,6 +743,8 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
                          mobile=dict(lg='promo-thanksgiving-mobile-1024.jpg', sm='promo-thanksgiving-mobile-750.jpg', w=1024, h=1536,
                                      hot=[('enerbalance',(160,60,870,540)),('enerbalance',(375,540,890,1000)),
                                           ('eye-patches',(10,880,480,1400)),('eye-cream',(540,1000,980,1400))])))
+
+DETAILS['eye-patches-trial'].update(how_title=DETAILS['eye-patches']['how_title'], how=DETAILS['eye-patches']['how'])
 
 def promo_img(slug):
     return DETAILS.get(slug,{}).get('promo_image')
@@ -851,7 +873,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 
 def series_products(k):
     # 系列內的產品（含組合），供導覽列與全部產品頁使用
-    s=SERIES[k]; return s['products']+([s['bundle']] if s.get('bundle') else [])
+    s=SERIES[k]; return s['products']+([s['trial']] if s.get('trial') else [])+([s['bundle']] if s.get('bundle') else [])
 
 def nav(rel, active=''):
     dd = ''.join(f'<a class="s-{k}" href="{rel}series/{k}.html"><span class="dot"></span><span>{SERIES[k]["name"]}<small>{SERIES[k]["h1"]}</small></span></a>' for k in SERIES_ORDER)
@@ -1282,7 +1304,7 @@ def build_series():
 
 # ───────────────────────────── 單品頁 ─────────────────────────────
 def build_products():
-    for slug in PRODUCT_ORDER:
+    for slug in PRODUCT_PAGES:
         p=PRODUCTS[slug]; s=SERIES[p['series']]; rel='../'
         url=buy_url(p,slug)
         variants=''
@@ -1292,7 +1314,7 @@ def build_products():
         if p.get('trial_handle'):
             trial=f'<a class="btn btn-ghost btn-block ext" style="margin-top:8px" data-product="{slug}-trial" href="{shop_url(p["trial_handle"])}">先從 $6 兩晚體驗裝開始</a>'
         oos='<p class="note" style="margin-top:10px;color:#B84F08"><b>目前補貨中。</b>商品頁會顯示最新庫存狀態；也可以先讀選購指南，或看同系列的其他產品。</p>' if p.get('oos') else ''
-        buy_label='前往護眼三寶組合頁' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else '立即購買')
+        buy_label='前往護眼三寶組合頁' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else p.get('buy_label','立即購買'))
         cross=''.join(product_card(c,rel) for c in p['cross'])
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
@@ -1311,7 +1333,7 @@ def build_products():
       <div class="row"><div class="price">{pr}<small>{esc(p['price_note'])} · USD</small></div>{'<span class="badge badge-oos">補貨中</span>' if p.get('oos') else ('<span class="badge badge-star">單次購買 · 無訂閱</span>' if not p.get('is_bundle') else '<span class="badge badge-star">招牌組合</span>')}</div>
       <a class="btn btn-primary btn-block ext" data-product="{slug}" href="{url}">{buy_label}</a>
       {trial}{oos}
-      <ul class="micro"><li>安全結帳</li><li>美國 {'眼貼滿 $79' if p['series']=='eye' and not p.get('is_bundle') else '滿 $200'} 免運</li><li>48 小時內出貨</li><li>30 天未拆封可退</li></ul>
+      <ul class="micro"><li>安全結帳</li><li>{p['ship_note'] if p.get('ship_note') else ('美國 '+('眼貼滿 $79' if p['series']=='eye' and not p.get('is_bundle') else '滿 $200')+' 免運')}</li><li>48 小時內出貨</li><li>30 天未拆封可退</li></ul>
       {variants}
       <ol class="flow"><li><b>選規格</b>在商品頁選擇數量／組合</li><li><b>安全結帳</b>Visa・Apple Pay・PayPal・Shop Pay</li><li><b>收到貨</b>工作日 48 小時內出貨</li></ol>
     </div>
@@ -1842,7 +1864,7 @@ def build_lead_pages():
 
 
 def build_misc(en_pages=()):
-    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]+list(en_pages)
+    pages=['index.html','about-us.html','about.html','faq.html','quiz.html','blog/index.html','series/index.html','products/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_PAGES]+[f'blog/{p["slug"]}.html' for p in POSTS]+list(en_pages)
     sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{LASTMOD.get(p,{}).get("date",BUILD_DATE)}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     json.dump({k:LASTMOD[k] for k in sorted(LASTMOD) if k in pages}, open(LASTMOD_FILE,'w',encoding='utf8'), ensure_ascii=False, indent=1)
