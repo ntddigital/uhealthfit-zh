@@ -211,7 +211,7 @@ h3{font-size:20px;font-weight:700}
 .pdp .facts{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin:18px 0;font-size:14px}
 .pdp .facts li{display:flex;gap:8px;color:var(--ink-2)}
 .pdp .facts li::before{content:"✓";color:var(--green);font-weight:900}
-.buybox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:0 20px 50px -30px rgba(0,0,0,.25);margin-top:10px}
+.buybox{scroll-margin-top:84px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:0 20px 50px -30px rgba(0,0,0,.25);margin-top:10px}
 .buybox .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .buybox .price{font-size:30px}
 .buybox .price small{font-size:13px}
@@ -220,6 +220,15 @@ h3{font-size:20px;font-weight:700}
 .variants li.best{border-color:var(--green);background:var(--green-light)}
 .variants li b{font-family:var(--font-en)}
 .variants li .tag{font-size:12px;color:var(--green);font-weight:700}
+.variants.pick{border:0;padding:0;margin:16px 0 10px;min-width:0}
+.variants.pick legend{font-size:13px;font-weight:700;color:var(--ink-3);margin-bottom:8px;padding:0}
+.variants.pick label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s}
+.variants.pick label>span{flex:1;min-width:0}
+.variants.pick label b{font-family:var(--font-en)}
+.variants.pick label .tag{font-size:12px;color:var(--green);font-weight:700}
+.variants.pick input{accent-color:var(--green);width:18px;height:18px;margin:0;flex:none}
+.variants.pick label:has(input:checked){border-color:var(--green);background:var(--green-light);box-shadow:inset 0 0 0 1px var(--green)}
+.variants.pick label:has(input:focus-visible){outline:2px solid var(--green);outline-offset:2px}
 .buybox .btn{margin-top:6px}
 .buybox .micro{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:13px;color:var(--ink-3)}
 .buybox .micro li::before{content:"✓ ";color:var(--green)}
@@ -581,6 +590,11 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 /* 感恩節優惠：產品頁說明、首頁其他優惠、文章提示 */
 .promo-line{background:#FDF0E6;border:1px solid #F1CDB3;color:#8E3B16;border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px;margin-bottom:12px}
 .promo-line small{display:block;font-weight:500;font-size:12px;color:#A0664A;margin-top:2px}
+/* 手機版產品頁第一屏的感恩節優惠列；桌機購買框已在首屏，不顯示 */
+.pdp-promo{display:none}
+@media(max-width:900px){.pdp-promo{display:flex;flex-direction:column;align-items:center;gap:2px;background:#FDF0E6;border-bottom:1px solid #F1CDB3;color:#8E3B16;padding:10px 16px;text-align:center;font-weight:800;font-size:15px;line-height:1.4;text-decoration:none}.pdp-promo .pp-s{font-weight:600;font-size:12px;color:#A0664A}}
+.buybar .t .bb-promo{color:#8E3B16;font-weight:700;font-size:13px;white-space:nowrap}
+@media(max-width:600px){.buybar .t span.bb-promo{display:inline}}
 .promo-more{margin-top:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .promo-more-h{font-weight:800;color:#8E3B16;font-size:15px}
 .promo-more-h small{display:block;font-weight:600;font-size:12px;color:#A0664A}

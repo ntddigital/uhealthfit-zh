@@ -53,8 +53,9 @@
       a.href=shopHref(a.href);
       a.setAttribute('rel','noopener'); a.setAttribute('target','_blank'); // 另開新分頁，保留本站
       a.addEventListener('click',function(){
-        var label=a.getAttribute('data-product')||page;
-        track('begin_checkout_redirect',{product:label,page:page});
+        var label=a.getAttribute('data-product')||page, ev={product:label,page:page}, vr=a.getAttribute('data-variant');
+        if(vr){ev.variant=vr;}
+        track('begin_checkout_redirect',ev);
         // Meta 只收到「前往商店」這個動作，不帶產品或頁面名稱，避免被視為健康相關資料
         if(!EN&&window.fbq){fbq('trackCustom','ShopRedirect');}
       });
@@ -82,6 +83,34 @@
     });});
     document.querySelectorAll('.cc-open').forEach(function(b){b.addEventListener('click',ccShow);});
   }
+
+  // 產品頁規格選擇：選了哪個規格，購買按鈕（購買框與底部固定列）就換成該規格的結帳連結（cart permalink）
+  var pick=document.querySelector('.variants.pick');
+  if(pick){
+    var buyBtns=[].slice.call(document.querySelectorAll('.buybox .btn-primary, .buybar .btn-primary'));
+    var bigPrice=document.querySelector('.buybox .row .price'), bigOrig=bigPrice?bigPrice.innerHTML:'', bigBase=bigPrice?(bigPrice.firstChild.textContent||'').trim():'';
+    var setVar=function(inp){
+      var href; try{href=shopHref(inp.getAttribute('data-href'));}catch(e){href=inp.getAttribute('data-href');}
+      var pr=inp.getAttribute('data-price');
+      buyBtns.forEach(function(b){b.href=href; b.setAttribute('data-variant',inp.value); var sel=b.querySelector('.bb-sel'); if(sel){sel.textContent='· '+pr;}});
+      var bp=document.querySelector('.buybar .t .price'); if(bp){bp.textContent=pr;}
+      // 購買框的大字價格跟著所選規格；回到原價規格時還原（保留原價刪除線）
+      if(bigPrice){ if(pr===bigBase){bigPrice.innerHTML=bigOrig;} else {bigPrice.textContent=pr; var sm=document.createElement('small'); sm.textContent=inp.value+' · USD'; bigPrice.appendChild(sm);} }
+      var bn=document.querySelector('.buybar .bb-name'); if(bn){bn.textContent=bn.textContent.replace(/ · .*$/,'')+' · '+inp.value;}
+    };
+    pick.addEventListener('change',function(e){if(e.target&&e.target.name){setVar(e.target);track('select_variant',{product:page.replace(/^product-/,''),variant:e.target.value});}});
+    var cur=pick.querySelector('input:checked'); if(cur){setVar(cur);}
+  }
+  // 手機版頁首優惠列：點了捲到購買框，並選好活動規格（例如眼貼 3 盒組）
+  var pp=document.querySelector('.pdp-promo');
+  if(pp){pp.addEventListener('click',function(e){
+    var box=document.getElementById('buy'); if(!box) return;
+    e.preventDefault();
+    var want=pp.getAttribute('data-pick');
+    if(want&&pick){[].forEach.call(pick.querySelectorAll('input'),function(i){if(i.value===want&&!i.checked){i.checked=true;i.dispatchEvent(new Event('change',{bubbles:true}));}});}
+    box.scrollIntoView({behavior:'smooth',block:'start'});
+    track('promo_strip_click',{product:page.replace(/^product-/,'')});
+  });}
 
   // 產品頁固定購買列：主購買按鈕沒有完整出現在畫面上時顯示（手機首屏只露出一半也算）
   var bar=document.querySelector('.buybar'), mainBtn=document.querySelector('.buybox .btn-primary');
@@ -200,9 +229,11 @@
     });
   }
 
-  // 免費下載小視窗：每次瀏覽最多一次；捲到 55% 或停留 30 秒才出現；測驗頁、下載頁、已領過的人不出現
+  // 免費下載小視窗：每次瀏覽最多一次；捲到 55% 或停留 30 秒才出現；測驗頁、下載頁、已領過的人不出現。
+  // 產品頁（已有購買意圖）與付費廣告進站的訪客（本次瀏覽帶 gclid 等點擊編號或付費 utm_medium）也不出現，避免擋住購買。
   var pops=[].slice.call(document.querySelectorAll('.lm-pop'));
-  if(pops.length&&page!=='quiz'&&!document.querySelector('main.lp')){
+  var paidVisit=!!(adParams.gclid||adParams.gbraid||adParams.wbraid||adParams.msclkid||adParams.fbclid||adParams.ttclid||/^(cpc|ppc|paid|paid_?social|paidsearch|display|cpm|cpv)/i.test(adParams.utm_medium||''));
+  if(pops.length&&page!=='quiz'&&!/^product-/.test(page)&&!paidVisit&&!document.querySelector('main.lp')){
     var inl=document.querySelector('.lm-inline[data-lm-key]');
     var popKey=inl?inl.getAttribute('data-lm-key'):'solar-calendar-2027';
     var pop=pops.filter(function(p){return p.getAttribute('data-lm-key')===popKey;})[0];

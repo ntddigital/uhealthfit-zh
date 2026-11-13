@@ -63,6 +63,27 @@ TODAY = '2026-10-19'
 def shop_url(handle):
     return f'{SHOP}/products/{quote(handle, safe="-")}'
 
+# 官方商店各規格的 variant ID（取自 {商品頁網址}.js）。購買按鈕用 cart permalink（/cart/ID:1）直接進結帳，
+# 不再先停在商店商品頁。鍵為商店 handle → 本站規格名稱（PRODUCTS 的 variants）；只有一個規格的商品用 'default'。
+# 商店改規格或改 handle 時要同步更新，build 時會檢查每個規格都有對應的 ID。
+VARIANT_IDS = {
+ '草本冷敷眼貼-十天包裝-贈試用裝一袋-價值-5': {'兩晚體驗裝（12 片）':46750933549211,'1 盒 · 60 片':49743208087707,
+     '3 盒 · 一個月組':49743208120475,'6 盒 · 兩個月組':49743208153243,'9 盒 · 三個月組':49743208186011,'default':49743208087707},
+ '試用裝-2日份-wise-quest-草本冷敷眼貼': {'default':46750933549211},
+ 'wisquest-草本明目膠囊': {'1 瓶':48229412962459,'2 瓶':48229412995227,'3 瓶':48229413027995},
+ 'wisequest-草本舒緩修護眼霜': {'1 瓶':49970490343579,'2 瓶 · 第 2 瓶半價':49970490376347,'default':49970490343579},
+ 'wisequest-dentaforte': {'1 瓶':50061209796763,'2 瓶':50061209829531,'3 瓶':50061209862299},
+ 'wisequest-calmoon': {'default':50061217661083},
+ 'wisequest-herbalflow': {'1 瓶':50062101872795,'2 瓶':50062101905563,'3 瓶':50062101938331},
+ 'wisequest-草本舒緩修護霜': {'default':48330158768283},
+ 'wisequest-草本淨顏霜': {'default':48331048747163},
+ 'wisequest-herbal-lifting-revitalizing-serum': {'default':50027594121371},
+ 'wisequest-enerbalance': {'1 瓶':50006583705755,'2 瓶':50006583738523,'3 瓶':50006583771291},
+}
+def cart_url(handle, label='default'):
+    vid=VARIANT_IDS.get(handle,{}).get(label)
+    return f'{SHOP}/cart/{vid}:1' if vid else shop_url(handle)
+
 # ───────────────────────────── 資料 ─────────────────────────────
 SERIES = {
  'eye': dict(name='護眼保健', short='護眼', en='Eye Health', color='var(--c-eye)', organ='肝開竅於目',
@@ -264,8 +285,18 @@ def pseries(p):
 def esc(s): return H.escape(s, quote=True)
 
 def buy_url(p, slug):
+    # 產品卡片、系列頁、首頁活動區等看不到規格的地方：連到官方商店商品頁，讓訪客在那裡選規格
     if p.get('page_url'): return p['page_url']
     return shop_url(p['handle'])
+
+def pdp_buy_url(p, slug):
+    # 本站產品頁的購買按鈕：直接進結帳（cart permalink），預設帶入推薦規格；訪客在頁面上換規格時由 main.js 換連結
+    if p.get('page_url'): return p['page_url']
+    if p.get('oos'): return shop_url(p['handle'])  # 補貨中：留在商品頁看庫存
+    if p.get('variants'):
+        best=[n for n,pr,t,b in p['variants'] if b] or [p['variants'][0][0]]
+        return cart_url(p['handle'], best[0])
+    return cart_url(p['handle'])
 
 def price_str(p, with_compare=False):
     if p['price'] is None: return '組合價'
@@ -715,6 +746,10 @@ PROMO = dict(eyebrow='感恩節限時活動', title='歲末感恩大回饋',
                      'eye-patches':('每買 3 送 1','明目冷敷眼貼每買 3 盒送 1 盒：買 3 送 1、買 6 送 2、買 9 送 3'),
                      'eye-cream':('第 2 瓶半價','草本舒緩修護眼霜第 2 瓶半價（2 瓶 $88.50）')},
              chips={'enerbalance':'40% OFF'},
+             # 手機版產品頁頁首的優惠列：(一句短文案, 點了要選取的規格)；沒有規格可選就填 None
+             strip={'eye-patches':('明目冷敷眼貼每買 3 盒送 1 盒','3 盒 · 一個月組'),
+                    'enerbalance':('黑膏滋膠囊限時特價 $179',None),
+                    'eye-cream':('修護眼霜第 2 瓶半價','2 瓶 · 第 2 瓶半價')},
              # 系列頁活動橫幅：放在該系列頁頁首下方；hot 為圖上可點範圍（像素：左、上、右、下）
              series_banners={'eye':dict(link='eye-patches', alt='歲末感恩・護眼好禮：明目冷敷眼貼每買 3 送 1、修護眼霜第 2 瓶半價，活動至 11/30 止',
                  desktop=dict(lg='promo-eye-wide-2000.jpg', sm='promo-eye-wide-1200.jpg', w=2000, h=667,
@@ -1084,6 +1119,15 @@ def write(path, content):
     open(full,'w',encoding='utf8').write(content)
 
 # ───────────────────────────── 首頁 ─────────────────────────────
+def pdp_promo_strip(slug):
+    # 手機版產品頁第一屏的感恩節優惠列（桌機隱藏，桌機的購買框已在首屏）
+    o=promo_offer(slug)
+    if not o: return ''
+    text,pick=(PROMO.get('strip',{}).get(slug) or (o[1],None))
+    dp=f' data-pick="{esc(pick)}"' if pick else ''
+    return (f'<a class="pdp-promo" href="#buy"{dp}>'
+            f'<span class="pp-t">🍁 感恩節限時｜{esc(text)}</span><span class="pp-s">至 {PROMO["ends"]} 止 · 立即選購 ›</span></a>')
+
 def gallery(slug):
     # 產品頁主圖；有特價圖時特價圖為第一張、原主圖為第二張，以輪播呈現
     p=PRODUCTS[slug]; d=DETAILS.get(slug,{})
@@ -1241,7 +1285,7 @@ def build_home():
   <div class="l"><span class="eyebrow">最低門檻的開始</span><h2>先試兩個晚上，再決定要不要走下去</h2><p>護眼系列的入口，是一包兩晚份的明目冷敷眼貼體驗裝——日本製造、不含防腐劑，剛好夠你感受它適不適合自己的睡前習慣。</p>
     <div class="big">$6<small> / 兩晚體驗裝</small></div>
     <ul><li>日本製造 · 不入眼 · 不含防腐劑 · 過敏回報極少（依品牌內部客服紀錄）</li><li>喜歡再升級：1 盒 $29.99 · 3 盒一個月組 $84（推薦入門）</li><li>所有商品 30 天內未拆封可退</li></ul>
-    <a class="btn btn-accent ext" data-product="eye-patches-trial" href="{shop_url(PRODUCTS['eye-patches']['trial_handle'])}">以 $6 體驗兩晚</a></div>
+    <a class="btn btn-accent ext" data-product="eye-patches-trial" href="{cart_url(PRODUCTS['eye-patches']['trial_handle'])}">以 $6 體驗兩晚</a></div>
   <div class="r"><img src="{shop_img('files/free-trial-package.jpg?v=1758563648',700)}" alt="WiseQuest 明目冷敷眼貼兩晚體驗裝" loading="lazy"></div>
 </div></div></section>
 {journey(rel,'home')}
@@ -1306,36 +1350,46 @@ def build_series():
 def build_products():
     for slug in PRODUCT_PAGES:
         p=PRODUCTS[slug]; s=SERIES[p['series']]; rel='../'
-        url=buy_url(p,slug)
+        url=pdp_buy_url(p,slug)
         variants=''
         if p.get('variants'):
-            variants='<ul class="variants">'+''.join(f'<li class="{"best" if best else ""}"><span>{esc(n)}{(" <span class=tag>· "+esc(t)+"</span>") if t else ""}</span><b>{pr}</b></li>' for n,pr,t,best in p['variants'])+'</ul><p class="note">規格於官方商店商品頁選擇；價格以結帳頁顯示為準。</p>'
+            if p.get('oos') or p.get('page_url'):
+                variants='<ul class="variants">'+''.join(f'<li class="{"best" if best else ""}"><span>{esc(n)}{(" <span class=tag>· "+esc(t)+"</span>") if t else ""}</span><b>{pr}</b></li>' for n,pr,t,best in p['variants'])+'</ul><p class="note">規格於官方商店商品頁選擇；價格以結帳頁顯示為準。</p>'
+            else:
+                for n,*_ in p['variants']:
+                    if n not in VARIANT_IDS.get(p['handle'],{}): raise SystemExit(f'VARIANT_IDS 缺少 {p["handle"]} 的規格「{n}」')
+                variants=(f'<fieldset class="variants pick"><legend>選擇規格</legend>'+''.join(f'<label class="{"best" if best else ""}"><input type="radio" name="v-{slug}" value="{esc(n)}" data-href="{cart_url(p["handle"],n)}" data-price="{pr}"{" checked" if best else ""}><span>{esc(n)}{(" <span class=tag>· "+esc(t)+"</span>") if t else ""}</span><b>{pr}</b></label>' for n,pr,t,best in p['variants'])+'</fieldset>')
         trial=''
         if p.get('trial_handle'):
-            trial=f'<a class="btn btn-ghost btn-block ext" style="margin-top:8px" data-product="{slug}-trial" href="{shop_url(p["trial_handle"])}">先從 $6 兩晚體驗裝開始</a>'
+            trial=f'<a class="btn btn-ghost btn-block ext" style="margin-top:8px" data-product="{slug}-trial" href="{cart_url(p["trial_handle"])}">先從 $6 兩晚體驗裝開始</a>'
         oos='<p class="note" style="margin-top:10px;color:#B84F08"><b>目前補貨中。</b>商品頁會顯示最新庫存狀態；也可以先讀選購指南，或看同系列的其他產品。</p>' if p.get('oos') else ''
         buy_label='前往護眼三寶組合頁' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else p.get('buy_label','立即購買'))
+        direct='/cart/' in url  # 購買按鈕直接進結帳（cart permalink）
+        picker=variants.startswith('<fieldset')
+        best_label,best_price=next(((n,pr) for n,pr,t,b in p['variants'] if b),(p['variants'][0][0],p['variants'][0][1])) if picker else ('','')
         cross=''.join(product_card(c,rel) for c in p['cross'])
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
         pr=price_str(p, with_compare=True)
-        ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":page_url(f"products/{slug}.html"),"offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
+        ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":page_url(f"products/{slug}.html"),"offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":shop_url(p['handle']) if p.get('handle') else url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
-<section class="pdp"><div class="wrap">
+{pdp_promo_strip(slug)}<section class="pdp"><div class="wrap">
   {gallery(slug)}
   <div>
     <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><a href="{rel}series/{p['series']}.html">{s['name']}</a><span>›</span><span>{esc(p['name'])}</span></div>
     <span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span>
     <h1>{esc(p['name'])}</h1><div class="en">{esc(p['en'])} · {esc(p['made'])}</div>
     <div class="hook">{esc(p['hook'])}</div>
-    <div class="buybox">
+    <div class="buybox" id="buy">
       {f'<div class="promo-line">🍁 感恩節優惠｜{esc(promo_offer(slug)[1])}<small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準</small></div>' if promo_offer(slug) else ''}
       <div class="row"><div class="price">{pr}<small>{esc(p['price_note'])} · USD</small></div>{'<span class="badge badge-oos">補貨中</span>' if p.get('oos') else ('<span class="badge badge-star">單次購買 · 無訂閱</span>' if not p.get('is_bundle') else '<span class="badge badge-star">招牌組合</span>')}</div>
-      <a class="btn btn-primary btn-block ext" data-product="{slug}" href="{url}">{buy_label}</a>
+      {variants if picker else ''}
+      <a class="btn btn-primary btn-block ext" data-product="{slug}"{f' data-variant="{esc(best_label)}"' if picker else ''} href="{url}">{buy_label}{f' <span class="bb-sel">· {best_price}</span>' if picker else ''}</a>
       {trial}{oos}
       <ul class="micro"><li>安全結帳</li><li>{p['ship_note'] if p.get('ship_note') else ('美國 '+('眼貼滿 $79' if p['series']=='eye' and not p.get('is_bundle') else '滿 $200')+' 免運')}</li><li>48 小時內出貨</li><li>30 天未拆封可退</li></ul>
-      {variants}
-      <ol class="flow"><li><b>選規格</b>在商品頁選擇數量／組合</li><li><b>安全結帳</b>Visa・Apple Pay・PayPal・Shop Pay</li><li><b>收到貨</b>工作日 48 小時內出貨</li></ol>
+      {'' if picker else variants}
+      {f'<p class="note">按下購買直接前往官方商店結帳；價格以結帳頁顯示為準。也可以先看<a class="ext" href="{shop_url(p["handle"])}" style="text-decoration:underline">官方商店商品頁</a>。</p>' if direct else ''}
+      <ol class="flow"><li><b>選規格</b>{'在上方選擇數量／組合' if picker else ('直接帶入結帳' if direct else '在商品頁選擇數量／組合')}</li><li><b>安全結帳</b>Visa・Apple Pay・PayPal・Shop Pay</li><li><b>收到貨</b>工作日 48 小時內出貨</li></ol>
     </div>
     {stats_row(slug)}
     <p class="desc">{esc(p['long'])}</p>
@@ -1370,7 +1424,7 @@ def build_products():
   <div class="pgrid">{cross}</div>
 </div></section>
 {journey(rel,'product',product=slug)}
-<div class="buybar"><div class="wrap"><div class="t"><span class="price">{pr}</span><span>{esc(p['name'])} · {esc(p['price_note'])}</span></div><a class="btn btn-primary ext" data-product="{slug}" href="{url}">{'查看組合' if p.get('is_bundle') else buy_label}</a></div></div>
+<div class="buybar"><div class="wrap"><div class="t"><span class="price">{best_price if picker else pr}</span>{f'<span class="bb-promo">🍁 {esc(promo_offer(slug)[0])}</span>' if promo_offer(slug) else ''}<span class="bb-name">{esc(p['name'])} · {esc(best_label if picker else p['price_note'])}</span></div><a class="btn btn-primary ext" data-product="{slug}"{f' data-variant="{esc(best_label)}"' if picker else ''} href="{url}">{'查看組合' if p.get('is_bundle') else buy_label}</a></div></div>
 <script type="application/ld+json">{faq_ld(p['faq'])}</script>
 {('<script type="application/ld+json">'+ld+'</script>') if ld else ''}
 '''
