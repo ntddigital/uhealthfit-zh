@@ -30,13 +30,16 @@
   // 自製 utm_source 反而會把 Google 自然搜尋、YouTube 等原始來源蓋掉。
   var page=document.body.getAttribute('data-page')||'site';
   var AD_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','fbclid','gclid','gbraid','wbraid','msclkid','ttclid'];
-  var adParams={};
-  try{
-    var q=new URLSearchParams(location.search), fresh={}, hasFresh=false;
+  var adParams={}, hasFresh=false;
+  try{ // 先採用目前網址上的參數：這一步不靠分頁暫存，暫存不能用時當頁的商店連結仍會帶著
+    var q=new URLSearchParams(location.search), fresh={};
     AD_KEYS.forEach(function(k){var v=q.get(k); if(v){fresh[k]=v; hasFresh=true;}});
-    if(hasFresh){ sessionStorage.setItem('uhf_ad_params',JSON.stringify(fresh)); adParams=fresh; }
+    if(hasFresh){ adParams=fresh; }
+  }catch(e){}
+  try{ // 分頁暫存另外處理：有新參數就存起來給後續頁面用，沒有就讀回；寫入或讀取失敗（封鎖網站資料等）都不影響上面已取得的參數
+    if(hasFresh){ sessionStorage.setItem('uhf_ad_params',JSON.stringify(adParams)); }
     else { adParams=JSON.parse(sessionStorage.getItem('uhf_ad_params')||'{}')||{}; }
-  }catch(e){ adParams={}; }
+  }catch(e){}
   function shopHref(href){
     var u=new URL(href), keys=Object.keys(adParams);
     if(keys.length){
