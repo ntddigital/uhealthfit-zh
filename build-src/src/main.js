@@ -182,14 +182,17 @@
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ toast('請輸入正確的 Email'); input.focus(); return; }
       var company=form.getAttribute('data-klaviyo-company'), list=form.getAttribute('data-klaviyo-list');
       var lmPage=form.getAttribute('data-lm'), place=form.getAttribute('data-lm-place')||'';
-      var props={source:'uhealthfit-site/'+page}, lmKey='', ebook=null;
+      var props={source:'uhealthfit-site/'+page}, lmKey='', ebook=null, ebookKey='';
       if(lmPage){ // 免費下載品（7 天護眼、節氣月曆）：各自的 List 觸發各自的 Flow
         lmKey=lmPage; props.lead_magnet=lmKey; props.lead_magnet_place=place;
+        // 電子書下載頁（護眼自救指南）：另外送「Requested Quiz Ebook」事件，沿用測驗電子書的 Flow 寄 PDF
+        ebookKey=form.getAttribute('data-ebook')||'';
+        if(ebookKey){ebook={title:form.getAttribute('data-ebook-title')||'',url:form.getAttribute('data-ebook-url')||''};}
       } else { // 測驗電子書
         var r=form.querySelector('input[name="quiz_result"]'); if(r&&r.value){props.quiz_result=r.value;}
         var lmIn=form.querySelector('input[name="lead_magnet"]'), ebooks={}; lmKey=lmIn?lmIn.value:'';
         try{ebooks=JSON.parse(form.getAttribute('data-ebooks')||'{}');}catch(e){}
-        ebook=ebooks[lmKey]||null; if(ebook){props.lead_magnet=lmKey;}else{lmKey='';}
+        ebook=ebooks[lmKey]||null; if(ebook){props.lead_magnet=lmKey;ebookKey=lmKey;}else{lmKey='';}
       }
       var body={data:{type:'subscription',attributes:{custom_source:'uhealthfit-site '+page+(place?' '+place:''),profile:{data:{type:'profile',attributes:{email:email,properties:props}}}},relationships:{list:{data:{type:'list',id:list}}}}};
       var btn=form.querySelector('button'); btn.disabled=true;
@@ -206,7 +209,7 @@
         if(lmPage){ markLm(lmPage); document.body.classList.add('lm-submitted'); }
         var pp=form.closest&&form.closest('.lm-pop'); if(pp&&pp._close){setTimeout(pp._close,6000);} // 小視窗送出後顯示「已收到」6 秒再收起
         if(ebook){ // 觸發 Klaviyo「Requested Quiz Ebook」事件，由 Flow 寄出對應的電子書
-          var ev={data:{type:'event',attributes:{properties:{ebook:lmKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
+          var ev={data:{type:'event',attributes:{properties:{ebook:ebookKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
           fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
         }
         track('generate_lead',{method:lmPage?('lead_magnet_'+(place||'page')):'quiz_email',lead_magnet:lmKey||'none'});

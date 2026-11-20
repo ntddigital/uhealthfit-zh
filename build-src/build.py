@@ -1779,7 +1779,47 @@ LEAD_MAGNETS = {
    next=[('逛逛六大系列','series/index.html'),('立冬進補怎麼選','blog/winter-tonic-herbal-guide.html')],
    site_link='也可以先免費領取《2027 節氣養生月曆》→',
  ),
+ # 電子書《螢幕族護眼自救指南》的獨立下載頁（測驗頁也送同一本）。寄送沿用測驗電子書的 Klaviyo Flow：
+ # 加入 Email List TKC3Bu，並送出「Requested Quiz Ebook」事件（ebook=eye-care），由 Flow 寄出 PDF。
+ 'eye-guide': dict(
+   list=KLAVIYO_LIST, ebook='eye-care', popup=False,
+   path='free/eye-care-guide.html', pdf='downloads/wisequest-eye-care-guide.pdf',
+   cover='img/lm-eye-guide-cover.jpg', cover_w=696, cover_h=900, name='螢幕族護眼自救指南',  # 網頁用縮圖；原圖在 downloads/eye-care-guide-cover.jpg
+   title='免費領取｜螢幕族護眼自救指南：黃醫師整理的 7 頁護眼電子書 · 優健堂 UHealthFit',
+   desc='眼睛乾、澀、容易累？黃醫師把門診最常被問的護眼問題整理成 7 頁電子書：眼睛為什麼越來越累、5 個常見護眼誤區、每天能做的 7 件小事，以及 4 種用眼類型各自的方向。免費下載。',
+   eyebrow='免費電子書 · 黃醫師整理', h1='眼睛又乾又累？<em>多半不是壞了，是太累了</em>',
+   lead='黃醫師把門診裡最常被問的護眼問題，整理成一本 7 頁的電子書：眼睛為什麼越來越累、5 個常見誤區、每天做得到的 7 件小事，還有對照你的用眼類型，該從哪裡開始照顧。留下 Email，馬上下載。',
+   lead_live='黃醫師把門診裡最常被問的護眼問題，整理成一本 7 頁的電子書：眼睛為什麼越來越累、5 個常見誤區、每天做得到的 7 件小事，還有對照你的用眼類型，該從哪裡開始照顧。留下 Email 馬上下載，PDF 也會寄到你的信箱。',
+   btn='免費下載電子書', btn_live='免費下載電子書',
+   gets=[('7 頁電子書（PDF）','手機、電腦都能讀，也能印出來慢慢看。'),('對照你的用眼類型','4 種常見類型，各自先從哪裡開始照顧。'),('哪些情況先找眼科','書裡標出了哪些狀況別自己撐，先做一次眼科檢查。')],
+   gets_live=None,
+   who=['每天看螢幕超過 6 小時','眼睛一乾就想點眼藥水','長時間待在冷氣房或戴隱形眼鏡','想從日常開始照顧眼睛，不想等到不舒服才處理'],
+   faq=[('真的免費嗎？需要買東西嗎？','完全免費，不需要購買任何產品。書裡的方法大多是日常就能做到的小事。'),
+        ('書裡會推銷產品嗎？','整本以護眼觀念和日常方法為主。最後一頁簡短介紹了 WiseQuest 的眼貼與明目膠囊，給想讓護眼更省事的人參考；不買也完全不影響使用。'),
+        ('這能取代看眼科嗎？','不能。這份指南是一般護眼知識與生活方式分享，不是醫療診斷或治療建議。如果眼睛的不適持續、加重，或已經離不開眼藥水，請先找眼科醫師檢查。'),
+        ('和《7 天護眼小計畫》有什麼不同？','電子書講「為什麼會累」和「該往哪個方向照顧」；7 天護眼小計畫是一張打勾表，帶你一天養成一個小習慣。兩份可以一起用。'),
+        ('PDF 怎麼下載？之後會收到 Email 嗎？','送出 Email 後，頁面會立即出現下載連結，PDF 也會寄到你的信箱。之後偶爾會收到優健堂的健康養護內容與會員消息，每封信底部都可以一鍵取消訂閱。')],
+   faq_live={},
+   inline_h='免費領取：螢幕族護眼自救指南', inline_p='黃醫師整理的 7 頁護眼電子書：為什麼眼睛越來越累、5 個常見誤區、每天能做的 7 件小事。',
+   bg='lp-bg-eye.jpg', get_icons=['📖','🧭','🩺'], get_icons_live=['📖','🧭','🩺'],
+   related=['beyond-lutein-eye-care','eye-patch-vs-steam-mask-vs-eye-drops','contact-lens-eye-drops-eye-patch-guide'],
+   next=[('看看護眼保健系列','series/eye.html'),('也領取 7 天護眼小計畫','free/eye-care-7-day.html')],
+   site_link='也可以先免費領取《螢幕族護眼自救指南》→',
+   final_h='今天就多懂自己的眼睛一點', final_lead='留下 Email，馬上下載 7 頁電子書，PDF 也會寄到你的信箱。',
+ ),
 }
+# 電子書下載頁的目錄（寫在前面＋五章＋居家養護）與用眼類型預覽，內容取自 downloads/wisequest-eye-care-guide.pdf
+LM_GUIDE_TOC = [
+ ('寫在前面','給每天用眼超過 6 小時的你','多數時候，眼睛沒有壞，只是太累了。'),
+ ('第一章','為什麼你的眼睛越來越累','眨眼次數少了一半、眼睛正在「過熱」、一直滴眼藥水卻沒有真正休息。'),
+ ('第二章','門診最常見的 5 個護眼誤區','「眼睛乾，多滴眼藥水就好」「熱敷一定對眼睛好」……哪裡不對？'),
+ ('第三章','螢幕族每天能做的 7 件小事','不用改變生活方式，任選幾項融入日常。'),
+ ('第四章','中醫怎麼看眼睛','「肝開竅於目」：為什麼護眼不只是眼睛局部的事。'),
+ ('第五章','對應你的用眼類型，找對方向','4 種常見類型，各自先從哪裡開始。'),
+ ('居家養護','黃醫師的居家養護小貼士','一杯草本明目茶飲的煮法，和眼周穴位按揉。'),
+]
+LM_GUIDE_TYPES = [('A','螢幕疲勞型','以痠、脹、容易累為主。'),('B','乾燥過載型','乾澀刺痛，加上長時間冷氣、隱形眼鏡或重度用眼。'),
+                  ('C','眼藥水常備型','已經習慣隨身帶著眼藥水，一乾就想點。'),('D','眼周初老型','除了疲勞，也在意眼周細紋、暗沉。')]
 # Klaviyo 的兩個 Flow 上線前保持 False：頁面只承諾「立即下載」，不承諾寄信；站內文章區塊與彈出視窗也先不出現。
 # Flow 上線後改成 True 並重建：下載頁換成寄信的說法，系列頁／產品頁／選購指南會出現免費下載區塊與一次性的小視窗。
 LEAD_FLOWS_LIVE = True   # 2026-11-02 兩個 Flow 已上線（7 天護眼 TEef5H：8 封；節氣月曆 SEFaUZ：1 封）
@@ -1791,13 +1831,19 @@ def lm_consent():
     return ('<p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員消息 Email，可隨時取消訂閱。詳見 '
             '<a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>')
 
+def ebook_attrs(m):
+    # 電子書下載品：送出後另外觸發「Requested Quiz Ebook」事件，由測驗電子書的 Flow 寄出 PDF
+    if not m.get('ebook'): return ''
+    e=EBOOKS[m['ebook']]
+    return f' data-ebook="{m["ebook"]}" data-ebook-title="{esc(e["title"])}" data-ebook-url="{SITE_URL}/{e["file"]}"'
+
 def lm_form(key, place, rel, fid='', after=''):
     m=LEAD_MAGNETS[key]
     btn=m['btn_live'] if LEAD_FLOWS_LIVE else m['btn']
     ok=('✓ 已收到！第一封信幾分鐘內寄到（沒看到的話，查看一下垃圾郵件匣）。也可以' if LEAD_FLOWS_LIVE else '✓ 已收到你的 Email！')
     idattr=f' id="{fid}"' if fid else ''
     return (f'<div class="lm-box"{idattr}>'
-            f'<form class="lm-form" data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{m["list"]}" data-lm="{key}" data-lm-place="{place}" novalidate>'
+            f'<form class="lm-form" data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{m["list"]}" data-lm="{key}" data-lm-place="{place}"{ebook_attrs(m)} novalidate>'
             f'<input type="email" name="email" placeholder="輸入你的 Email" required aria-label="Email" autocomplete="email" inputmode="email">'
             f'<button class="btn btn-primary" type="submit">{btn}</button></form>'
             f'{lm_consent()}'
@@ -1814,6 +1860,7 @@ def lm_inline(key, rel):
 def lm_popups(rel):
     out=''
     for key,m in LEAD_MAGNETS.items():
+        if m.get('popup') is False: continue
         out+=f'''<div class="lm-pop" data-lm-key="{key}" role="dialog" aria-modal="false" aria-labelledby="lmpop-{key}" hidden>
   <button class="lm-pop-x" type="button" aria-label="關閉">×</button>
   <div class="lm-pop-row"><img src="{rel}{m['cover']}" alt="" width="{m['cover_w']}" height="{m['cover_h']}" loading="lazy"><div><span class="eyebrow">免費下載</span><h3 id="lmpop-{key}">{esc(m['inline_h'])}</h3><p>{esc(m['inline_p'])}</p></div></div>
@@ -1867,6 +1914,23 @@ def build_lead_pages():
   <ol class="lm-tl">{days}</ol>
   <div class="lm-tl-after"><div><b>做完 7 天</b><span>不用每格都打滿。寫下最想留下的一個習慣，讓它變成日常。</span></div><a class="btn btn-primary btn-sm" href="#lp-top">免費領取 →</a></div>
 </div></section>'''
+        elif key=='eye-guide':
+            toc=''.join(f'<li><span class="lm-toc-k">{esc(k_)}</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for k_,t,x in LM_GUIDE_TOC)
+            types=''.join(f'<li><span class="lm-type-k">{k_}</span><b>{esc(t)}</b><span>{esc(x)}</span></li>' for k_,t,x in LM_GUIDE_TYPES)
+            preview=f'''<section class="sec lp-sec"><div class="wrap">
+  <div class="sec-head lp-center"><span class="eyebrow">先看看內容</span><h2>7 頁，從「為什麼累」到「怎麼開始」</h2><p class="lead">黃醫師用門診裡最常解釋的方式寫成：不賣焦慮，也不推銷速成方案，只整理你今天就能開始做的事。</p></div>
+  <div class="lm-pages lm-pages3">
+    <figure><img src="{rel}img/lm-eye-guide-p2.jpg" alt="電子書內頁：寫在前面與第一章「為什麼你的眼睛越來越累」" width="696" height="900" loading="lazy"><figcaption>寫在前面・第一章</figcaption></figure>
+    <figure><img src="{rel}img/lm-eye-guide-p3.jpg" alt="電子書內頁：第二章「門診最常見的 5 個護眼誤區」" width="696" height="900" loading="lazy"><figcaption>第二章・5 個護眼誤區</figcaption></figure>
+    <figure><img src="{rel}img/lm-eye-guide-p5.jpg" alt="電子書內頁：第五章「對應你的用眼類型，找對方向」" width="696" height="900" loading="lazy"><figcaption>第五章・4 種用眼類型</figcaption></figure>
+  </div>
+  <ol class="lm-toc">{toc}</ol>
+</div></section>
+<section class="sec lp-sec bg-green-light"><div class="wrap">
+  <div class="sec-head lp-center"><span class="eyebrow">你比較像哪一型？</span><h2>同樣是乾澀疲勞，方向不一樣</h2><p class="lead">先對照看看。每一型該從哪裡開始照顧，寫在指南第五章。</p></div>
+  <ul class="lm-types">{types}</ul>
+  <div class="lm-tl-after"><div><b>找到自己的類型了嗎？</b><span>下載電子書，看看你這一型的照顧方向。</span></div><a class="btn btn-primary btn-sm" href="#lp-top">免費下載 →</a></div>
+</div></section>'''
         else:
             byno={mo:(a_,b_,t) for mo,a_,b_,t in LM_TERMS}
             seasons=''.join(f'<div class="lm-season s-{cls}"><h3><span>{nm}</span></h3><ol>'+''.join(f'<li><span class="mo">{mo} 月</span><b>{byno[mo][0]}・{byno[mo][1]}</b><span>{esc(byno[mo][2])}</span></li>' for mo in mos)+'</ol></div>' for nm,cls,mos in LM_SEASONS)
@@ -1875,7 +1939,7 @@ def build_lead_pages():
   <div class="lm-cal-wrap"><img class="lm-cal-sample" src="{rel}downloads/2027-calendar-june.jpg" alt="月曆內頁示意：2027 年 6 月，芒種與夏至" width="696" height="900" loading="lazy">
   <div class="lm-seasons">{seasons}</div></div>
 </div></section>'''
-        bottom_lead=('留下 Email，馬上下載 12 頁月曆。' if key!='eye-7day' else ('留下 Email，馬上下載檢查表，明天收到第 1 天的短信。' if live else '留下 Email，馬上下載 7 天檢查表。'))
+        bottom_lead=m.get('final_lead') or ('留下 Email，馬上下載 12 頁月曆。' if key!='eye-7day' else ('留下 Email，馬上下載檢查表，明天收到第 1 天的短信。' if live else '留下 Email，馬上下載 7 天檢查表。'))
         related=''.join(post_card(POST_BY_SLUG[sl], rel) for sl in m['related'] if sl in POST_BY_SLUG)
         body=f'''
 <section class="lp-hero2" id="lp-top" style="--lp-bg:url('{rel}img/{m['bg']}')"><div class="wrap">
@@ -1910,7 +1974,7 @@ def build_lead_pages():
 </div></div></section>
 <section class="sec lp-final2" style="--lp-bg:url('{rel}img/{m['bg']}')"><div class="wrap">
   <div class="lp-final-card">
-    <h2>{esc('今天就從第一個習慣開始' if key=='eye-7day' else '把 2027 的節奏貼在冰箱上')}</h2>
+    <h2>{esc(m.get('final_h') or ('今天就從第一個習慣開始' if key=='eye-7day' else '把 2027 的節奏貼在冰箱上'))}</h2>
     <p class="lead">{esc(bottom_lead)}</p>
     {lm_form(key,'page-bottom',rel,after=nxt)}
   </div>

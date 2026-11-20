@@ -749,6 +749,21 @@ img.promo{object-fit:contain!important;object-position:center!important;backgrou
 .lm-pages figure:first-child img{transform:rotate(-1.5deg)}.lm-pages figure:last-child img{transform:rotate(1.5deg)}
 .lm-pages figcaption{text-align:center;font-size:14px;font-weight:700;color:var(--ink-2);margin-top:14px}
 @media(max-width:560px){.lm-pages{gap:14px;margin-bottom:24px}.lm-pages figcaption{font-size:13px}}
+/* 電子書下載頁：三張內頁、目錄、用眼類型 */
+.lm-pages.lm-pages3{grid-template-columns:repeat(3,1fr);max-width:900px}
+.lm-pages.lm-pages3 figure:nth-child(2) img{transform:translateY(-8px)}
+.lm-toc{display:grid;grid-template-columns:1fr 1fr;gap:12px 28px;max-width:900px;margin:0 auto}
+.lm-toc li{display:grid;grid-template-columns:78px 1fr;column-gap:14px;row-gap:2px;padding:14px 0;border-top:1px solid var(--line)}
+.lm-toc-k{grid-row:span 2;font-size:13px;font-weight:800;color:var(--green);padding-top:2px}
+.lm-toc b{font-size:17px;line-height:1.4}
+.lm-toc li>span:last-child{font-size:14px;color:var(--ink-2);line-height:1.6}
+.lm-types{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.lm-types li{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px 20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 14px 30px -24px rgba(8,32,15,.35)}
+.lm-type-k{width:34px;height:34px;border-radius:10px;background:var(--green);color:#fff;font-family:var(--font-en);font-weight:800;display:grid;place-items:center;margin-bottom:6px}
+.lm-types b{font-size:18px}
+.lm-types li>span:last-child{font-size:14px;color:var(--ink-2);line-height:1.65}
+@media(max-width:900px){.lm-types{grid-template-columns:1fr 1fr}.lm-toc{grid-template-columns:1fr}}
+@media(max-width:560px){.lm-pages.lm-pages3{grid-template-columns:1fr 1fr}.lm-pages.lm-pages3 figure:nth-child(3){display:none}.lm-pages.lm-pages3 figure:nth-child(2) img{transform:rotate(1.5deg)}.lm-types{gap:10px}.lm-types li{padding:16px 14px;border-radius:14px}.lm-type-k{width:28px;height:28px;font-size:14px;border-radius:8px;margin-bottom:4px}.lm-types b{font-size:16px}.lm-types li>span:last-child{font-size:13px;line-height:1.55}.lm-toc li{grid-template-columns:64px 1fr}}
 /* 節氣：四季分組 */
 .lm-seasons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .lm-season{--sc:#3E8E5A;--st:#EEF6EF;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
