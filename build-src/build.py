@@ -1148,6 +1148,8 @@ def gallery(slug):
 def post_promo(p, rel):
     counts={k:len(re.findall(r,p['body'])) for k,r in (PROMO or {}).get('match',{}).items() if promo_offer(k)}
     ks=sorted([k for k,n in counts.items() if n], key=lambda k:-counts[k])
+    # 文章所屬系列的活動產品一律列出（例如護眼系列文章：眼貼與眼霜的優惠都顯示），即使內文沒提到
+    ks+=[k for k in (PROMO or {}).get('items',[]) if k not in ks and promo_offer(k) and PRODUCTS[k]['series']==p.get('series')]
     if not ks: return ''
     lis=''.join(f'<li><a href="{rel}products/{k}.html">{esc(promo_offer(k)[1])}</a></li>' for k in ks)
     return f'<div class="post-promo"><b>🍁 {esc(PROMO["title"])}・感恩節限時優惠（至 {PROMO["ends"]} 止）</b><ul>{lis}</ul><small>活動至 {PROMO["ends"]} 止；實際優惠以官方商店結帳頁為準。</small></div>'
