@@ -856,3 +856,8 @@ body.cc-on .sticky-cta,body.cc-on .buybar{visibility:hidden}
 .article .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:16px 0 24px;border-radius:8px}
 .article .table-scroll table{margin:0;min-width:560px}
 .article-layout>*{min-width:0}
+/* 產品頁：成分研究說明（眼貼） */
+.ing-research{margin-top:18px;background:var(--green-light);border-radius:var(--r);padding:18px 22px}
+.ing-research p{font-size:15px;color:var(--ink-2);line-height:1.75}
+.ing-research a{color:var(--green);font-weight:700;white-space:nowrap}
+.ing-research .ing-research-fine{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6}

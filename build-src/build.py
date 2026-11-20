@@ -274,7 +274,7 @@ for fn in sorted(os.listdir(os.path.join(ROOT,'posts'))):
     meta, body = s.split('---END-META---',1)
     m = json.loads(meta.strip()); m['body'] = body.strip(); POSTS.append(m)
 POST_BY_SLUG = {p['slug']:p for p in POSTS}
-POST_ORDER = ['thanksgiving-gift-for-parents-herbal', 'thanksgiving-parents-supplement-schedule', 'thanksgiving-feast-bloating-care', 'eye-patch-vs-steam-mask-vs-eye-drops', 'beyond-lutein-eye-care', 'eye-patch-how-to-use-guide', 'eye-care-gift-for-parents', 'eye-patch-ingredients-explained', 'eye-cream-buying-guide', 'eye-patch-which-pack-to-buy', 'contact-lens-eye-drops-eye-patch-guide', 'cassia-chrysanthemum-goji-tea-or-capsule', 'dendrobium-shihu-eye-cream-herb', 'melatonin-free-sleep-aid-guide', 'stress-daytime-relax-night-sleep', 'suanzaoren-calming-herbs-explained', 'gentle-digestive-support-no-senna', 'bloating-after-sitting-herbal-flow', 'gum-care-supplement-for-parents', 'brushing-plus-herbal-support', 'steroid-free-soothing-cream-guide', 'acne-prone-skin-herbal-cream-guide', 'herbal-skincare-which-cream-and-order', 'anti-fatigue-look-serum-guide', 'caffeine-free-energy-herbal-guide', 'winter-tonic-herbal-guide', 'gaozi-paste-vs-capsule', 'american-ginseng-vs-ginseng', 'astragalus-huangqi-guide', 'american-ginseng-cold-constitution', 'poria-chinese-yam-everyday-herbs', 'herbal-supplement-safety-checklist']
+POST_ORDER = ['thanksgiving-gift-for-parents-herbal', 'thanksgiving-parents-supplement-schedule', 'thanksgiving-feast-bloating-care', 'eye-patch-vs-steam-mask-vs-eye-drops', 'beyond-lutein-eye-care', 'eye-patch-how-to-use-guide', 'eye-care-gift-for-parents', 'eye-patch-ingredients-explained', 'eye-patch-herb-research-how-to-read', 'eye-cream-buying-guide', 'eye-patch-which-pack-to-buy', 'contact-lens-eye-drops-eye-patch-guide', 'cassia-chrysanthemum-goji-tea-or-capsule', 'dendrobium-shihu-eye-cream-herb', 'melatonin-free-sleep-aid-guide', 'stress-daytime-relax-night-sleep', 'suanzaoren-calming-herbs-explained', 'gentle-digestive-support-no-senna', 'bloating-after-sitting-herbal-flow', 'gum-care-supplement-for-parents', 'brushing-plus-herbal-support', 'steroid-free-soothing-cream-guide', 'acne-prone-skin-herbal-cream-guide', 'herbal-skincare-which-cream-and-order', 'anti-fatigue-look-serum-guide', 'caffeine-free-energy-herbal-guide', 'winter-tonic-herbal-guide', 'gaozi-paste-vs-capsule', 'american-ginseng-vs-ginseng', 'astragalus-huangqi-guide', 'american-ginseng-cold-constitution', 'poria-chinese-yam-everyday-herbs', 'herbal-supplement-safety-checklist']
 POSTS = [POST_BY_SLUG[s] for s in POST_ORDER]
 POST_GENERAL = dict(name='日常保健', short='日常保健', photo=None)  # 文章 series='general'：適用全系列
 
@@ -438,6 +438,9 @@ INGREDIENTS = {
           ('調養','當歸','傳統上用於養血，是中醫最常用的調養草本之一。'),
           ('調養','黃耆','傳統上用於日常調養，常與當歸搭配。')],
    note='以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為外用保養品，不是藥品；首次使用請先做局部測試，孕婦請勿使用。',
+   research=dict(text='明目冷敷眼貼配方選用的植物成分，已有日本京都大學、美國康乃爾大學、香港中文大學、台北醫學大學等多國大學及醫院發表眼部相關研究（多為動物或細胞實驗），其中部分成分並有初步人體研究。',
+     link=('../blog/eye-patch-herb-research-how-to-read.html','看我們怎麼整理這些研究 →'),
+     fine='以上為個別成分之研究，非針對本產品，不代表本產品具同等效果。本產品非藥品，不用於診斷、治療或預防任何疾病。'),
    facts=[('清涼成分','冰片、薄荷，帶來貼上時的清涼感'),('劑型','外用透皮冷敷眼貼，貼在眼周肌膚、不入眼'),('製造','日本製造'),('不含','防腐劑'),('規格','每盒 60 片；每晚建議 6 片，約 10 晚')]),
  'calmoon': dict(
    title='七味草本，依「君臣佐使」分工',
@@ -562,11 +565,14 @@ def ingredients_section(slug):
     full=f'<details class="ing-full"><summary>完整成分表（INCI）</summary><p>{esc(g["full"])}</p></details>' if g.get('full') else ''
     note=g.get('note') or ('以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為膳食補充劑，不是藥品。' if capsule
           else '以上為成分在配方中的角色說明，描述的是使用感受與肌膚外觀。本品為日常保養品，不是藥品；首次使用請先做局部測試。')
+    rs=g.get('research')
+    research=(f'<div class="ing-research"><p>{esc(rs["text"])} <a href="{rs["link"][0]}">{esc(rs["link"][1])}</a></p><p class="ing-research-fine">{esc(rs["fine"])}</p></div>' if rs else '')
     return f'''<section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分解析</span><h2>{esc(g['title'])}</h2><p class="lead" style="font-size:16px">{esc(g['intro'])}</p></div>
   <div class="ing-grid{' ing-grid-3' if len(g['items'])==9 else ''}">{cards}</div>
   {f'<ul class="ing-facts">{facts}</ul>' if facts else ''}
   {full}
+  {research}
   <p class="note" style="margin-top:14px">{note}</p>
 </div></section>
 '''
